@@ -427,9 +427,14 @@ MonoBehaviour:
   boardX: -1
   boardY: -1
   SideIndex: -1
+  cellWidth: 0
+  cellHeight: 0
   owner: 0
   DraggedInstance: {fileID: 0}
   draging: 0
+  _startInput: {x: 0, y: 0, z: 0}
+  sendToSide: 0
+  needDecideSendToSide: 0
 --- !u!210 &210379585582591802
 SortingGroup:
   m_ObjectHideFlags: 1
