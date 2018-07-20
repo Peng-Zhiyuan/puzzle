@@ -9,7 +9,8 @@ public class Game : MonoBehaviour
 	{
 		StaticDataLite.Init();
 		UIEngine.Init();
-		UIEngine.Forward("ShopPage");
+		UIEngine.Forward("MainPage");
+		UIEngine.ShowFloating<HeadBarFloating>();
 	}
 
 
