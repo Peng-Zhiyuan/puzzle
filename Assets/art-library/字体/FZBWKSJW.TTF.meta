@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 5ef0ae550f1dc484eafbbcbebdd667c9
+timeCreated: 1532062393
+licenseType: Pro
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: FZBeiWeiKaiShu-S19S
+  fontNames:
+  - FZBeiWeiKaiShu-S19S
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
