@@ -51,4 +51,33 @@ public class HeadBarFloating : Floating
 			this.likeItem.Value = value.ToString();
 		}
 	}
+
+	public void OnBackButton()
+	{
+		if(UIEngine.PagesCount > 1)
+		{
+			UIEngine.Back(null, admission);
+		}
+		else
+		{
+			Debug.Log("this is the only one page, can't call UIEngine.Back()");
+		}
+	}
+
+	public static HeadBarFloating instance;
+	public static Admission admission;
+
+	public override void OnCreate()
+	{
+		instance = this;
+	}
+
+	/// <summary>
+	/// Update is called every frame, if the MonoBehaviour is enabled.
+	/// </summary>
+	void Update()
+	{
+		this.goldItem.Value = GameStorage.Gold.ToString();
+		this.starItem.value = GameStorage.star.ToString();
+	}
 }

@@ -22,11 +22,7 @@ public class ShopPage : Page
     {
         // rebuild item list
         itemList.Clear();
-        for(int i = transform_listRoot.childCount - 1; i >= 0; i--)
-        {
-            var child = transform_listRoot.GetChild(i);
-            Destroy(child);
-        }
+        TransformUtil.DestroyAllChildren(transform_listRoot);
 
         // add ad item first
         {
@@ -60,6 +56,10 @@ public class ShopPage : Page
             var iapItem = item as ShopPage_IapItem;
             var row = iapItem.row;
             Debug.Log(row.Get<int>("id"));
+        }
+        else if(item is ShopPage_AdItem)
+        {
+            UIEngine.Forward<AdPage>();
         }
     }
 

@@ -276,7 +276,8 @@ public static class UIEngine
 		Page firstPage = PageStack.Peek();
 		if (firstPage.Overlay)
         {
-			Floating control = ShowFlaoting("MaskControl", null,firstPage.Depth - 1);
+			Floating control = ShowFlaoting("MaskControl", null, firstPage.Depth - 1);
+            control.transform.SetSiblingIndex(firstPage.transform.GetSiblingIndex());
         }
         else
         {
@@ -296,8 +297,8 @@ public static class UIEngine
 
 public static class UIDepth
 {
-    public const int High = 2000;
-	public const int Middle = 1000;
+    public const int High = 200;
+	public const int Middle = 100;
 }
 
 public enum UIResourceType

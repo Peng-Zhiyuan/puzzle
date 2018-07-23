@@ -51,9 +51,10 @@ public class MainPage : Page
         var rt = item.GetComponent<RectTransform>();
 		var rect = GetWorldRect(rt, Vector2.one);
 	
-        Debug.Log("rect: " + rect);
 		var admission = new Admission_ScaleUpNewPage(rect);
 		UIEngine.Forward<PicturePage>(pictype, admission);
+
+        HeadBarFloating.admission = new Admission_ScaleDownOldPage(rect);
     }
 
 
@@ -71,7 +72,14 @@ public class MainPage : Page
 
     public void OnShopButton()
     {
-        UIEngine.Forward("ShopPage");
+        var admission = new Admission_OldDownNewUp();
+        UIEngine.Forward<ShopPage>(null, admission);
+        HeadBarFloating.admission = new Admission_OldDownNewUp();
     }
 	
+    public void OnGiftButton()
+    {
+        var addmision = new Admission_PopupNewPage();
+        UIEngine.Forward<AdPage>(null, addmision);
+    }
 }

@@ -10,6 +10,8 @@ public class Game : MonoBehaviour
 		StaticDataLite.Init();
 		UIEngine.Init();
 		UIEngine.Forward("MainPage");
+		var floating = UIEngine.ShowFloating<BackgroundFloating>(null, -10);
+		floating.transform.SetAsFirstSibling();
 		UIEngine.ShowFloating<HeadBarFloating>();
 	}
 

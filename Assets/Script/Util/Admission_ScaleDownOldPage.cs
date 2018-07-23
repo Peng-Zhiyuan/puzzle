@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Admission_ScaleUpNewPage : Admission
+public class Admission_ScaleDownOldPage: Admission
 {
     Rect rect;
     float DURATION = 0.2f;
 
-    public Admission_ScaleUpNewPage(Rect rect)
+    public Admission_ScaleDownOldPage(Rect rect)
     {
         this.rect = rect;
     } 
@@ -17,28 +17,31 @@ public class Admission_ScaleUpNewPage : Admission
     {
         oldPage.Active = true;
         newPage.Active = true;
+        // newPage.rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.xMin, rect.size.x);
+        // newPage.rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, rect.yMin,rect.size.y);
+        
+        // tween center
+        var fromPosition = oldPage.transform.position;
+        var targetPosition = this.rect.center;
+        // oldPage.transform.position = this.rect.center;
+        oldPage.rectTransform.DOMove(targetPosition, DURATION);
+
+        // tween scale
         var canvas = UIEngine.Canvas.GetComponent<RectTransform>();
         var canvasWidth = canvas.rect.width;
         var canvasHeight = canvas.rect.height;
-        // newPage.rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.xMin, rect.size.x);
-        // newPage.rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, rect.yMin,rect.size.y);
-        // var targetPosition = newPage.transform.position;
-        var targetPosition = new Vector2(canvasWidth/2, canvasHeight/2);
-        Debug.Log(targetPosition);
-        var fromPosition = this.rect.center;
-        newPage.transform.position = fromPosition;
-        newPage.rectTransform.DOMove(targetPosition, DURATION);
-        
-
         var fromScaleX = this.rect.width / canvasWidth;
         var fromScaleY = this.rect.height / canvasHeight;
-        newPage.rectTransform.localScale = new Vector2(fromScaleX, fromScaleY);
-        newPage.rectTransform.DOScale(Vector2.one, DURATION);
-        var cg = TryGetComponent<CanvasGroup>(newPage.gameObject);
-        cg.alpha = DURATION;
-        cg.DOFade(1, DURATION).OnComplete(()=>{
+        // newPage.rectTransform.localScale = Vector2.one; 
+        oldPage.rectTransform.DOScale(new Vector2(fromScaleX, fromScaleY), DURATION);
+
+        // tween alpha
+        var cg = TryGetComponent<CanvasGroup>(oldPage.gameObject);
+        cg.alpha = 1;
+        cg.DOFade(0, DURATION).OnComplete(()=>{
             this.finished = true;
             oldPage.Active = false;
+            cg.alpha = 1;
         });
 
     }
