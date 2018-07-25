@@ -11,6 +11,7 @@ public class PicturePage : Page
     public PictruePage_Item itemSample;
     public Transform itemRoot;
     public RectTransform scrollContent;
+    public Text text_pictureCount;
 
 
     public override void OnParamChanged()
@@ -55,6 +56,18 @@ public class PicturePage : Page
             }
         }
         this.setDataList(dataList);
+
+        // set picture count
+        var completePictureCount = 0;
+        var pictureCount = dataList.Count;
+        foreach(var data in dataList)
+        {
+            if(data.status == PicturePage_ItemStatus.Complete)
+            {
+                completePictureCount++;
+            }
+        }
+        text_pictureCount.text = completePictureCount + "/" + pictureCount;
     }
 
     void setDataList(List<PictruePage_ItemData> dataList)
@@ -130,7 +143,9 @@ public class PicturePage : Page
     {
         if(item.data.status == PicturePage_ItemStatus.Unlocked)
         {
-            UIEngine.Forward<LevelCompletePage>();
+            //UIEngine.Forward<LevelCompletePage>();
+            var picId = item.data.row.Get<int>("id");
+            GameController.EnterCore(picId);
         }
     }
 }

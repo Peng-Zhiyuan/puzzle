@@ -673,6 +673,7 @@ MonoBehaviour:
   itemSample: {fileID: 114312951002922740}
   itemRoot: {fileID: 224027208885544400}
   scrollContent: {fileID: 224996657175369378}
+  text_pictureCount: {fileID: 114029286236214032}
 --- !u!114 &114748022900607544
 MonoBehaviour:
   m_ObjectHideFlags: 1

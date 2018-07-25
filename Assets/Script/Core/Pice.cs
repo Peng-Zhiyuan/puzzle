@@ -20,9 +20,19 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public Sprite sprite_ao;
 	public Sprite sprite_tu;
 	public Sprite sprite_ping;
+	public SpriteRenderer sr_flash;
 	public BoxCollider2D collider;
+	/// <summary>
+	/// 所在图片上的索引，从左到右，从下到上
+	/// </summary>
 	public int index;
+	/// <summary>
+	/// 所在图片上的横索引，从左到右
+	/// </summary>
 	public int indexX;
+	/// <summary>
+	/// 所在图片上的纵索引，从下到上
+	/// </summary>
 	public int indexY;
 
 	public List<LinkInfo> linking = new List<LinkInfo>();
@@ -37,6 +47,34 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public int SideIndex = -1;
 	public int cellWidth;
 	public int cellHeight;
+
+	private bool _isFiexed;
+	/// <summary>
+	/// 是否已经固定在正确位置上
+	/// </summary>
+	public bool isFixed
+	{
+		get
+		{
+			return _isFiexed;
+		}
+		set
+		{
+			if(value == _isFiexed)
+			{
+				return;
+			}
+			_isFiexed = value;
+			if(value)
+			{
+				collider.enabled = false;
+			}
+			else
+			{
+				collider.enabled = true;
+			}
+		}
+	}
 
 	public PiceOwner owner;
 
@@ -83,6 +121,8 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		RightType = info.right;
 		TopType = info.top;
 		BottomType = info.bottom;
+
+		this.sr_flash.enabled = false;
 	}
 
 	public float MaskWidth
@@ -254,7 +294,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		var pp = new Vector2(p.x + dx, p.y + dy);
 		this.transform.position = pp;
 
-		ForeachPice(pice =>{
+		ForeachLinkedPice(pice =>{
 			pice.MovePosition(dx, dy);
 		});
 	}
@@ -264,7 +304,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	{
 		//GameObject.Destroy(this.gameObject.GetComponent<iTween>());
 		iTween.MoveBy(this.gameObject, iTween.Hash("x", dx, "y", dy, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
-		ForeachPice(pice =>{
+		ForeachLinkedPice(pice =>{
 			pice.SmoothMovePosition(dx, dy);
 		});
 	}
@@ -275,7 +315,11 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		iTween.ScaleTo(this.gameObject, new Vector2(scale, scale), 0.4f);
 	}
 
-	public void ForeachPice(Action<Pice> callback)
+	/// <summary>
+	/// 遍历被这个 pice 连结到的 pice (不包括自身)
+	/// </summary>
+	/// <param name="callback"></param>
+	public void ForeachLinkedPice(Action<Pice> callback)
 	{
 		dealedFlag = true;
 		linking.ForEach(info =>{
@@ -285,6 +329,30 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			}
 		});
 		dealedFlag = false;
+	}
+
+	/// <summary>
+	/// 遍历被这个 pice 连结到的 pice (包括自身)
+	/// </summary>
+	/// <param name="callback"></param>
+	public void ForeachLinkedPiceIncludeSelf(Action<Pice> callback)
+	{
+		callback(this);
+		dealedFlag = true;
+		linking.ForEach(info =>{
+			if(!info.pice.dealedFlag)
+			{
+				callback(info.pice);
+			}
+		});
+		dealedFlag = false;
+	}
+
+	public void Flash()
+	{
+		this.sr_flash.enabled = true;
+		sr_flash.GetComponent<SpriteRenderer>().material.color = new Color(1.0f, 1.0f, 1.0f, 0f);
+		iTween.ColorFrom(sr_flash.gameObject, iTween.Hash("color", new Color(1.0f, 1.0f, 1.0f, 1.0f), "time", 0.2f ));
 	}
 
  	#region Interface Implementations
@@ -315,6 +383,15 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	private void BeginDrag(PointerEventData eventData)
 	{
+		// 已经 fixed 的 pice 无法拖动
+		if(this.isFixed)
+		{
+			return;
+		}
+
+		// 给这个 pice 分配最高的 layer
+		this.GetComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder = LayerOrderDispatcher.Next;
+
 		draging = true;
 		DraggedInstance = gameObject;
 		_startPosition = transform.position;
@@ -383,6 +460,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		}
 	}
 
+
 	private void Drag(PointerEventData eventData)
 	{
 		if(!draging)
@@ -391,6 +469,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		}
 		if(Input.touchCount > 1)
 			return;
+
 
 		transform.position = Camera.main.ScreenToWorldPoint (
 			new Vector3 (Input.mousePosition.x, Input.mousePosition.y, _zDistanceToCamera)

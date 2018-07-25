@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Puzzle 
 {
+	public event Action Complete;
+
 	public static int EXPAND = 10;
 	public Texture2D expanedTexture;
 
@@ -24,10 +27,13 @@ public class Puzzle
 	}
 	public Pice prefab_pice;
 	private Core core;
+	private Map map;
 
 
 	public void Init () {
 		instance = this;
+		UnityEngine.Random.InitState(DateTime.UtcNow.Second);
+		LayerOrderDispatcher.Init();
 		var core_go = GameObject.Find("Core");
 		if(core_go == null)
 		{
@@ -65,7 +71,7 @@ public class Puzzle
 	{
 		EXPAND = (int)(cellSize * 0.25f);
 		expanedTexture = ExpandTexture(texture);
-		var map = new Map();
+		map = new Map();
 		map.Init(expanedTexture, EXPAND, cellSize);
 
 		board.Init(map.validWidth, map.validHeight, map.xCount, map.yCount);
@@ -81,23 +87,7 @@ public class Puzzle
 		side.RepositionPiceList();
 	}
 
-	void Link(Pice pice1, LinkDirectory directory, Pice pice2)
-	{
-		// set pice1
-		{
-			var info = new LinkInfo();
-			info.directory = directory;
-			info.pice = pice2;
-			pice1.linking.Add(info);
-		}
-		// set pice2
-		{
-			var info = new LinkInfo();
-			info.directory = LinkDirectoryUtil.Reverse(directory);
-			info.pice = pice1;
-			pice2.linking.Add(info);
-		}
-	}
+
 
 	public void OnRootPiceDraging(Pice pice)
 	{
@@ -143,44 +133,34 @@ public class Puzzle
 	public void OnRootPiceDragEnd(Pice pice)
 	{
 		UpdatePiceOwner(pice);
+		// 没有连结的 pice， 当拖放释放点不在 board 上时，自动回到 side 上
 		if(pice.linking.Count == 0)
 		{
 			var inboard = board.Rect.Contains(pice.transform.position);
-			if(inboard)
-			{
-				board.PlacePice(pice);
-				CheckNewLink();
-			}
-			else
+			if(!inboard)
 			{
 				side.PlacePice(pice);
+				return;
 			}
 		}
-		else
+
+		// 应该放置到 board 上时
+		board.PlacePice(pice);
+		CheckNewLink();
+		CheckNewFix();
+		var complete = IsAllPiceFixed();
+		if(complete)
 		{
-			board.PlacePice(pice);
-			CheckNewLink();
+			Debug.Log("[Core] Complete");
+			CoroutineManager.Create(waiteAndSendComplete());
 		}
+		
 	}
 
-	void TryLink(Pice pice1, LinkDirectory directory, Pice pice2)
+	private IEnumerator waiteAndSendComplete()
 	{
-		if(pice1.owner != PiceOwner.Board || pice2.owner != PiceOwner.Board)
-		{
-			return;
-		}
-		var alreadyLinked = false;
-		pice1.linking.ForEach(info =>{
-			if(info.directory == directory)
-			{
-				alreadyLinked = true;
-			}
-		});
-		if(alreadyLinked)
-		{
-			return;
-		}
-		Link(pice1, directory, pice2);
+		yield return new WaitForSeconds(0.4f);
+		Complete?.Invoke();
 	}
 
 	private bool SameRow(Pice pice1, Pice pice2)
@@ -208,7 +188,7 @@ public class Puzzle
 						{
 							if(SameCol(pice, upper) && upper.indexY == pice.indexY + 1)
 							{
-								TryLink(pice, LinkDirectory.Top, upper);
+								Linker.TryLink(pice, LinkDirectory.Top, upper);
 							}
 						}
 					}
@@ -218,7 +198,7 @@ public class Puzzle
 						{
 							if(SameCol(pice, downer) && downer.indexY == pice.indexY - 1)
 							{
-								TryLink(pice, LinkDirectory.Bottom, downer);
+								Linker.TryLink(pice, LinkDirectory.Bottom, downer);
 							}
 						}
 					}
@@ -228,7 +208,7 @@ public class Puzzle
 						{
 							if(SameRow(pice, lefter) && lefter.indexX == pice.indexX - 1)
 							{
-								TryLink(pice, LinkDirectory.Left, lefter);
+								Linker.TryLink(pice, LinkDirectory.Left, lefter);
 							}
 						}
 					}
@@ -238,7 +218,7 @@ public class Puzzle
 						{
 							if(SameRow(pice, rightter) && rightter.indexX == pice.indexX + 1)
 							{
-								TryLink(pice, LinkDirectory.Right, rightter);
+								Linker.TryLink(pice, LinkDirectory.Right, rightter);
 							}
 						}
 					}
@@ -248,4 +228,86 @@ public class Puzzle
 		}
 	}
 
+	Dictionary<Pice, bool> tempDic = new Dictionary<Pice, bool>();
+	public void CheckNewFix()
+	{
+		tempDic.Clear();
+		for(int i = 0; i < board.xCount; i++)
+		{
+			for(int j = 0; j < board.yCount; j++)
+			{
+				var pice = board.GetPiceFromData(i, j);
+				// 如果棋盘上这个位置没有 pice，则不处理
+				if(pice == null)
+				{
+					continue;
+				}
+				// 如果这个 pice 已经检查过了，则不处理
+				if(tempDic.ContainsKey(pice) &&  tempDic[pice])
+				{
+					continue;
+				}
+				var hasLeft = false;
+				var hasRight = false;
+				var hasBottom = false;
+				var hasTop = false;
+				
+				pice.ForeachLinkedPiceIncludeSelf(linkedPice=>{
+					// 设置已检查标志
+					tempDic[pice] = true;
+					// 如果在 board 上被放置到了正确的位置
+					if(linkedPice.indexX == linkedPice.boardX && linkedPice.indexY == linkedPice.boardY)
+					{
+						if(linkedPice.indexX == 0)
+						{
+							hasLeft = true;
+						}
+						if(linkedPice.indexY == 0)
+						{
+							hasBottom = true;
+						}
+						if(linkedPice.indexX == map.xCount - 1)
+						{
+							hasRight = true;
+						}
+						if(linkedPice.indexY == map.yCount - 1)
+						{
+							hasTop = true;
+						}
+					}
+				});
+
+				// 如果包含两个相邻边，则固定以上所有 pice
+				if((hasLeft && hasBottom) || (hasBottom && hasRight) || (hasRight && hasTop) || (hasTop && hasLeft))
+				{
+					pice.ForeachLinkedPiceIncludeSelf(linkedPice=>{
+						// 如果这个 pice 是新 fixed 的则闪烁
+						if(!linkedPice.isFixed)
+						{
+							linkedPice.Flash();
+						}
+						linkedPice.isFixed = true;
+						//Debug.Log("fix: " + linkedPice.indexX + ", " + linkedPice.indexY);
+
+					});
+				}
+			}
+		}
+	}
+
+	public bool IsAllPiceFixed()
+	{
+		for(int i = 0; i < board.xCount; i++)
+		{
+			for(int j = 0; j < board.yCount; j++)
+			{
+				var pice = board.GetPiceFromData(i, j);
+				if(pice == null || !pice.isFixed)
+				{
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 }

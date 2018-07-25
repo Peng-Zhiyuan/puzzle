@@ -16,7 +16,7 @@ public class Game : MonoBehaviour
 	}
 
 
-	void TestCore () 
+	public static void TestCore () 
 	{
 		UnityEngine.Random.InitState(DateTime.UtcNow.Second);
 		Puzzle.Instance.Init();
