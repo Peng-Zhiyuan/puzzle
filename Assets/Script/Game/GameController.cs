@@ -33,6 +33,10 @@ public static class GameController
 
 	private static void OnCoreGameCompelte()
 	{
+		PlayerStatus.exp += 10;
+		PlayerStatus.gold += 10;
+		PlayerStatus.Save();
+
 		var admin = new Admission_FadeInNewPage();
 		UIEngine.Forward<LevelCompletePage>(null, admin);
 	}

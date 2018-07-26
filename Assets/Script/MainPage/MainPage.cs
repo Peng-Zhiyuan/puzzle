@@ -38,7 +38,8 @@ public class MainPage : Page
             var item = GameObject.Instantiate(sample_item);
             item.transform.parent = itemGridRoot;
             item.gameObject.SetActive(true);
-            item.Init(data);
+            //item.Init(data);
+            SetData(item, data);
         }
 
         // reset scroll content height
@@ -52,6 +53,15 @@ public class MainPage : Page
         var rt = scrollContent.GetComponent<RectTransform>();
         Debug.Log(scrollContentHeight);
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, scrollContentHeight);
+    }
+
+    void SetData(MainPage_Item item, MainPage_ItemData data)
+    {
+        item.data = data;
+        item.label.text = data.row.Get<string>("display_name");
+        var file = PicLibrary.FindFirstFileNameOfType(data.row.Get<string>("id"));
+        var texture = PicLibrary.Load(file);
+        item.Facade = texture;
     }
 
     public void OnItemClick(MainPage_Item item)

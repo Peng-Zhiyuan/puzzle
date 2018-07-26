@@ -9,6 +9,7 @@ public class Game : MonoBehaviour
 	{
 		StaticDataLite.Init();
 		UIEngine.Init();
+		PlayerStatus.Read();
 		UIEngine.Forward("MainPage");
 		//UIEngine.Forward("LevelSettingsPage");
 		var floating = UIEngine.ShowFloating<BackgroundFloating>(null, -10);

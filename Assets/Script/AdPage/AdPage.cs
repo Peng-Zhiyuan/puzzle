@@ -7,7 +7,7 @@ public class AdPage : Page
 
 	public void OnGetButton()
 	{
-		GameStorage.Gold += 40;
+		PlayerStatus.gold += 40;
 		PlayerPrefs.Save();
 		var admission = new Admission_PopdownOldPage();
 		UIEngine.Back(null, admission);

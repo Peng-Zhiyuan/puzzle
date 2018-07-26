@@ -40,7 +40,7 @@ public static class Linker
 			pice1.linking.Add(info);
 			if(pice1.linking.Count == 1)
 			{
-				pice1.Flash();
+				pice1.FlashAsLink();
 			}
 			
 		}
@@ -52,7 +52,7 @@ public static class Linker
 			pice2.linking.Add(info);
 			if(pice2.linking.Count == 1)
 			{
-				pice2.Flash();
+				pice2.FlashAsLink();
 			}
 		}
 	}

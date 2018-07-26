@@ -336,6 +336,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			if(!info.pice.dealedFlag)
 			{
 				callback(info.pice);
+				info.pice.ForeachLinkedPice(callback);
 			}
 		});
 		dealedFlag = false;
@@ -352,7 +353,8 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		linking.ForEach(info =>{
 			if(!info.pice.dealedFlag)
 			{
-				callback(info.pice);
+				info.pice.ForeachLinkedPiceIncludeSelf(callback);
+				//callback(info.pice);
 			}
 		});
 		dealedFlag = false;
@@ -363,6 +365,16 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		this.sr_flash.enabled = true;
 		sr_flash.GetComponent<SpriteRenderer>().material.color = new Color(1.0f, 1.0f, 1.0f, 0f);
 		iTween.ColorFrom(sr_flash.gameObject, iTween.Hash("color", new Color(1.0f, 1.0f, 1.0f, 1.0f), "time", 0.2f ));
+	}
+
+	public void FlashAsLink()
+	{
+		//Flash();
+	}
+
+	public void FlashAsFix()
+	{
+		Flash();
 	}
 
  	#region Interface Implementations

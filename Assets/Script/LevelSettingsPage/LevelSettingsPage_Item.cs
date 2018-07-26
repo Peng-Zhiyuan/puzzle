@@ -13,6 +13,7 @@ public class LevelSettingsPage_Item : MonoBehaviour
 	{
 		text.color =  new Color(219/255f, 198/255f, 23/255f, 255/255f);
 		text.fontSize = 120;
+		text.resizeTextMaxSize = 120;
 		// iTween.Stop(this.gameObject);
 		// var color = new Color(219/255f, 198/255f, 23/255f, 255/255f);
 		// var fontSize = 120;
@@ -30,6 +31,7 @@ public class LevelSettingsPage_Item : MonoBehaviour
 	{
 		text.color = new Color(135/255f, 83/255f, 38/255f, 255/255f);
 		text.fontSize = 72;
+		text.resizeTextMaxSize = 72;
 	}
 
 }

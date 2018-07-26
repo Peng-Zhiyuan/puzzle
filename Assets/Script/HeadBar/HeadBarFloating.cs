@@ -12,6 +12,8 @@ public class HeadBarFloating : Floating
 	public HeadBar_Mail mailItem;
 	public HeadBar_Like likeItem;
 
+	public RectTransform backButton;
+
 	public int Gold
 	{
 		set
@@ -62,6 +64,11 @@ public class HeadBarFloating : Floating
 				var admin = new Admission_PopdownOldPage();
 				UIEngine.Back(null, admin);
 			}
+			else if(top is ShopPage)
+			{
+				var admin = new Admission_OldDownNewUp();
+				UIEngine.Back(null, admin);
+			}
 			else
 			{
 				UIEngine.Back(null, admission);
@@ -81,12 +88,55 @@ public class HeadBarFloating : Floating
 		instance = this;
 	}
 
+	Page lastPage;
 	/// <summary>
 	/// Update is called every frame, if the MonoBehaviour is enabled.
 	/// </summary>
 	void Update()
 	{
-		this.goldItem.Value = GameStorage.Gold.ToString();
-		this.starItem.value = GameStorage.star.ToString();
+		this.goldItem.Value = PlayerStatus.gold.ToString();
+		this.starItem.value = PlayerStatus.exp.ToString();
+		var nowTop = UIEngine.Top;
+		if(nowTop != lastPage)
+		{
+			if(nowTop is MainPage)
+			{
+				HideBack();
+				Debug.Log("HideBack");
+			}
+			else
+			{
+				ShowBack();
+				Debug.Log("ShowBack");
+			}
+			lastPage = nowTop;
+		}
+	}
+
+	public void OnGoldClicked()
+	{
+		var admission = new Admission_OldDownNewUp();
+        UIEngine.Forward<ShopPage>(null, admission);
+	}
+
+	public void OnStarClicked()
+	{
+		UIEngine.ShowFloating<StarFloating>();
+	}
+
+	public void HideBack()
+	{
+		iTween.Stop(backButton.gameObject);
+		var wp = backButton.position;
+		wp.x = - 110;
+		iTween.MoveTo(backButton.gameObject, wp, 0.2f);
+	}
+
+	public void ShowBack()
+	{
+		iTween.Stop(backButton.gameObject);
+		var wp = backButton.position;
+		wp.x = 0;
+		iTween.MoveTo(backButton.gameObject, wp, 0.2f);
 	}
 }

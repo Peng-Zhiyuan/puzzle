@@ -10,5 +10,18 @@ public static class PicLibrary
 		return texture;
 	}
 	
-
+	public static string FindFirstFileNameOfType(string findType)
+	{
+		var sheet = StaticDataLite.GetSheet("pic");
+		foreach(string id in sheet.Keys)
+		{
+			var row = sheet[id];
+			var type = row.Get<string>("type");
+			if(findType == type)
+			{
+				return row.Get<string>("file");
+			}
+		}
+		return "";
+	}
 }

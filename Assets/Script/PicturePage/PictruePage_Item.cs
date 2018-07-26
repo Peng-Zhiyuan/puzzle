@@ -6,16 +6,16 @@ using UnityEngine.UI;
 public class PictruePage_Item : MonoBehaviour 
 {
 	public PictruePage_ItemData data;
-	public Image picture;
+	public RawImage picture;
 	public Image puzzleMask;
 	public Transform unlockLayer;
 	public Text label;
 
-	public Sprite Picture
+	public Texture2D Texture2D
 	{
 		set
 		{
-			this.picture.sprite = value;
+			this.picture.texture = value;
 		}
 	}
 

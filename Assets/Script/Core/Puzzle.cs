@@ -262,9 +262,11 @@ public class Puzzle
 				{
 					continue;
 				}
+				Debug.Log("pice (" + pice.boardX + ", " + pice.boardY + ")");
 				// 如果这个 pice 已经检查过了，则不处理
-				if(tempDic.ContainsKey(pice) &&  tempDic[pice])
+				if(tempDic.ContainsKey(pice) && tempDic[pice])
 				{
+					Debug.Log("already checked");
 					continue;
 				}
 				var hasLeft = false;
@@ -272,9 +274,11 @@ public class Puzzle
 				var hasBottom = false;
 				var hasTop = false;
 				
+				Debug.Log("foreach linked pice");
 				pice.ForeachLinkedPiceIncludeSelf(linkedPice=>{
+					Debug.Log("linkedPice (" + linkedPice.boardX + ", " + linkedPice.boardY + ")");
 					// 设置已检查标志
-					tempDic[pice] = true;
+					tempDic[linkedPice] = true;
 					// 如果在 board 上被放置到了正确的位置
 					if(linkedPice.indexX == linkedPice.boardX && linkedPice.indexY == linkedPice.boardY)
 					{
@@ -300,16 +304,22 @@ public class Puzzle
 				// 如果包含两个相邻边，则固定以上所有 pice
 				if((hasLeft && hasBottom) || (hasBottom && hasRight) || (hasRight && hasTop) || (hasTop && hasLeft))
 				{
+					Debug.Log("fix all");
 					pice.ForeachLinkedPiceIncludeSelf(linkedPice=>{
+						Debug.Log("fix (" + linkedPice.boardX + ", " + linkedPice.boardY + ")");
 						// 如果这个 pice 是新 fixed 的则闪烁
-						if(!linkedPice.isFixed)
+						//if(!linkedPice.isFixed)
 						{
-							linkedPice.Flash();
+							linkedPice.FlashAsFix();
 						}
 						linkedPice.isFixed = true;
 						//Debug.Log("fix: " + linkedPice.indexX + ", " + linkedPice.indexY);
 
 					});
+				}
+				else
+				{
+
 				}
 			}
 		}

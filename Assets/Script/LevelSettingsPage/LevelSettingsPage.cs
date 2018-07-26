@@ -51,7 +51,8 @@ public class LevelSettingsPage : Page
 		sampleizeScrollRect.Content.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, contentLength);
 		
 		OnRotateSelection();
-		frame = 0;
+		lostTime = 0;
+		first = true;
 	}
 
 	private void OnSetData(Transform itemTr, object dataObj)
@@ -65,10 +66,10 @@ public class LevelSettingsPage : Page
 
     public void OnDragEnd()
 	{
-		TweenCenter();
+		TweenNearestToCenter();
 	}
 
-	public void TweenCenter()
+	public void TweenNearestToCenter()
 	{
 		// 计算最近的 item 的 rect
 		var itemList = sampleizeScrollRect.ItemList;
@@ -93,7 +94,7 @@ public class LevelSettingsPage : Page
 				nearestItemIndex = i;
 			}
 		}
-		Debug.Log(nearestItemIndex);
+
 		// 计算移动向量
 		var moveVector = lockPoint - nearestItemCenter;
 		var moveVector3 = new Vector3(moveVector.x, moveVector.y);
@@ -101,18 +102,30 @@ public class LevelSettingsPage : Page
 		var content = sampleizeScrollRect.GetComponent<ScrollRect>().content;
 		//iTween.MoveBy(content.gameObject, moveVector, 0.2f);
 		iTween.MoveBy(content.gameObject, iTween.Hash("amount", moveVector3, "time", 0.2f, "easetype", "easeOutQuad"));
+
+		Debug.Log(nearestItemIndex);
+		Debug.Log(moveVector);
 	}
 
-	int frame = 0;
+	float lostTime = 0;
+	bool first = true;
 	LevelSettingsPage_Item selectItem;
 	public void Update()
 	{
 		// tween center at frame 2
-		frame++;
-		if(frame == 2)
+		lostTime += Time.deltaTime;
+
+		if(lostTime >= 0.3f)
 		{
-			TweenCenter();
+			if(first)
+			{
+				
+				TweenNearestToCenter();
+				first = false;
+			}
 		}
+
+		
 
 		// 计算离中心点最近的 item
 		var itemList = sampleizeScrollRect.ItemList;

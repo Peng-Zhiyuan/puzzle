@@ -81,16 +81,21 @@ public class PicturePage : Page
             var item = GameObject.Instantiate(itemSample);
             item.transform.parent = itemRoot;
             SetItem(item, data);
+            item.gameObject.SetActive(true);
         }
 
         // set scroll content total height
         var itemHeight = itemSample.GetComponent<RectTransform>().rect.height;
         var spaceing = itemRoot.GetComponent<VerticalLayoutGroup>().spacing;
-        var listInset = 480;
-        var scrollContentHeight = itemHeight * dataList.Count + (dataList.Count - 1) * spaceing + listInset;
+        var preExtra = 480;
+        var postExtra = 100;
+        var scrollContentHeight = itemHeight * dataList.Count + (dataList.Count - 1) * spaceing + preExtra + postExtra;
         var rt = scrollContent.GetComponent<RectTransform>();
         Debug.Log(scrollContentHeight);
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, scrollContentHeight);
+
+        // hide sample
+        itemSample.gameObject.SetActive(false);
 
     }
 
@@ -112,21 +117,26 @@ public class PicturePage : Page
                 item.IsShowUnlockLayer = false;
                 break;
         }
+        item.LabelText = data.row.Get<string>("name");
+        var file = data.row.Get<string>("file");
+        var texture = PicLibrary.Load(file);
+        item.Texture2D = texture;
     }
 
     void OnItemUnlockButton(PictruePage_Item item)
     {
         var data = item.data;
         var cost = data.row.Get<int>("cost");
-        var gold = GameStorage.Gold;
+        var gold = PlayerStatus.gold;
         if(gold >= cost)
         {
             Debug.Log("can unlock");
             gold -= cost;
-            GameStorage.Gold = gold;
+            PlayerStatus.gold = gold;
             var pictureId = data.row.Get<string>("id");
             LevelStorage.SetPictureUnlocked(pictureId);
-            PlayerPrefs.Save();
+            PlayerStatus.Save();
+            
             // 单独处理需要修改显示状态的 item
             data.status = PicturePage_ItemStatus.Unlocked;
             SetItem(item, data);
