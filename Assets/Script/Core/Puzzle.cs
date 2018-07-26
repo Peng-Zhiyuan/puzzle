@@ -6,6 +6,7 @@ using System;
 public class Puzzle 
 {
 	public event Action Complete;
+	public event Action LoadComplete;
 
 	public static int EXPAND = 10;
 	public Texture2D expanedTexture;
@@ -21,18 +22,25 @@ public class Puzzle
 			if(instance == null)
 			{
 				instance = new Puzzle();
+				instance.Init();
 			}
 			return instance;
 		}
 	}
-	public Pice prefab_pice;
+
 	private Core core;
 	private Map map;
 
+	public static bool DEBUG = false;
 
-	public void Init () {
+	/// <summary>
+	/// 整个游戏中只会被调用一次
+	/// </summary>
+	public void Init () 
+	{
 		instance = this;
 		UnityEngine.Random.InitState(DateTime.UtcNow.Second);
+		PiceManager.Init();
 		LayerOrderDispatcher.Init();
 		var core_go = GameObject.Find("Core");
 		if(core_go == null)
@@ -44,9 +52,10 @@ public class Puzzle
 		{
 			this.core = core_go.GetComponent<Core>();
 		}
-		this.prefab_pice = Resources.Load<Pice>("Core/Pice");
+
 		this.board = core.board;
 		this.side = core.side;
+
 	}
 
 	private Texture2D ExpandTexture(Texture2D texture)
@@ -67,26 +76,37 @@ public class Puzzle
 		return t;
 	}
 
+	/// <summary>
+	/// 每当开始新拼图时调用
+	/// </summary>
+	/// <param name="texture"></param>
+	/// <param name="cellSize"></param>
 	public void StartPuzzle(Texture2D texture, int cellSize)
 	{
+		Clean();
 		EXPAND = (int)(cellSize * 0.25f);
 		expanedTexture = ExpandTexture(texture);
 		map = new Map();
 		map.Init(expanedTexture, EXPAND, cellSize);
 
 		board.Init(map.validWidth, map.validHeight, map.xCount, map.yCount);
-		side.Init(100);
+		side.Init(200);
 		//side.Init(map.validHeight, map.yCount);
 		var count = map.xCount * map.yCount;
 		for(int i = 0; i < count; i++)
 		{
-			var pice = GameObject.Instantiate<Pice>(prefab_pice);
+			//var pice = GameObject.Instantiate<Pice>(prefab_pice);
+			var pice = PiceManager.Create();
 			pice.Init(map, i);
 			side.Append(pice);
 		}
 		side.RepositionPiceList();
 	}
 
+	public void Clean()
+	{
+		PiceManager.Clean();
+	}
 
 
 	public void OnRootPiceDraging(Pice pice)

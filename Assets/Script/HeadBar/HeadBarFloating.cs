@@ -56,7 +56,16 @@ public class HeadBarFloating : Floating
 	{
 		if(UIEngine.PagesCount > 1)
 		{
-			UIEngine.Back(null, admission);
+			var top = UIEngine.Top;
+			if(top is LevelSettingsPage)
+			{
+				var admin = new Admission_PopdownOldPage();
+				UIEngine.Back(null, admin);
+			}
+			else
+			{
+				UIEngine.Back(null, admission);
+			}
 		}
 		else
 		{

@@ -24,17 +24,23 @@ public class Board : MonoBehaviour
 		this.maxIndex = xCount * yCount - 1;
 		this.cellWidth = width / xCount;
 		this.cellHeight = height / yCount;
-		this.test = this.transform.Find("test").GetComponent<SpriteRenderer>();
-		for(int i = 0; i <= maxIndex; i++)
+
+		if(Puzzle.DEBUG)
 		{
-			var indexX = IndexToIndexX(i);
-			var indexY = IndexToIndexY(i);
-			var centerX = GetCenterX(indexX);
-			var centerY = GetCenterY(indexY);
-			var dot = GameObject.Instantiate(this.test);
-			dot.transform.parent = this.transform;
-			dot.transform.position = new Vector2(centerX, centerY);
+			this.test = this.transform.Find("test").GetComponent<SpriteRenderer>();
+			for(int i = 0; i <= maxIndex; i++)
+			{
+				var indexX = IndexToIndexX(i);
+				var indexY = IndexToIndexY(i);
+				var centerX = GetCenterX(indexX);
+				var centerY = GetCenterY(indexY);
+				var dot = GameObject.Instantiate(this.test);
+				dot.transform.parent = this.transform;
+				dot.transform.position = new Vector2(centerX, centerY);
+			}
 		}
+
+
 		data = new PiceStack[xCount, yCount];
 		for(int i = 0; i < xCount; i++)
 		{
@@ -271,4 +277,5 @@ public class Board : MonoBehaviour
 			return new Rect(Left, Bottom, Right - Left, Top - Bottom);
 		}
 	}
+
 }

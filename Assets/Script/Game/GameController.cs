@@ -7,7 +7,7 @@ public static class GameController
 {
 	static int lastPicId;
 
-	public static void EnterCore(int picId)
+	public static void EnterCore(int picId, int sliceId)
 	{
 		// save status
 		lastPicId = picId;
@@ -20,17 +20,21 @@ public static class GameController
 		var picFile = StaticDataLite.GetCell<string>("pic", picId.ToString(), "file");
 		var picTexture = PicLibrary.Load(picFile);
 
+		// load slice info
+		var piceSize = StaticDataLite.GetCell<int>("pice_slice", sliceId.ToString(), "cell_size");
+
 		// start core game
-		Puzzle.Instance.Init();
-		Puzzle.Instance.StartPuzzle(picTexture, 200);
+		Puzzle.Instance.StartPuzzle(picTexture, piceSize);
 
 		// when compelte
 		Puzzle.Instance.Complete += OnCoreGameCompelte;
 	}
 
+
 	private static void OnCoreGameCompelte()
 	{
-		UIEngine.Forward<LevelCompletePage>();
+		var admin = new Admission_FadeInNewPage();
+		UIEngine.Forward<LevelCompletePage>(null, admin);
 	}
 
 }

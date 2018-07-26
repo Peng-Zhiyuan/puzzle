@@ -6,6 +6,7 @@ public class MainPage : Page
 {
     public MainPage_Item sample_item;
     public Transform itemGridRoot;
+    public Transform scrollContent;
 
     public override void OnCreate()
     {
@@ -29,11 +30,7 @@ public class MainPage : Page
     void SetDataList(List<MainPage_ItemData> dataList)
     {
         // clean root
-        for(int i = itemGridRoot.childCount - 1; i >= 0; i--)
-        {
-            var child = itemGridRoot.GetChild(i);
-            Destroy(child);
-        }
+        TransformUtil.DestroyAllChildren(itemGridRoot);
 
         // create items
         foreach(var data in dataList)
@@ -43,6 +40,18 @@ public class MainPage : Page
             item.gameObject.SetActive(true);
             item.Init(data);
         }
+
+        // reset scroll content height
+        var itemHeight = sample_item.GetComponent<RectTransform>().rect.height;
+        var gl = itemGridRoot.GetComponent<UnityEngine.UI.GridLayoutGroup>();
+        var spaceingY = gl.spacing.y;
+        var listInset = 436;
+        var extra = 200;
+        var rowCount = Mathf.Ceil(dataList.Count/2f);
+        var scrollContentHeight = itemHeight * rowCount + (rowCount - 1) * spaceingY + listInset + extra;
+        var rt = scrollContent.GetComponent<RectTransform>();
+        Debug.Log(scrollContentHeight);
+        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, scrollContentHeight);
     }
 
     public void OnItemClick(MainPage_Item item)

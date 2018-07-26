@@ -104,6 +104,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		spriteRanderer.sprite = sprite;
 		this.MaskWidth = expandedCellWidth;
 		this.MaskHight = expandedCellHight;
+		this.FlashSize = new Vector2(expandedCellWidth, expandedCellHight);
 		this.LeftType = EdgeType.AO;
 		this.RightType = EdgeType.AO;
 		this.TopType = EdgeType.AO;
@@ -142,6 +143,15 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			mask.localScale = new Vector2(mask.localScale.x, scale);
 		}
 	}
+
+	public Vector2 FlashSize
+	{
+		set
+		{
+			sr_flash.size = value;
+		}
+	}
+
 	private Sprite EdgetTypeToMaskSprite(EdgeType type)
 	{
 		if(type == EdgeType.AO)

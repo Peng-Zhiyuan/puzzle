@@ -10,6 +10,7 @@ public class Game : MonoBehaviour
 		StaticDataLite.Init();
 		UIEngine.Init();
 		UIEngine.Forward("MainPage");
+		//UIEngine.Forward("LevelSettingsPage");
 		var floating = UIEngine.ShowFloating<BackgroundFloating>(null, -10);
 		floating.transform.SetAsFirstSibling();
 		UIEngine.ShowFloating<HeadBarFloating>();
@@ -19,7 +20,6 @@ public class Game : MonoBehaviour
 	public static void TestCore () 
 	{
 		UnityEngine.Random.InitState(DateTime.UtcNow.Second);
-		Puzzle.Instance.Init();
 		var texture = Resources.Load<Texture2D>("mapbg");
 		Puzzle.Instance.StartPuzzle(texture, 200);
 	}

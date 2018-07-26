@@ -51,11 +51,13 @@ public static class UIEngine
             page.transform.parent = root.transform;
             //page.transform.localPosition = Vector2.zero;
             //page.rectTransform.parent = root.GetComponent<RectTransform>();
-            page.rectTransform.sizeDelta = Vector2.zero;
-            page.rectTransform.localPosition = Vector2.zero;
+            // page.rectTransform.sizeDelta = Vector2.zero;
+            // page.rectTransform.localPosition = Vector2.zero;
             Debug.Log("(new Instance)");
             page.OnCreate();
         }
+        page.rectTransform.sizeDelta = Vector2.zero;
+        page.rectTransform.localPosition = Vector2.zero;
         return page;
     }
 
@@ -108,6 +110,20 @@ public static class UIEngine
         return page;
 	}
 
+
+    public static void BackTo<T>() where T : Page
+    {
+        var top = Top;
+        while(typeof(T) != top.GetType())
+        {
+            UIEngine.Back();
+            top = Top;
+            if(top == null)
+            {
+                break;
+            }
+        }
+    }
 
     public static void Back(object result = null, Admission admision = null)
 	{

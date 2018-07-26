@@ -42,14 +42,12 @@ public class View : MonoBehaviour
         set
         {
             _depth = value;
-            var z = -_depth * 10;
 
-            
- 
-  
-            var p = this.transform.localPosition;
-            p.z = z;
-            this.transform.localPosition = p; 
+            // change z
+            //var z = -_depth * 10;
+            //var p = this.transform.localPosition;
+            //p.z = z;
+            //this.transform.localPosition = p; 
         }
     }
 

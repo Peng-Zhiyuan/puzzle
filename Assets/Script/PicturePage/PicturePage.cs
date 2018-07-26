@@ -145,7 +145,9 @@ public class PicturePage : Page
         {
             //UIEngine.Forward<LevelCompletePage>();
             var picId = item.data.row.Get<int>("id");
-            GameController.EnterCore(picId);
+            // GameController.EnterCore(picId);
+            var admin = new Admission_PopupNewPage();
+            UIEngine.Forward<LevelSettingsPage>(picId.ToString(), admin);
         }
     }
 }

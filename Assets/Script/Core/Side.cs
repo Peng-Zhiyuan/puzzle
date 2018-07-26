@@ -21,6 +21,7 @@ public class Side : MonoBehaviour
 	{
 		this.cellWidth = cellWidth;
 		this.prefab_dot = transform.Find("dot");
+		list.Clear();
 		// for(int i = 0; i < count; i++)
 		// {
 		// 	var x = GetCellCenterX(i);
@@ -30,6 +31,7 @@ public class Side : MonoBehaviour
 		// 	dot.transform.parent = this.transform;
 		// }
 	}
+
 
 	public void SetContentLength(int length)
 	{

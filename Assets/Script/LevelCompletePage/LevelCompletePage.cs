@@ -9,4 +9,10 @@ public class LevelCompletePage : Page
 		// var light = this.transform.Find("light");
 		// iTween.RotateBy(light.gameObject, new Vector3(0, 0, 360), 100);
 	}
+
+	public void OnFullButton()
+	{
+		UIEngine.BackTo<PicturePage>();
+		Puzzle.instance.Clean();
+	}
 }
