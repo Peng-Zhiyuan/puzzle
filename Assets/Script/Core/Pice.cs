@@ -300,22 +300,18 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public void MovePosition(float dx, float dy)
 	{
-		var p = this.transform.position;
-		var pp = new Vector2(p.x + dx, p.y + dy);
-		this.transform.position = pp;
-
-		ForeachLinkedPice(pice =>{
-			pice.MovePosition(dx, dy);
+		ForeachPiceOfBlock(pice=>{
+			var p = pice.transform.position;
+			var pp = new Vector2(p.x + dx, p.y + dy);
+			pice.transform.position = pp;
 		});
 	}
 
 
 	public void SmoothMovePosition(float dx, float dy)
 	{
-		//GameObject.Destroy(this.gameObject.GetComponent<iTween>());
-		iTween.MoveBy(this.gameObject, iTween.Hash("x", dx, "y", dy, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
-		ForeachLinkedPice(pice =>{
-			pice.SmoothMovePosition(dx, dy);
+		ForeachPiceOfBlock(pice=>{
+			iTween.MoveBy(pice.gameObject, iTween.Hash("x", dx, "y", dy, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
 		});
 	}
 
@@ -325,39 +321,45 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		iTween.ScaleTo(this.gameObject, new Vector2(scale, scale), 0.4f);
 	}
 
-	/// <summary>
-	/// 遍历被这个 pice 连结到的 pice (不包括自身)
-	/// </summary>
-	/// <param name="callback"></param>
-	public void ForeachLinkedPice(Action<Pice> callback)
-	{
-		dealedFlag = true;
-		linking.ForEach(info =>{
-			if(!info.pice.dealedFlag)
-			{
-				callback(info.pice);
-				info.pice.ForeachLinkedPice(callback);
-			}
-		});
-		dealedFlag = false;
-	}
+	// /// <summary>
+	// /// 遍历被这个 pice 连结到的 pice (不包括自身)
+	// /// </summary>
+	// /// <param name="callback"></param>
+	// public void ForeachLinkedPice(Action<Pice> callback)
+	// {
+	// 	dealedFlag = true;
+	// 	linking.ForEach(info =>{
+	// 		if(!info.pice.dealedFlag)
+	// 		{
+	// 			callback(info.pice);
+	// 			info.pice.ForeachLinkedPice(callback);
+	// 		}
+	// 	});
+	// 	dealedFlag = false;
+	// }
 
 	/// <summary>
 	/// 遍历被这个 pice 连结到的 pice (包括自身)
 	/// </summary>
 	/// <param name="callback"></param>
-	public void ForeachLinkedPiceIncludeSelf(Action<Pice> callback)
+	public void ForeachPiceOfBlock(Action<Pice> callback)
 	{
+		var dic = DicPool.Take();
+		_ForeachPickOfBlock(dic, callback);
+		DicPool.Put(dic);
+	}
+
+	public void _ForeachPickOfBlock(Dictionary<Pice, bool> dic, Action<Pice> callback)
+	{
+		if(dic.ContainsKey(this) && dic[this])
+		{
+			return;
+		}
+		dic[this] = true;
 		callback(this);
-		dealedFlag = true;
 		linking.ForEach(info =>{
-			if(!info.pice.dealedFlag)
-			{
-				info.pice.ForeachLinkedPiceIncludeSelf(callback);
-				//callback(info.pice);
-			}
+			info.pice._ForeachPickOfBlock(dic, callback);
 		});
-		dealedFlag = false;
 	}
 
 	public void Flash()
@@ -369,7 +371,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public void FlashAsLink()
 	{
-		//Flash();
+		Flash();
 	}
 
 	public void FlashAsFix()

@@ -30,6 +30,10 @@ public class Side : MonoBehaviour
 		// 	dot.transform.localPosition = new Vector2(x, y);
 		// 	dot.transform.parent = this.transform;
 		// }
+		if(!Puzzle.DEBUG)
+		{
+			prefab_dot.gameObject.SetActive(false);
+		}
 	}
 
 

@@ -32,6 +32,7 @@ public class Puzzle
 	private Map map;
 
 	public static bool DEBUG = false;
+	public static bool SHUFF = true;
 
 	/// <summary>
 	/// 整个游戏中只会被调用一次
@@ -93,14 +94,29 @@ public class Puzzle
 		side.Init(200);
 		//side.Init(map.validHeight, map.yCount);
 		var count = map.xCount * map.yCount;
+
+		var indexList = new List<int>();
 		for(int i = 0; i < count; i++)
+		{
+			indexList.Add(i);
+		}
+		if(SHUFF)
+		{
+			indexList = ArraryUtil.GetRandomList(indexList);
+		}
+		foreach(var index in indexList)
 		{
 			//var pice = GameObject.Instantiate<Pice>(prefab_pice);
 			var pice = PiceManager.Create();
-			pice.Init(map, i);
+			pice.Init(map, index);
 			side.Append(pice);
 		}
 		side.RepositionPiceList();
+
+		if(!DEBUG)
+		{
+			core.HideDot();
+		}
 	}
 
 	public void Clean()
@@ -262,21 +278,34 @@ public class Puzzle
 				{
 					continue;
 				}
-				Debug.Log("pice (" + pice.boardX + ", " + pice.boardY + ")");
+				if(DEBUG)
+				{
+					Debug.Log("pice (" + pice.boardX + ", " + pice.boardY + ")");
+				}
 				// 如果这个 pice 已经检查过了，则不处理
 				if(tempDic.ContainsKey(pice) && tempDic[pice])
 				{
-					Debug.Log("already checked");
+					if(DEBUG)
+					{
+						Debug.Log("already checked");
+					}
 					continue;
 				}
 				var hasLeft = false;
 				var hasRight = false;
 				var hasBottom = false;
 				var hasTop = false;
-				
-				Debug.Log("foreach linked pice");
-				pice.ForeachLinkedPiceIncludeSelf(linkedPice=>{
-					Debug.Log("linkedPice (" + linkedPice.boardX + ", " + linkedPice.boardY + ")");
+
+				if(DEBUG)
+				{
+					Debug.Log("foreach linked pice");
+				}
+				pice.ForeachPiceOfBlock(linkedPice=>{
+					if(DEBUG)
+					{
+						Debug.Log("linkedPice (" + linkedPice.boardX + ", " + linkedPice.boardY + ")");
+					}
+					
 					// 设置已检查标志
 					tempDic[linkedPice] = true;
 					// 如果在 board 上被放置到了正确的位置
@@ -304,11 +333,17 @@ public class Puzzle
 				// 如果包含两个相邻边，则固定以上所有 pice
 				if((hasLeft && hasBottom) || (hasBottom && hasRight) || (hasRight && hasTop) || (hasTop && hasLeft))
 				{
-					Debug.Log("fix all");
-					pice.ForeachLinkedPiceIncludeSelf(linkedPice=>{
-						Debug.Log("fix (" + linkedPice.boardX + ", " + linkedPice.boardY + ")");
+					if(DEBUG)
+					{
+						Debug.Log("fix all");
+					}
+					pice.ForeachPiceOfBlock(linkedPice=>{
+						if(DEBUG)
+						{
+							Debug.Log("fix (" + linkedPice.boardX + ", " + linkedPice.boardY + ")");
+						}
 						// 如果这个 pice 是新 fixed 的则闪烁
-						//if(!linkedPice.isFixed)
+						if(!linkedPice.isFixed)
 						{
 							linkedPice.FlashAsFix();
 						}

@@ -25,9 +25,10 @@ public class Board : MonoBehaviour
 		this.cellWidth = width / xCount;
 		this.cellHeight = height / yCount;
 
+		this.test = this.transform.Find("test").GetComponent<SpriteRenderer>();
 		if(Puzzle.DEBUG)
 		{
-			this.test = this.transform.Find("test").GetComponent<SpriteRenderer>();
+			
 			for(int i = 0; i <= maxIndex; i++)
 			{
 				var indexX = IndexToIndexX(i);
@@ -38,6 +39,10 @@ public class Board : MonoBehaviour
 				dot.transform.parent = this.transform;
 				dot.transform.position = new Vector2(centerX, centerY);
 			}
+		}
+		else
+		{
+			test.gameObject.SetActive(false);
 		}
 
 

@@ -293,6 +293,7 @@ public static class UIEngine
 		if (firstPage.Overlay)
         {
 			Floating control = ShowFlaoting("MaskControl", null, firstPage.Depth - 1);
+            control.transform.SetAsLastSibling();
             control.transform.SetSiblingIndex(firstPage.transform.GetSiblingIndex());
         }
         else
@@ -308,6 +309,11 @@ public static class UIEngine
 	public static void RegisterExternalResouceLoader(Func<UIResourceType, string, GameObject> loader)
     {
         externalLoader = loader;
+    }
+
+    public static void DestroyFromPool(string name)
+    {
+        pagePool.Destroy(name);
     }
 }
 

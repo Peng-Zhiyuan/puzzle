@@ -44,7 +44,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1067581115121746
 GameObject:
   m_ObjectHideFlags: 1
@@ -272,6 +272,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   param: 
   Overlay: 0
+  label_exp: {fileID: 114284613853427140}
+  label_gold: {fileID: 114222422265732172}
+  goldGroup: {fileID: 224797523586255464}
+  expGroup: {fileID: 224326031976595168}
 --- !u!114 &114153850472851416
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -400,7 +404,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 114153850472851416}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:

@@ -7,6 +7,8 @@ public class HeadBar_Star : MonoBehaviour
 {
 	public Text text;
 
+	public RectTransform mask;
+
 	public string value
 	{
 		get
@@ -16,6 +18,19 @@ public class HeadBar_Star : MonoBehaviour
 		set
 		{
 			this.text.text = value;
+		}
+	}
+
+	public Rect WorldRect()
+	{
+		return RectTransformUtil.GetWorldRect(this.GetComponent<RectTransform>());
+	}
+
+	public float Process
+	{
+		set
+		{
+			mask.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 57 * value);
 		}
 	}
 }

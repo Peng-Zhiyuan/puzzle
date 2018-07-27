@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class HeadBarFloating : Floating 
 {
@@ -20,6 +21,10 @@ public class HeadBarFloating : Floating
 		{
 			this.goldItem.Value = value.ToString();
 		}
+		get
+		{
+			return int.Parse(this.goldItem.Value);
+		}
 	}
 
 	public int Star
@@ -27,6 +32,10 @@ public class HeadBarFloating : Floating
 		set
 		{
 			this.starItem.value = value.ToString();
+		}
+		get
+		{
+			return int.Parse(this.starItem.value);
 		}
 	}
 
@@ -86,6 +95,7 @@ public class HeadBarFloating : Floating
 	public override void OnCreate()
 	{
 		instance = this;
+		AutoRefresh = true;
 	}
 
 	Page lastPage;
@@ -94,8 +104,13 @@ public class HeadBarFloating : Floating
 	/// </summary>
 	void Update()
 	{
-		this.goldItem.Value = PlayerStatus.gold.ToString();
-		this.starItem.value = PlayerStatus.exp.ToString();
+		if(AutoRefresh)
+		{
+			this.goldItem.Value = PlayerStatus.gold.ToString();
+			this.starItem.value = PlayerStatus.exp.ToString();
+			this.starItem.Process = PlayerStatus.LevelUpProcess;
+		}
+
 		var nowTop = UIEngine.Top;
 		if(nowTop != lastPage)
 		{
@@ -115,6 +130,11 @@ public class HeadBarFloating : Floating
 
 	public void OnGoldClicked()
 	{
+		var top = UIEngine.Top;
+		if(top is CorePage)
+		{
+			return;
+		}
 		var admission = new Admission_OldDownNewUp();
         UIEngine.Forward<ShopPage>(null, admission);
 	}
@@ -138,5 +158,60 @@ public class HeadBarFloating : Floating
 		var wp = backButton.position;
 		wp.x = 0;
 		iTween.MoveTo(backButton.gameObject, wp, 0.2f);
+	}
+
+	public Rect GoldWolrdRect
+	{
+		get
+		{
+			return goldItem.WorldRect();
+		}
+	}
+
+	public Rect ExpWolrdRect
+	{
+		get
+		{
+			return starItem.WorldRect();
+		}
+	}
+
+	private bool _autoRefresh;
+	public bool AutoRefresh
+	{
+		get
+		{
+			return _autoRefresh;
+		}
+		set
+		{
+			_autoRefresh = value;
+		}
+	}
+
+	public void ScaleGold()
+	{
+		CoroutineManager.Create(_ScaleGoldTask());
+	}
+
+	private IEnumerator _ScaleGoldTask()
+	{
+		var rt = goldItem.text.GetComponent<RectTransform>();
+		rt.DOScale(2, 0.2f);
+		yield return new WaitForSeconds(0.2f);
+		rt.DOScale(1, 0.2f);
+	}
+
+	public void ScaleExp()
+	{
+		CoroutineManager.Create(_ScaleExpTask());
+	}
+
+	private IEnumerator _ScaleExpTask()
+	{
+		var rt = starItem.text.GetComponent<RectTransform>();
+		rt.DOScale(2, 0.2f);
+		yield return new WaitForSeconds(0.2f);
+		rt.DOScale(1, 0.2f);
 	}
 }

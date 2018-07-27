@@ -27,6 +27,12 @@ public class MainPage : Page
         SetDataList(dataList);
     }
 
+    public override void OnNavigatedTo()
+    {
+        UIEngine.ShowFlaoting("BackgroundFloating");
+    
+    }
+
     void SetDataList(List<MainPage_ItemData> dataList)
     {
         // clean root

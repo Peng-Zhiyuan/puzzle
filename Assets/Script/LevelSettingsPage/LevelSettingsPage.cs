@@ -59,8 +59,9 @@ public class LevelSettingsPage : Page
 	{
 		var item = itemTr.GetComponent<LevelSettingsPage_Item>();
 		var row = dataObj as JsonData;
-		var cellSize = row["cell_size"];
-		item.text.text = "x" + cellSize;
+		//var cellSize = row["cell_size"];
+		var name = row.Get<string>("name");
+		item.text.text = name;
 		item.dataRow = row;
 	}
 

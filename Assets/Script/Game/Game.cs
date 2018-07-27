@@ -11,7 +11,7 @@ public class Game : MonoBehaviour
 		UIEngine.Init();
 		PlayerStatus.Read();
 		UIEngine.Forward("MainPage");
-		//UIEngine.Forward("LevelSettingsPage");
+		//UIEngine.Forward<LevelCompletePage>();
 		var floating = UIEngine.ShowFloating<BackgroundFloating>(null, -10);
 		floating.transform.SetAsFirstSibling();
 		UIEngine.ShowFloating<HeadBarFloating>();

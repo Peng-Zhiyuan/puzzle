@@ -6,11 +6,13 @@ using System;
 public static class GameController  
 {
 	static int lastPicId;
+	static int lastSliceId;
 
 	public static void EnterCore(int picId, int sliceId)
 	{
 		// save status
 		lastPicId = picId;
+		lastSliceId = sliceId;
 
 		// hide bg and show core page
 		UIEngine.HideFlaoting<BackgroundFloating>();
@@ -33,10 +35,18 @@ public static class GameController
 
 	private static void OnCoreGameCompelte()
 	{
+		var sliceRow = StaticDataLite.GetRow("pice_slice", lastSliceId.ToString());
+		var gold = sliceRow.Get<int>("gold");
+		var exp = sliceRow.Get<int>("exp");
+
+		HeadBarFloating.instance.AutoRefresh = false;
 		PlayerStatus.exp += 10;
 		PlayerStatus.gold += 10;
 		PlayerStatus.Save();
 
+		LevelCompletePage.goldParam = gold;
+		LevelCompletePage.expParam = exp;
+	
 		var admin = new Admission_FadeInNewPage();
 		UIEngine.Forward<LevelCompletePage>(null, admin);
 	}

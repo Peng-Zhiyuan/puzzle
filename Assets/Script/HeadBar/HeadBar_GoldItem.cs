@@ -18,4 +18,9 @@ public class HeadBar_GoldItem : MonoBehaviour
 			return this.text.text;
 		}
 	}
+
+	public Rect WorldRect()
+	{
+		return RectTransformUtil.GetWorldRect(this.GetComponent<RectTransform>());
+	}
 }

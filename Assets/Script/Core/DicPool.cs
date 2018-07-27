@@ -17,6 +17,7 @@ public static class DicPool
 
     public static void Put(Dictionary<Pice, bool> dic)
     {
+        dic.Clear();
         list.Add(dic);
     }
 }
