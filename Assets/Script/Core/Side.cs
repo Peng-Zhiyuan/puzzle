@@ -76,7 +76,7 @@ public class Side : MonoBehaviour
 	{
 		list.Insert(index, pice);
 		pice.owner = PiceOwner.Side;
-		pice.SideIndex = index;
+		pice.sideIndex = index;
 		pice.transform.parent = scrollView.content;
 		SetContentLength(list.Count * cellWidth);
 	}
@@ -85,7 +85,7 @@ public class Side : MonoBehaviour
 	{
 		list.Add(pice);
 		pice.owner = PiceOwner.Side;
-		pice.SideIndex = list.Count - 1;
+		pice.sideIndex = list.Count - 1;
 		pice.transform.parent = scrollView.content;
 		SetContentLength(list.Count * cellWidth);
 	}
@@ -110,6 +110,22 @@ public class Side : MonoBehaviour
 				pice.SmoothSetPosition(x, y);
 				var scale = ((float)this.cellWidth / pice.cellWidth) * 0.65f;
 				pice.AnimateScale(scale);
+			}
+		}
+	}
+
+	public void RepositionPiceListNoAnimation()
+	{
+		for(int i = 0; i < this.list.Count; i++)
+		{
+			var pice = this.list[i];
+			var x = GetCellCenterX(i);
+			var y = GetCellCenterY(i);
+			if(!pice.draging)
+			{
+				pice.SetPostion(x, y);
+				var scale = ((float)this.cellWidth / pice.cellWidth) * 0.65f;
+				pice.SetScale(scale);
 			}
 		}
 	}

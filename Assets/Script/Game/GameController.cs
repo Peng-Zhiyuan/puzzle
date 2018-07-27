@@ -16,6 +16,7 @@ public static class GameController
 
 		// hide bg and show core page
 		UIEngine.HideFlaoting<BackgroundFloating>();
+		UIEngine.CleanAdmission();
 		UIEngine.Forward<CorePage>();
 
 		// load picture which player select
@@ -25,11 +26,22 @@ public static class GameController
 		// load slice info
 		var piceSize = StaticDataLite.GetCell<int>("pice_slice", sliceId.ToString(), "cell_size");
 
+		// test code
+		//piceSize = 400;
+
 		// start core game
 		Puzzle.Instance.StartPuzzle(picTexture, piceSize);
 
 		// when compelte
 		Puzzle.Instance.Complete += OnCoreGameCompelte;
+	}
+
+	public static void EnterWithInfo(CoreInfo info)
+	{
+		var picId = info.picId;
+		var sliceId = info.sliceId;
+		EnterCore(picId, sliceId);
+		Puzzle.instance.LoadInfo(info.puzzleInfo);
 	}
 
 
@@ -49,6 +61,23 @@ public static class GameController
 	
 		var admin = new Admission_FadeInNewPage();
 		UIEngine.Forward<LevelCompletePage>(null, admin);
+	}
+
+	private static CoreInfo CreateInfo()
+	{
+		var info = new CoreInfo();
+		info.picId = lastPicId;
+		info.sliceId = lastSliceId;
+		var puzzleInfo = Puzzle.Instance.CreateInfo();
+		info.puzzleInfo = puzzleInfo;
+		return info;
+	}
+
+	public static void SaveUncompletePuzzle()
+	{
+		var info = CreateInfo();
+		PlayerStatus.uncompletePuzzle[lastPicId.ToString()] = info;
+		PlayerStatus.Save();
 	}
 
 }

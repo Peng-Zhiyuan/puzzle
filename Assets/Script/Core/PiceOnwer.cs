@@ -1,6 +1,6 @@
 	public enum PiceOwner
 	{
-		Side,
-		Board,
-		Floating,
+		Side = 0,
+		Board = 1,
+		Floating = 2,
 	}

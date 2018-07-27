@@ -10,8 +10,8 @@ public class Core : MonoBehaviour
 
 	public void HideDot()
 	{
-		var content = this.transform.Find("content");
-		var dot = content.Find("dot");
-		dot.gameObject.SetActive(false);
+//		var content = this.transform.Find("content");
+//		var dot = content.Find("dot");
+//		dot.gameObject.SetActive(false);
 	}
 }

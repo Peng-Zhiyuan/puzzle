@@ -12,62 +12,101 @@ public class PicturePage : Page
     public Transform itemRoot;
     public RectTransform scrollContent;
     public Text text_pictureCount;
+    public bool isUncomplete;
 
 
     public override void OnParamChanged()
     {
-        var pictype = this.param;
-        var name = StaticDataLite.GetCell<string>("pictype", pictype, "display_name");
-        var des = StaticDataLite.GetCell<string>("pictype", pictype, "des");
-        this.text_title.text = name;
-        this.text_des.text = des;
+        if(param == "#uncomplete")
+        {
+            isUncomplete = true;
+            this.text_title.text = "未完成的拼图";
+            this.text_des.text = "共 " + PlayerStatus.uncompletePuzzle.Count + " 张";
+        }
+        else
+        {
+            isUncomplete = false;
+            var pictype = this.param;
+            var name = StaticDataLite.GetCell<string>("pictype", pictype, "display_name");
+            var des = StaticDataLite.GetCell<string>("pictype", pictype, "des");
+            this.text_title.text = name;
+            this.text_des.text = des;
+        }
+
     }
 
     public override void OnPush()
     {
-        // 从 pic 表中找出所有 type 是 param 的数据行
-        // 并且包装成 PicturePage_ItemData
-        var sheet = StaticDataLite.GetSheet("pic");
-        var pictype = this.param;
-        var dataList = new List<PictruePage_ItemData>();
-        foreach(string key in sheet.Keys)
+        // 如果要显示的是某个图片分类
+        if(!isUncomplete)
         {
-            var row = sheet[key];
-            if(row.Get<string>("type") == pictype)
+            // 从 pic 表中找出所有 type 是 param 的数据行
+            // 并且包装成 PicturePage_ItemData
+            var sheet = StaticDataLite.GetSheet("pic");
+            var pictype = this.param;
+            var dataList = new List<PictruePage_ItemData>();
+            foreach(string key in sheet.Keys)
             {
+                var row = sheet[key];
+                if(row.Get<string>("type") == pictype)
+                {
+                    var data = new PictruePage_ItemData
+                    {
+                        picRow = row,
+                    };
+                    // check unlock info
+                    var unlocked = LevelStorage.IsPictureUnlocked(key);
+                    var complete = LevelStorage.IsPictureComplete(key);
+                    var status = PicturePage_ItemStatus.Locked;
+                    if(complete)
+                    {
+                        status = PicturePage_ItemStatus.Complete;
+                    }
+                    else if(unlocked)
+                    {
+                        status = PicturePage_ItemStatus.Unlocked;
+                    }
+                    data.status = status;
+                    dataList.Add(data);
+                }
+            }
+            this.setDataList(dataList);
+
+            // set picture count
+            var completePictureCount = 0;
+            var pictureCount = dataList.Count;
+            foreach(var data in dataList)
+            {
+                if(data.status == PicturePage_ItemStatus.Complete)
+                {
+                    completePictureCount++;
+                }
+            }
+            text_pictureCount.text = completePictureCount + "/" + pictureCount;
+        }
+
+        // 如果要显示的是未完成的拼图
+        if(isUncomplete)
+        {
+            var dataList = new List<PictruePage_ItemData>();
+            foreach(var kv in PlayerStatus.uncompletePuzzle)
+            {
+                var info = kv.Value;
+                var picRow = StaticDataLite.GetRow("pic", info.picId.ToString());
+
                 var data = new PictruePage_ItemData
                 {
-                    row = row,
+                    picRow = picRow,
                 };
-                // check unlock info
-                var unlocked = LevelStorage.IsPictureUnlocked(key);
-                var complete = LevelStorage.IsPictureComplete(key);
-                var status = PicturePage_ItemStatus.Locked;
-                if(complete)
-                {
-                    status = PicturePage_ItemStatus.Complete;
-                }
-                else if(unlocked)
-                {
-                    status = PicturePage_ItemStatus.Unlocked;
-                }
-                data.status = status;
+                data.status = PicturePage_ItemStatus.Unlocked;
                 dataList.Add(data);
             }
-        }
-        this.setDataList(dataList);
+            this.setDataList(dataList);
 
-        // set picture count
-        var completePictureCount = 0;
-        var pictureCount = dataList.Count;
-        foreach(var data in dataList)
-        {
-            if(data.status == PicturePage_ItemStatus.Complete)
-            {
-                completePictureCount++;
-            }
+            text_pictureCount.text = PlayerStatus.uncompletePuzzle.Count.ToString();
+
         }
-        text_pictureCount.text = completePictureCount + "/" + pictureCount;
+      
     }
 
     void setDataList(List<PictruePage_ItemData> dataList)
@@ -117,8 +156,8 @@ public class PicturePage : Page
                 item.IsShowUnlockLayer = false;
                 break;
         }
-        item.LabelText = data.row.Get<string>("name");
-        var file = data.row.Get<string>("file");
+        item.LabelText = data.picRow.Get<string>("name");
+        var file = data.picRow.Get<string>("file");
         var texture = PicLibrary.Load(file);
         item.Texture2D = texture;
     }
@@ -126,14 +165,14 @@ public class PicturePage : Page
     void OnItemUnlockButton(PictruePage_Item item)
     {
         var data = item.data;
-        var cost = data.row.Get<int>("cost");
+        var cost = data.picRow.Get<int>("cost");
         var gold = PlayerStatus.gold;
         if(gold >= cost)
         {
             Debug.Log("can unlock");
             gold -= cost;
             PlayerStatus.gold = gold;
-            var pictureId = data.row.Get<string>("id");
+            var pictureId = data.picRow.Get<string>("id");
             LevelStorage.SetPictureUnlocked(pictureId);
             PlayerStatus.Save();
             
@@ -151,13 +190,29 @@ public class PicturePage : Page
 
     void OnItemClicked(PictruePage_Item item)
     {
-        if(item.data.status == PicturePage_ItemStatus.Unlocked)
-        {
-            //UIEngine.Forward<LevelCompletePage>();
-            var picId = item.data.row.Get<int>("id");
-            // GameController.EnterCore(picId);
-            var admin = new Admission_PopupNewPage();
-            UIEngine.Forward<LevelSettingsPage>(picId.ToString(), admin);
-        }
+        // 如果是图片分类，则开始新游戏
+        //if(!isUncomplete)
+        //{
+            if(item.data.status == PicturePage_ItemStatus.Unlocked)
+            {
+                //UIEngine.Forward<LevelCompletePage>();
+                var picId = item.data.picRow.Get<int>("id");
+                // GameController.EnterCore(picId);
+                var admin = new Admission_PopupNewPage();
+                UIEngine.Forward<LevelSettingsPage>(picId.ToString(), admin);
+            }
+        //}
+
+        // 如果是未完成的拼图, 则继续游戏
+        // if(isUncomplete)
+        // {
+        //     var picId = item.data.picRow.Get<int>("id");
+        //     var info = PlayerStatus.uncompletePuzzle[picId.ToString()];
+        //     GameController.EnterWithInfo(info);
+        //     // GameController.EnterCore(picId);
+        //     // var admin = new Admission_PopupNewPage();
+        //     // UIEngine.Forward<LevelSettingsPage>(picId.ToString(), admin);
+        // }
+
     }
 }

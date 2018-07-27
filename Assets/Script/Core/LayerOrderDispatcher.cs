@@ -1,10 +1,10 @@
 public static class LayerOrderDispatcher
 {
-    static int next = 1;
+    static int next = 10;
 
-    public static void Init()
+    public static void Clean()
     {
-        next = 1;
+        next = 10;
     }
 
     public static int Next

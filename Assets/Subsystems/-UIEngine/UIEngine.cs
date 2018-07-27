@@ -28,6 +28,11 @@ public static class UIEngine
         }
     }
 
+    public static void CleanAdmission()
+    {
+        AdmissionManager.Remove();
+    }
+
 	public static T Forward<T>(string param = null, Admission admission = null) where T : Page
     {
         var name = typeof(T).Name;
@@ -57,7 +62,7 @@ public static class UIEngine
             page.OnCreate();
         }
         page.rectTransform.sizeDelta = Vector2.zero;
-        page.rectTransform.localPosition = Vector2.zero;
+        page.rectTransform.localPosition = Vector2.one;
         return page;
     }
 
@@ -113,6 +118,10 @@ public static class UIEngine
 
     public static void BackTo<T>() where T : Page
     {
+        if(AdmissionManager.busing)
+        {
+            return;
+        }
         var top = Top;
         while(typeof(T) != top.GetType())
         {

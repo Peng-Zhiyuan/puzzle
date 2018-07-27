@@ -14,12 +14,14 @@ public class Map
 	public int expand;
 	public int xCount;
 	public int yCount;
+	public int cellSize;
 
 	public Rect validRect;
-	public PiceInfo[,] piceInfo;
+	public PiceEdgeInfo[,] piceInfo;
 
 	public void Init(Texture2D texture, int expand, int cellSize)
 	{
+		this.cellSize = cellSize;
 		this.texture = texture;
 		var realWidth = texture.width - 2 * expand;
 		var readlHeight = texture.height - 2 * expand;
@@ -43,7 +45,7 @@ public class Map
 		GeneratePiceShap();
 	}
 
-	public class PiceInfo
+	public class PiceEdgeInfo
 	{
 		public EdgeType top;
 		public EdgeType bottom;
@@ -53,14 +55,14 @@ public class Map
 
 	public void GeneratePiceShap()
 	{
-		piceInfo = new PiceInfo[xCount, yCount];
+		piceInfo = new PiceEdgeInfo[xCount, yCount];
 		for(int i = 0; i < xCount; i++)
 		{
 			for(int j = 0; j < yCount; j++)
 			{
 				var x = i;
 				var y = j;
-				var info = new PiceInfo();
+				var info = new PiceEdgeInfo();
 				// decide left
 				if(x == 0)
 				{
@@ -180,4 +182,5 @@ public class Map
 	{
 		return index / xCount;
 	}
+
 }

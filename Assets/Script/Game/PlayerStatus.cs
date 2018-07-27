@@ -1,21 +1,31 @@
 using UnityEngine;
+using System.Collections.Generic;
+using CustomLitJson;
 
 public static class PlayerStatus
 {
     public static int exp;
     public static int gold;
+    public static Dictionary<string, CoreInfo> uncompletePuzzle = new Dictionary<string, CoreInfo>();
 
     public static void Save()
     {
-        PlayerPrefs.SetInt("gamestorage.gold", gold);
-        PlayerPrefs.SetInt("gamestorage.exp", exp);
+        PlayerPrefs.SetInt("PlayerStatus.gold", gold);
+        PlayerPrefs.SetInt("PlayerStatus.exp", exp);
+        var json = JsonMapper.Instance.ToJson(uncompletePuzzle);
+        Debug.Log(json);
+        PlayerPrefs.SetString("PlayerStatus.uncompletePuzzle", json);
         PlayerPrefs.Save();
     }
 
     public static void Read()
     {
-        exp = PlayerPrefs.GetInt("gamestorage.exp", 0);
-        gold = PlayerPrefs.GetInt("gamestorage.gold", 0);
+        exp = PlayerPrefs.GetInt("PlayerStatus.exp", 0);
+        gold = PlayerPrefs.GetInt("PlayerStatus.gold", 0);
+        var json = PlayerPrefs.GetString("PlayerStatus.uncompletePuzzle", "{}");
+        Debug.Log(json);
+        uncompletePuzzle = JsonMapper.Instance.ToObject<Dictionary<string, CoreInfo>>(json);
+        Debug.Log("obj:" + JsonMapper.Instance.ToJson(uncompletePuzzle));
     }
 
     public static int Level
@@ -76,5 +86,24 @@ public static class PlayerStatus
             float current = exp - a;
             return current / total;
         }
+    }
+
+    public static CoreInfo FirstUncompletePuzzleInfo
+    {
+        get
+        {
+            foreach(var kv in uncompletePuzzle)
+            {
+                return kv.Value;
+            }
+            return null;
+        }
+    }
+
+    public static CoreInfo TryGetUncompleteOfPicId(int picId)
+    {
+        CoreInfo info;
+        uncompletePuzzle.TryGetValue(picId.ToString(), out info);
+        return info;
     }
 }

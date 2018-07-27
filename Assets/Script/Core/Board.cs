@@ -107,6 +107,28 @@ public class Board : MonoBehaviour
 		pice.SetToBoard(indexX_, indexY_);
 	}
 
+	public void RepositionAllPiceNoAnimation()
+	{
+		for(var i = 0; i < xCount; i++)
+		{
+			for(var j = 0; j < yCount; j++)
+			{
+				var stack = data[i, j];
+				if(stack == null || stack.Count == 0)
+				{
+					continue;
+				}
+				var centerX = GetCenterX(i);
+				var centerY = GetCenterY(j);
+				foreach(var pice in stack.list)
+				{
+					pice.SetPostion(centerX, centerY);
+				}
+			}
+		}
+
+	}
+
 	public bool isIndexInvalid(int indexX, int indexY)
 	{
 		if(indexX >= 0 && indexX < xCount)
@@ -156,7 +178,7 @@ public class Board : MonoBehaviour
 	{
 		Remove(pice, indexX, indexY);
 		pice.dealedFlag = true;
-		pice.linking.ForEach(info =>{
+		pice.linkingList.ForEach(info =>{
 			if(!info.pice.dealedFlag)
 			{
 				var x = indexX;
@@ -196,7 +218,7 @@ public class Board : MonoBehaviour
 			pice.boardY = -1;
 		}
 		pice.dealedFlag = true;
-		pice.linking.ForEach(info =>{
+		pice.linkingList.ForEach(info =>{
 			if(!info.pice.dealedFlag)
 			{
 				var x = indexX;

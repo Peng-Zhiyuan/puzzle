@@ -15,7 +15,7 @@ public static class Linker
 
 		// 如果 pice1 的指定方向上已经连结，则不予处理
 		var alreadyLinked = false;
-		pice1.linking.ForEach(info =>{
+		pice1.linkingList.ForEach(info =>{
 			if(info.directory == directory)
 			{
 				alreadyLinked = true;
@@ -34,11 +34,11 @@ public static class Linker
 	{
 		// set pice1
 		{
-			var info = new LinkInfo();
+			var info = new Linking();
 			info.directory = directory;
 			info.pice = pice2;
-			pice1.linking.Add(info);
-			if(pice1.linking.Count == 1)
+			pice1.linkingList.Add(info);
+			if(pice1.linkingList.Count == 1)
 			{
 				pice1.FlashAsLink();
 			}
@@ -46,11 +46,11 @@ public static class Linker
 		}
 		// set pice2
 		{
-			var info = new LinkInfo();
+			var info = new Linking();
 			info.directory = LinkDirectoryUtil.Reverse(directory);
 			info.pice = pice1;
-			pice2.linking.Add(info);
-			if(pice2.linking.Count == 1)
+			pice2.linkingList.Add(info);
+			if(pice2.linkingList.Count == 1)
 			{
 				pice2.FlashAsLink();
 			}

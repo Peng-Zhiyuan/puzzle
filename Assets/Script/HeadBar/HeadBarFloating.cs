@@ -78,6 +78,20 @@ public class HeadBarFloating : Floating
 				var admin = new Admission_OldDownNewUp();
 				UIEngine.Back(null, admin);
 			}
+			else if(top is CorePage)
+			{
+				var popup = new Admission_PopupNewPage();
+				var dialog = UIEngine.Forward<DialogPage>("退出会存储已进行的拼图，确定要退出吗？", popup);
+				dialog.Complete = DialogResult =>
+				{
+					if(DialogResult == DialogResult.Conform)
+					{
+						GameController.SaveUncompletePuzzle();
+						//UIEngine.BackTo<PicturePage>();
+						CoroutineManager.Create(WaitAndReturn());
+					}
+				};
+			}
 			else
 			{
 				UIEngine.Back(null, admission);
@@ -87,6 +101,12 @@ public class HeadBarFloating : Floating
 		{
 			Debug.Log("this is the only one page, can't call UIEngine.Back()");
 		}
+	}
+
+	public IEnumerator WaitAndReturn()
+	{
+		yield return new WaitForSeconds(0.3f);
+		UIEngine.BackTo<PicturePage>();
 	}
 
 	public static HeadBarFloating instance;

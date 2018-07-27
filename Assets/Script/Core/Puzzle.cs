@@ -42,7 +42,6 @@ public class Puzzle
 		instance = this;
 		UnityEngine.Random.InitState(DateTime.UtcNow.Second);
 		PiceManager.Init();
-		LayerOrderDispatcher.Init();
 		var core_go = GameObject.Find("Core");
 		if(core_go == null)
 		{
@@ -106,9 +105,7 @@ public class Puzzle
 		}
 		foreach(var index in indexList)
 		{
-			//var pice = GameObject.Instantiate<Pice>(prefab_pice);
-			var pice = PiceManager.Create();
-			pice.Init(map, index);
+			var pice = PiceManager.Create(map, index);
 			side.Append(pice);
 		}
 		side.RepositionPiceList();
@@ -119,9 +116,54 @@ public class Puzzle
 		}
 	}
 
+	public void LoadInfo(PuzzleInfo info)
+	{
+		// 把所有 pice 拿起
+		foreach(var pice in PiceManager.list)
+		{
+			pice.SetToFloating();
+			pice.StopTween();
+		}
+
+		// 逐个设置 pice 归属
+		foreach(var i in info.piceInfoList)
+		{
+			var index = i.index;
+			var pice = PiceManager.GetByIndex(index);
+			if(i.owner == PiceOwner.Board)
+			{
+				pice.SetToBoard(i.boardX, i.boardY);
+			}
+			else if(i.owner == PiceOwner.Side)
+			{
+				//pice.SetToSide(i.sideIndex);
+				side.Append(pice);
+			}
+			else if(i.owner == PiceOwner.Floating)
+			{
+				pice.SetToSide(side.count - 1);
+			}
+			pice.isFixed = i.isFixed;
+			// linking
+			pice.linkingList.Clear();
+			foreach(var linkingInfo in i.LinkingInfoList)
+			{
+				var linking = new Linking();
+				linking.directory = linkingInfo.directory;
+				var linkingToPinceIndex = linkingInfo.piceIndex;
+				var linkingToPice = PiceManager.GetByIndex(linkingToPinceIndex);
+				linking.pice = linkingToPice;
+				pice.linkingList.Add(linking);
+			}
+		}
+		board.RepositionAllPiceNoAnimation();
+		side.RepositionPiceListNoAnimation();
+	}
+
 	public void Clean()
 	{
 		PiceManager.Clean();
+		LayerOrderDispatcher.Clean();
 	}
 
 
@@ -145,7 +187,7 @@ public class Puzzle
 			}
 			else
 			{
-				var rect = side.GetCellRect(pice.SideIndex);
+				var rect = side.GetCellRect(pice.sideIndex);
 				if(!rect.Contains(pice.transform.position))
 				{
 					// 认为在side中移动了位置
@@ -170,7 +212,7 @@ public class Puzzle
 	{
 		UpdatePiceOwner(pice);
 		// 没有连结的 pice， 当拖放释放点不在 board 上时，自动回到 side 上
-		if(pice.linking.Count == 0)
+		if(pice.linkingList.Count == 0)
 		{
 			var inboard = board.Rect.Contains(pice.transform.position);
 			if(!inboard)
@@ -375,4 +417,17 @@ public class Puzzle
 		}
 		return true;
 	}
+
+	public PuzzleInfo CreateInfo()
+	{
+		var info = new PuzzleInfo();
+		foreach(var pice in PiceManager.list)
+		{
+			var piceInfo = pice.CreateInfo();
+			info.piceInfoList.Add(piceInfo);
+		}
+		return info;
+	}
+
+
 }

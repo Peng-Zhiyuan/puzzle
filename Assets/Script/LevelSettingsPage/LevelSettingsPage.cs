@@ -10,6 +10,7 @@ public class LevelSettingsPage : Page
 	public RectTransform selectBg;
 	public RectTransform selection_norotation;
 	public RectTransform selection_rotation;
+	public Button button_continue;
 
 	public void OnRotateSelection()
 	{
@@ -53,6 +54,18 @@ public class LevelSettingsPage : Page
 		OnRotateSelection();
 		lostTime = 0;
 		first = true;
+
+		// 检查是否有已经开始的拼图
+		var picId = int.Parse(this.param);
+		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
+		if(info == null)
+		{
+			button_continue.gameObject.SetActive(false);
+		}
+		else
+		{
+			button_continue.gameObject.SetActive(true);
+		}
 	}
 
 	private void OnSetData(Transform itemTr, object dataObj)
@@ -171,7 +184,32 @@ public class LevelSettingsPage : Page
 
 	public void OnStartButton()
 	{
+		// 检查这个 picId 是否已经有存档，如果有则提示
 		var picId = int.Parse(this.param);
-		GameController.EnterCore(picId, selectItem.dataRow.Get<int>("id"));
+
+		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
+		if(info != null)
+		{
+			var admin = new Admission_PopupNewPage();
+			var dialog = UIEngine.Forward<DialogPage>("会覆盖已存在的游戏，是否继续？", admin);
+			dialog.Complete = result =>{
+				if(result == DialogResult.Conform)
+				{
+					GameController.EnterCore(picId, selectItem.dataRow.Get<int>("id"));
+				}
+			};
+		}
+		else
+		{
+			GameController.EnterCore(picId, selectItem.dataRow.Get<int>("id"));
+		}
+		
+	}
+
+	public void OnContinue()
+	{
+		var picId = int.Parse(this.param);
+		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
+		GameController.EnterWithInfo(info);
 	}
 }

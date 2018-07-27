@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 public class PiceStack
 {
-    List<Pice> list = new List<Pice>();
+    public List<Pice> list = new List<Pice>();
 
     public void Remove(Pice pice)
     {

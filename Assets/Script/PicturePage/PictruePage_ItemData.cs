@@ -5,7 +5,7 @@ using CustomLitJson;
 
 public class PictruePage_ItemData 
 {
-	public JsonData row;
+	public JsonData picRow;
 	public PicturePage_ItemStatus status;
 
 }

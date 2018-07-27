@@ -3,10 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class LinkInfo
+public class Linking
 {
 	public Pice pice;
 	public LinkDirectory directory;
+
+	public LinkingInfo CreateInfo()
+	{
+		return new LinkingInfo
+		{
+			piceIndex = this.pice.index,
+			directory = this.directory,
+		};
+	}
 }
 
 public enum LinkDirectory

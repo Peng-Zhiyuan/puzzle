@@ -7,6 +7,7 @@ using System;
 
 public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler
 {
+	public int id;
 	public Transform mask;
 	public SpriteMask maskLeft;
 	public SpriteMask maskRigjt;
@@ -35,7 +36,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	/// </summary>
 	public int indexY;
 
-	public List<LinkInfo> linking = new List<LinkInfo>();
+	public List<Linking> linkingList = new List<Linking>();
 
 	public static int MASK_PIXEL_WIDTH = 300;
 	public static int MASK_PIXEL_HIGHT = 300;
@@ -44,7 +45,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public int boardX = -1;
 	public int boardY = -1;
-	public int SideIndex = -1;
+	public int sideIndex = -1;
 	public int cellWidth;
 	public int cellHeight;
 
@@ -68,6 +69,8 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			if(value)
 			{
 				collider.enabled = false;
+				this.GetComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder = 1;
+				
 			}
 			else
 			{
@@ -103,7 +106,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 		spriteRanderer.sprite = sprite;
 		this.MaskWidth = expandedCellWidth;
-		this.MaskHight = expandedCellHight;
+		this.MaskHeight = expandedCellHight;
 		this.FlashSize = new Vector2(expandedCellWidth, expandedCellHight);
 		this.LeftType = EdgeType.AO;
 		this.RightType = EdgeType.AO;
@@ -135,7 +138,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		}
 	}
 
-	public float MaskHight
+	public float MaskHeight
 	{
 		set
 		{
@@ -143,6 +146,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			mask.localScale = new Vector2(mask.localScale.x, scale);
 		}
 	}
+
 
 	public Vector2 FlashSize
 	{
@@ -315,10 +319,21 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		});
 	}
 
+	public void StopTween()
+	{
+		iTween.Stop(this.gameObject);
+	}
+
 	public void AnimateScale(float scale)
 	{
 		//GameObject.Destroy(this.gameObject.GetComponent<iTween>());
 		iTween.ScaleTo(this.gameObject, new Vector2(scale, scale), 0.4f);
+	}
+
+	public void SetScale(float scale)
+	{
+		//GameObject.Destroy(this.gameObject.GetComponent<iTween>());
+		this.gameObject.transform.localScale = new Vector2(scale, scale);
 	}
 
 	// /// <summary>
@@ -357,7 +372,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		}
 		dic[this] = true;
 		callback(this);
-		linking.ForEach(info =>{
+		linkingList.ForEach(info =>{
 			info.pice._ForeachPickOfBlock(dic, callback);
 		});
 	}
@@ -426,7 +441,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		);
 
 		dealedFlag = true;
-		linking.ForEach(info=>{
+		linkingList.ForEach(info=>{
 			if(!info.pice.dealedFlag)
 			{
 				info.pice.BeginDrag(eventData);
@@ -500,7 +515,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			) + _offsetToMouse;
 
 		dealedFlag = true;
-		linking.ForEach(info=>{
+		linkingList.ForEach(info=>{
 			if(!info.pice.dealedFlag)
 			{
 				info.pice.Drag(eventData);
@@ -529,7 +544,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		_offsetToMouse = Vector3.zero;
 
 		dealedFlag = true;
-		linking.ForEach(info=>{
+		linkingList.ForEach(info=>{
 			if(!info.pice.dealedFlag)
 			{
 				info.pice.EndDrag();
@@ -539,6 +554,25 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	}
 
 	#endregion
+
+	public PiceInfo CreateInfo()
+	{
+		var info = new PiceInfo
+		{
+			index = this.index,
+			boardX = this.boardX,
+			boardY = this.boardY,
+			sideIndex = this.sideIndex,
+			isFixed = this.isFixed,
+			owner = this.owner,
+		};
+		foreach(var l in linkingList)
+		{
+			var linkingInfo = l.CreateInfo();
+			info.LinkingInfoList.Add(linkingInfo);
+		}
+		return info;
+	}
 }
 
 public enum EdgeType

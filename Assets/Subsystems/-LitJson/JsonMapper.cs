@@ -378,6 +378,11 @@ namespace CustomLitJson
 				{
 					return false;
 				}
+				else if(inst_type.IsEnum)
+				{
+					var intValue = System.Convert.ToInt32(reader.Value);
+					return intValue;
+				}
 				return null;
 			}
 
