@@ -57,16 +57,31 @@ public class MainPage : Page
         }
 
         // 检查是否有未完成拼图
-        var count = PlayerStatus.uncompletePuzzle.Count;
-        if(count > 0)
         {
-            var data = new MainPage_ItemData()
+            var count = PlayerStatus.uncompletePuzzle.Count;
+            if(count > 0)
             {
-                isUncompletePuzzle = true
-            };
-            dataList.Insert(0, data);
+                var data = new MainPage_ItemData()
+                {
+                    pageType = PicturePageType.Uncomplete
+                };
+                dataList.Insert(0, data);
+            }
         }
 
+        // 检查是否有已完成的拼图
+        {
+            var count = PlayerStatus.completeList.Count;
+            if(count > 0)
+            {
+                var data = new MainPage_ItemData()
+                {
+                    pageType = PicturePageType.Complete
+                };
+                dataList.Insert(0, data);
+            }
+        }
+        
         SetDataList(dataList);
     }
 
@@ -103,7 +118,7 @@ public class MainPage : Page
         item.data = data;
 
         // 如果是一个图片分类
-        if(!data.isUncompletePuzzle)
+        if(data.pageType == PicturePageType.Pictype)
         {
             item.label.text = data.row.Get<string>("display_name");
             var file = PicLibrary.FindFirstFileNameOfType(data.row.Get<string>("id"));
@@ -112,9 +127,9 @@ public class MainPage : Page
         }
 
         // 如果是未完成的拼图
-        if(data.isUncompletePuzzle)
+        if(data.pageType == PicturePageType.Uncomplete)
         {
-            item.label.text = "未完成的拼图";
+            item.label.text = "未完成";
             if(PlayerStatus.uncompletePuzzle.Count > 0)
             {
                 var firstCoreInfo = PlayerStatus.FirstUncompletePuzzleInfo;
@@ -125,20 +140,32 @@ public class MainPage : Page
                 item.Facade = texture;
             }
         }
+
+        // 如果是已完成的拼图
+        if(data.pageType == PicturePageType.Complete)
+        {
+            item.label.text = "已完成";
+            if(PlayerStatus.completeList.Count > 0)
+            {
+                var picId = PlayerStatus.completeList[0].pid;
+                var picRow = StaticDataLite.GetRow("pic", picId.ToString());
+                var fileName = picRow.Get<string>("file");
+                var texture = PicLibrary.Load(fileName);
+                item.Facade = texture;
+            }
+        }
     }
 
     public void OnItemClick(MainPage_Item item)
     {
-        string param = "#uncomplete";
-        if(item.data.isUncompletePuzzle)
+
+        var param = new PicturePageParam();
+        param.pageType = item.data.pageType;
+        if(item.data.pageType == PicturePageType.Pictype)
         {
-            param = "#uncomplete";
+            param.picTypeId = item.data.row.Get<string>("id");
         }
-        else
-        {
-            var pictype = item.data.row.Get<string>("id");
-            param = pictype;
-        }
+
         var rt = item.GetComponent<RectTransform>();
 		var rect = RectTransformUtil.GetWorldRect(rt);
 	

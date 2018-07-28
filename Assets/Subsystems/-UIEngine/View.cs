@@ -6,8 +6,7 @@ using UnityEngine;
 // UI 最小逻辑单元
 public class View : MonoBehaviour
 {
-	[ReadOnly]
-	public string param;
+	public object param;
 
     private bool _active;
     public bool Active

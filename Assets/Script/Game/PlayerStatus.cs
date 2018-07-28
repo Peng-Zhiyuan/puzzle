@@ -7,26 +7,50 @@ public static class PlayerStatus
     public static int exp;
     public static int gold;
     public static Dictionary<string, CoreInfo> uncompletePuzzle = new Dictionary<string, CoreInfo>();
+    public static List<CompleteInfo> completeList;
 
     public static void Save()
     {
+        // misc data
         PlayerPrefs.SetInt("PlayerStatus.gold", gold);
         PlayerPrefs.SetInt("PlayerStatus.exp", exp);
-        var json = JsonMapper.Instance.ToJson(uncompletePuzzle);
-        Debug.Log(json);
-        PlayerPrefs.SetString("PlayerStatus.uncompletePuzzle", json);
+        // uncomplete
+        {
+            var json = JsonMapper.Instance.ToJson(uncompletePuzzle);
+            PlayerPrefs.SetString("PlayerStatus.uncompletePuzzle", json);
+        }
+
+        // complete list
+        {
+            var dic = new Dictionary<string, List<CompleteInfo>>();
+            dic["content"] = completeList;
+            var json = JsonMapper.Instance.ToJson(dic);
+            PlayerPrefs.SetString("PlayerStatus.completeList", json);
+        }
+
+        // flush
         PlayerPrefs.Save();
     }
 
     public static void Read()
     {
+        // misc data
         exp = PlayerPrefs.GetInt("PlayerStatus.exp", 0);
         gold = PlayerPrefs.GetInt("PlayerStatus.gold", 0);
-        var json = PlayerPrefs.GetString("PlayerStatus.uncompletePuzzle", "{}");
-        Debug.Log(json);
-        uncompletePuzzle = JsonMapper.Instance.ToObject<Dictionary<string, CoreInfo>>(json);
-        Debug.Log("obj:" + JsonMapper.Instance.ToJson(uncompletePuzzle));
+        // uncomplete
+        {
+            var json = PlayerPrefs.GetString("PlayerStatus.uncompletePuzzle", "{}");
+            uncompletePuzzle = JsonMapper.Instance.ToObject<Dictionary<string, CoreInfo>>(json);
+        }
+        // complete list
+        {
+            var json = PlayerPrefs.GetString("PlayerStatus.completeList", "{\"content\":[]}");
+            var dic = JsonMapper.Instance.ToObject<Dictionary<string,  List<CompleteInfo>>>(json);
+            var list = dic["content"];
+            completeList = list;
+        }
     }
+
 
     public static int Level
     {

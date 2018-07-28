@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PictruePage_Item : MonoBehaviour 
 {
@@ -10,6 +11,7 @@ public class PictruePage_Item : MonoBehaviour
 	public Image puzzleMask;
 	public Transform unlockLayer;
 	public Text label;
+	public Image flash;
 
 	public Texture2D Texture2D
 	{
@@ -51,5 +53,15 @@ public class PictruePage_Item : MonoBehaviour
 	public void OnClicked()
 	{
 		SendMessageUpwards("OnItemClicked", this);
+	}
+
+	public void Flash()
+	{
+		flash.gameObject.SetActive(true);
+		var image =  flash.GetComponent<Image>();
+		var c = image.color;
+		c.a = 1f;
+		image.color = c;
+		flash.DOFade(0, 0.5f);
 	}
 }

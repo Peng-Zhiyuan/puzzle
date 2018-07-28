@@ -12,7 +12,7 @@ public class DialogPage : Page
 
 	public override void OnParamChanged()
 	{
-		this.des.text = this.param;
+		this.des.text = this.param as string;
 	}
 
 	public void OnConfirmButton()

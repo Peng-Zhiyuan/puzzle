@@ -56,7 +56,7 @@ public class LevelSettingsPage : Page
 		first = true;
 
 		// 检查是否有已经开始的拼图
-		var picId = int.Parse(this.param);
+		var picId = int.Parse(this.param as string);
 		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
 		if(info == null)
 		{
@@ -185,7 +185,7 @@ public class LevelSettingsPage : Page
 	public void OnStartButton()
 	{
 		// 检查这个 picId 是否已经有存档，如果有则提示
-		var picId = int.Parse(this.param);
+		var picId = int.Parse(this.param as string);
 
 		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
 		if(info != null)
@@ -208,7 +208,7 @@ public class LevelSettingsPage : Page
 
 	public void OnContinue()
 	{
-		var picId = int.Parse(this.param);
+		var picId = int.Parse(this.param as string);
 		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
 		GameController.EnterWithInfo(info);
 	}

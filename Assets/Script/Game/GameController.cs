@@ -54,6 +54,10 @@ public static class GameController
 		HeadBarFloating.instance.AutoRefresh = false;
 		PlayerStatus.exp += 10;
 		PlayerStatus.gold += 10;
+		var info = new CompleteInfo();
+		info.pid = lastPicId;
+		info.sliceId = lastSliceId;
+		PlayerStatus.completeList.Add(info);
 		PlayerStatus.Save();
 
 		LevelCompletePage.goldParam = gold;
@@ -61,6 +65,7 @@ public static class GameController
 	
 		var admin = new Admission_FadeInNewPage();
 		UIEngine.Forward<LevelCompletePage>(null, admin);
+
 	}
 
 	private static CoreInfo CreateInfo()

@@ -10,6 +10,6 @@ public class MainPage_ItemData
     /// </summary>
     public JsonData row;
 
-    public bool isUncompletePuzzle;
+    public PicturePageType pageType;
 
 }

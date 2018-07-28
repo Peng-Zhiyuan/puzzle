@@ -33,7 +33,7 @@ public static class UIEngine
         AdmissionManager.Remove();
     }
 
-	public static T Forward<T>(string param = null, Admission admission = null) where T : Page
+	public static T Forward<T>(object param = null, Admission admission = null) where T : Page
     {
         var name = typeof(T).Name;
 		return Forward(name, param, admission) as T;
@@ -90,7 +90,7 @@ public static class UIEngine
         return page;
     }
 
-    public static Page Forward(string pageName, string param = null, Admission admision = null)
+    public static Page Forward(string pageName, object param = null, Admission admision = null)
 	{
         if(AdmissionManager.busing)
         {

@@ -12,25 +12,29 @@ public class PicturePage : Page
     public Transform itemRoot;
     public RectTransform scrollContent;
     public Text text_pictureCount;
-    public bool isUncomplete;
 
+    public PicturePageParam p;
 
     public override void OnParamChanged()
     {
-        if(param == "#uncomplete")
+        this.p = param as PicturePageParam;
+        if(p.pageType == PicturePageType.Uncomplete)
         {
-            isUncomplete = true;
-            this.text_title.text = "未完成的拼图";
+            this.text_title.text = "未完成";
             this.text_des.text = "共 " + PlayerStatus.uncompletePuzzle.Count + " 张";
         }
-        else
+        else if(p.pageType == PicturePageType.Pictype)
         {
-            isUncomplete = false;
-            var pictype = this.param;
+            var pictype = p.picTypeId;
             var name = StaticDataLite.GetCell<string>("pictype", pictype, "display_name");
             var des = StaticDataLite.GetCell<string>("pictype", pictype, "des");
             this.text_title.text = name;
             this.text_des.text = des;
+        }
+        else if(p.pageType == PicturePageType.Complete)
+        {
+            this.text_title.text = "已完成";
+            this.text_des.text = "共 " + PlayerStatus.completeList.Count + " 张";
         }
 
     }
@@ -38,12 +42,12 @@ public class PicturePage : Page
     public override void OnPush()
     {
         // 如果要显示的是某个图片分类
-        if(!isUncomplete)
+        if(p.pageType == PicturePageType.Pictype)
         {
             // 从 pic 表中找出所有 type 是 param 的数据行
             // 并且包装成 PicturePage_ItemData
             var sheet = StaticDataLite.GetSheet("pic");
-            var pictype = this.param;
+            var pictype = this.p.picTypeId;
             var dataList = new List<PictruePage_ItemData>();
             foreach(string key in sheet.Keys)
             {
@@ -86,7 +90,7 @@ public class PicturePage : Page
         }
 
         // 如果要显示的是未完成的拼图
-        if(isUncomplete)
+        if(p.pageType == PicturePageType.Uncomplete)
         {
             var dataList = new List<PictruePage_ItemData>();
             foreach(var kv in PlayerStatus.uncompletePuzzle)
@@ -105,6 +109,26 @@ public class PicturePage : Page
 
             text_pictureCount.text = PlayerStatus.uncompletePuzzle.Count.ToString();
 
+        }
+
+        // 如果要显示已完成的图片
+        if(p.pageType == PicturePageType.Complete)
+        {
+            var dataList = new List<PictruePage_ItemData>();
+            foreach(var info in PlayerStatus.completeList)
+            {
+                var picId = info.pid;
+                var picRow = StaticDataLite.GetRow("pic", picId.ToString());
+
+                var data = new PictruePage_ItemData
+                {
+                    picRow = picRow,
+                };
+                data.status = PicturePage_ItemStatus.Complete;
+                dataList.Add(data);
+                this.setDataList(dataList);
+            }
+            text_pictureCount.text = dataList.Count.ToString();
         }
       
     }
@@ -179,10 +203,11 @@ public class PicturePage : Page
             // 单独处理需要修改显示状态的 item
             data.status = PicturePage_ItemStatus.Unlocked;
             SetItem(item, data);
+            item.Flash();
         }
         else
         {
-            var text = MsgList.Get("lacke_of_gold");
+            var text = MsgList.Get("lack_of_gold");
             UIEngine.Forward<DialogPage>(text);
         }
         

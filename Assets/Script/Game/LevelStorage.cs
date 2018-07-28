@@ -6,7 +6,7 @@ public static class LevelStorage
 {
 	public static bool IsPictureUnlocked(string id)
 	{
-		var defaultUnlocked = StaticDataLite.GetCell<bool>("pic", id, "unlocked");
+		var defaultUnlocked = StaticDataLite.GetCell<bool>("pic", id, "unlock");
 		var unlock = PlayerPrefs.GetInt("levelstorage.unlock." + id, 0);
 		return defaultUnlocked || unlock == 1;
 	}
