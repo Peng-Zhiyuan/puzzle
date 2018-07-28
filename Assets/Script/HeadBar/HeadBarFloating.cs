@@ -164,6 +164,12 @@ public class HeadBarFloating : Floating
 		UIEngine.ShowFloating<StarFloating>();
 	}
 
+	public void OnSignClicked()
+	{
+		var admin = new Admission_PopupNewPage();
+		UIEngine.Forward<SignPage>(null, admin);
+	}
+
 	public void HideBack()
 	{
 		iTween.Stop(backButton.gameObject);

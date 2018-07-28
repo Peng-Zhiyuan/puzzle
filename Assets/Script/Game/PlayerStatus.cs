@@ -1,11 +1,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 using CustomLitJson;
+using System;
 
 public static class PlayerStatus
 {
     public static int exp;
     public static int gold;
+    public static int sign;
+    public static int lastSignDay;
+
     public static Dictionary<string, CoreInfo> uncompletePuzzle = new Dictionary<string, CoreInfo>();
     public static List<CompleteInfo> completeList;
 
@@ -14,6 +18,8 @@ public static class PlayerStatus
         // misc data
         PlayerPrefs.SetInt("PlayerStatus.gold", gold);
         PlayerPrefs.SetInt("PlayerStatus.exp", exp);
+        PlayerPrefs.SetInt("PlayerStatus.sign", sign);
+        PlayerPrefs.SetInt("PlayerStatus.lastSignDay", lastSignDay);
         // uncomplete
         {
             var json = JsonMapper.Instance.ToJson(uncompletePuzzle);
@@ -30,6 +36,7 @@ public static class PlayerStatus
 
         // flush
         PlayerPrefs.Save();
+
     }
 
     public static void Read()
@@ -37,6 +44,8 @@ public static class PlayerStatus
         // misc data
         exp = PlayerPrefs.GetInt("PlayerStatus.exp", 0);
         gold = PlayerPrefs.GetInt("PlayerStatus.gold", 0);
+        sign =  PlayerPrefs.GetInt("PlayerStatus.sign", 0);
+        lastSignDay = PlayerPrefs.GetInt("PlayerStatus.lastSignDay", 0);
         // uncomplete
         {
             var json = PlayerPrefs.GetString("PlayerStatus.uncompletePuzzle", "{}");

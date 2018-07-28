@@ -1,1 +1,1 @@
-{"1":{"id":1,"type":"animal","file":"pic1","unlock":true,"cost":0},"2":{"id":2,"type":"animal","file":"pic2","unlock":false,"cost":40},"3":{"id":3,"type":"animal","file":"pic3","unlock":false,"cost":100}}
+{"1":{"id":1,"type":"animal","file":"pic1","name":"\u6D4B\u8BD5\u56FE\u72471","unlock":true,"cost":0},"2":{"id":2,"type":"animal","file":"pic2","name":"\u6D4B\u8BD5\u56FE\u72472","unlock":false,"cost":40},"3":{"id":3,"type":"animal","file":"pic3","name":"\u6D4B\u8BD5\u56FE\u72473","unlock":false,"cost":100}}

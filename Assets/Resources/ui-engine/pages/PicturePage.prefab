@@ -510,7 +510,6 @@ MonoBehaviour:
   unlockLayer: {fileID: 224722776023278622}
   label: {fileID: 114572451264364908}
   flash: {fileID: 114759071503008462}
-  mask_unlock_black: {fileID: 0}
 --- !u!114 &114361767325888104
 MonoBehaviour:
   m_ObjectHideFlags: 1
