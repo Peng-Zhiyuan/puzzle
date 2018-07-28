@@ -95,6 +95,7 @@ public class MainPage : Page
         {
             var item = GameObject.Instantiate(sample_item);
             item.transform.parent = itemGridRoot;
+            item.transform.localScale = Vector2.one;
             item.gameObject.SetActive(true);
             //item.Init(data);
             SetData(item, data);
@@ -109,7 +110,6 @@ public class MainPage : Page
         var rowCount = Mathf.Ceil(dataList.Count/2f);
         var scrollContentHeight = itemHeight * rowCount + (rowCount - 1) * spaceingY + listInset + extra;
         var rt = scrollContent.GetComponent<RectTransform>();
-        Debug.Log(scrollContentHeight);
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, scrollContentHeight);
     }
 

@@ -8,6 +8,7 @@ public class Admission_ScaleUpNewPage : Admission
     Rect rect;
     float DURATION = 0.2f;
 
+    // rect: 世界坐标
     public Admission_ScaleUpNewPage(Rect rect)
     {
         this.rect = rect;
@@ -17,21 +18,23 @@ public class Admission_ScaleUpNewPage : Admission
     {
         oldPage.Active = true;
         newPage.Active = true;
-        var canvas = UIEngine.Canvas.GetComponent<RectTransform>();
-        var canvasWidth = canvas.rect.width;
-        var canvasHeight = canvas.rect.height;
+        // var canvas = UIEngine.Canvas.GetComponent<RectTransform>();
+        // var canvasWidth = canvas.rect.width * canvas.localScale.x;
+        // var canvasHeight = canvas.rect.height * canvas.localScale.y;
+        var canvasRect = RectTransformUtil.GetWorldRect(UIEngine.Canvas.GetComponent<RectTransform>());
         // newPage.rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Left, rect.xMin, rect.size.x);
         // newPage.rectTransform.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Bottom, rect.yMin,rect.size.y);
         // var targetPosition = newPage.transform.position;
-        var targetPosition = new Vector2(canvasWidth/2, canvasHeight/2);
+        //var targetPosition = new Vector2(canvasWidth/2, canvasHeight/2);
+        var targetPosition = canvasRect.center;
         Debug.Log(targetPosition);
         var fromPosition = this.rect.center;
         newPage.transform.position = fromPosition;
         newPage.rectTransform.DOMove(targetPosition, DURATION);
         
 
-        var fromScaleX = this.rect.width / canvasWidth;
-        var fromScaleY = this.rect.height / canvasHeight;
+        var fromScaleX = 0;//this.rect.width / canvasWidth;
+        var fromScaleY = 0;//this.rect.height / canvasHeight;
         newPage.rectTransform.localScale = new Vector2(fromScaleX, fromScaleY);
         newPage.rectTransform.DOScale(Vector2.one, DURATION);
         var cg = TryGetComponent<CanvasGroup>(newPage.gameObject);

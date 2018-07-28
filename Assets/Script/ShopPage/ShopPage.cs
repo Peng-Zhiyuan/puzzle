@@ -28,6 +28,7 @@ public class ShopPage : Page
         {
             var tr = GameObject.Instantiate(prefab_ad_item);
             tr.parent = transform_listRoot;
+            tr.transform.localScale = Vector2.one;
             tr.gameObject.SetActive(true);
             var item = tr.GetComponent<ShopPage_Item>();
             itemList.Add(item);
@@ -40,6 +41,7 @@ public class ShopPage : Page
             var row = sheet[id];
             var tr = GameObject.Instantiate(prefab_ipa_item);
             tr.parent = transform_listRoot;
+            tr.transform.localScale = Vector2.one;
             tr.gameObject.SetActive(true);
             var item = tr.GetComponent<ShopPage_IapItem>();
             item.Init(row);

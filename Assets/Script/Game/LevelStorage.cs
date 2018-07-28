@@ -15,16 +15,5 @@ public static class LevelStorage
 	{
 		PlayerPrefs.SetInt("levelstorage.unlock." + id, 1);
 	}
-
-		public static bool IsPictureComplete(string id)
-	{
-		var defaultUnlocked = StaticDataLite.GetCell<bool>("pic", id, "unlocked");
-		var unlock = PlayerPrefs.GetInt("levelstorage.complete." + id, 0);
-		return defaultUnlocked || unlock == 1;
-	}
-
-	public static void SetPictureComplete(string id)
-	{
-		PlayerPrefs.SetInt("levelstorage.complete." + id, 1);
-	}
+	
 }

@@ -36,6 +36,7 @@ public class SamplizeScrollRect : MonoBehaviour, IEndDragHandler
 		{
 			var item = GameObject.Instantiate(this.sample);
 			item.parent = layout.transform;
+			item.transform.localScale = Vector2.one;
 			var p = item.localPosition;
 			p.z = 0;
 			item.localPosition = p;

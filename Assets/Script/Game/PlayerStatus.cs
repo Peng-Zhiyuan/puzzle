@@ -36,8 +36,8 @@ public static class PlayerStatus
 
         // flush
         PlayerPrefs.Save();
-
     }
+    
 
     public static void Read()
     {
@@ -131,6 +131,24 @@ public static class PlayerStatus
             }
             return null;
         }
+    }
+
+    public static CompleteInfo GetCompleteInfoOfPicId(int picId)
+    {
+        foreach(var c in completeList)
+        {
+            if(c.pid == picId)
+            {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    public static bool IsPictureComplete(int picId)
+    {
+        var info = GetCompleteInfoOfPicId(picId);
+        return info != null;
     }
 
     public static CoreInfo TryGetUncompleteOfPicId(int picId)

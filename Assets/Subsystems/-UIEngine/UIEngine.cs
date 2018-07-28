@@ -54,6 +54,7 @@ public static class UIEngine
             page = go_page.GetComponent<Page>();
             page.name = prefab.name;
             page.transform.parent = root.transform;
+            page.transform.localScale = Vector2.one;
             //page.transform.localPosition = Vector2.zero;
             //page.rectTransform.parent = root.GetComponent<RectTransform>();
             // page.rectTransform.sizeDelta = Vector2.zero;
@@ -63,6 +64,7 @@ public static class UIEngine
         }
         page.rectTransform.sizeDelta = Vector2.zero;
         page.rectTransform.localPosition = Vector2.one;
+       
         return page;
     }
 
@@ -206,6 +208,7 @@ public static class UIEngine
             control = go.GetComponent<Floating>();
             control.name = prefab.name;
 			control.param=param;
+            control.transform.localScale = Vector2.one;
             control.OnCreate();
             createdControl[name] = control;
         }
@@ -252,6 +255,7 @@ public static class UIEngine
         // var localRotation = go.transform.localRotation;
         // var localScale = go.transform.localScale;
         go.transform.parent = parent.transform;
+        //go.transform.localScale = Vector2.one;
         // go.transform.localPosition = localPosition;
         // go.transform.localRotation = localRotation;
         // go.transform.localScale = localScale;

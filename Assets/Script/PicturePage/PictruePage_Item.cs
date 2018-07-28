@@ -12,6 +12,7 @@ public class PictruePage_Item : MonoBehaviour
 	public Transform unlockLayer;
 	public Text label;
 	public Image flash;
+	public Image image_pice;
 
 	public Texture2D Texture2D
 	{
@@ -42,6 +43,23 @@ public class PictruePage_Item : MonoBehaviour
 		set
 		{
 			this.label.text = value;
+		}
+	}
+
+	public bool IsShowPice
+	{
+		set
+		{
+			this.image_pice.gameObject.SetActive(value);
+		}
+	}
+
+	public int PiceCount
+	{
+		set
+		{
+			var text = this.image_pice.GetComponentInChildren<Text>();
+			text.text = value.ToString();
 		}
 	}
 

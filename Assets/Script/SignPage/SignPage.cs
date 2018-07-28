@@ -35,6 +35,7 @@ public class SignPage : Page
 			TransformUtil.DestroyAllChildren(anchor);
 			item.transform.parent = anchor;
 			item.transform.localPosition = Vector2.zero;
+			item.transform.localScale = Vector2.one;
 			anchor.GetComponent<Image>().enabled = false;
 			item.gameObject.SetActive(true);
 			if(IsSelect(i))
@@ -52,6 +53,7 @@ public class SignPage : Page
 			TransformUtil.DestroyAllChildren(anchor);
 			item.transform.parent = anchor;
 			item.transform.localPosition = Vector2.zero;
+			item.transform.localScale = Vector2.one;
 			anchor.GetComponent<Image>().enabled = false;
 			item.gameObject.SetActive(true);
 			if(IsSelect(7))

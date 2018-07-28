@@ -55,6 +55,7 @@ public class Puzzle
 
 		this.board = core.board;
 		this.side = core.side;
+		core.Init();
 
 	}
 

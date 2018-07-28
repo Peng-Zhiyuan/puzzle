@@ -38,6 +38,7 @@ public class Board : MonoBehaviour
 				var dot = GameObject.Instantiate(this.test);
 				dot.transform.parent = this.transform;
 				dot.transform.position = new Vector2(centerX, centerY);
+				dot.transform.localScale = Vector2.one;
 			}
 		}
 		else

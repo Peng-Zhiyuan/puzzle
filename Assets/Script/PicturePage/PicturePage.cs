@@ -60,7 +60,7 @@ public class PicturePage : Page
                     };
                     // check unlock info
                     var unlocked = LevelStorage.IsPictureUnlocked(key);
-                    var complete = LevelStorage.IsPictureComplete(key);
+                    var complete = PlayerStatus.IsPictureComplete(int.Parse(key));
                     var status = PicturePage_ItemStatus.Locked;
                     if(complete)
                     {
@@ -143,6 +143,7 @@ public class PicturePage : Page
         {
             var item = GameObject.Instantiate(itemSample);
             item.transform.parent = itemRoot;
+            item.transform.localScale = Vector2.one;
             SetItem(item, data);
             item.gameObject.SetActive(true);
         }
@@ -170,14 +171,24 @@ public class PicturePage : Page
             case PicturePage_ItemStatus.Locked:
                 item.IsShowPuzzleMask = true;
                 item.IsShowUnlockLayer = true;
+                item.IsShowPice = false;
                 break;
             case PicturePage_ItemStatus.Unlocked:
                 item.IsShowPuzzleMask = true;
                 item.IsShowUnlockLayer = false;
+                item.IsShowPice = false;
                 break;
             case PicturePage_ItemStatus.Complete:
                 item.IsShowPuzzleMask = false;
                 item.IsShowUnlockLayer = false;
+                item.IsShowPice = true;
+                var picId = data.picRow.Get<int>("id");
+                var info = PlayerStatus.GetCompleteInfoOfPicId(picId);
+                if(info != null)
+                {
+                    var sliceCount = StaticDataLite.GetCell<int>("pice_slice", info.sliceId.ToString(), "count");
+                    item.PiceCount = sliceCount;
+                }
                 break;
         }
         item.LabelText = data.picRow.Get<string>("name");
@@ -218,7 +229,7 @@ public class PicturePage : Page
         // 如果是图片分类，则开始新游戏
         //if(!isUncomplete)
         //{
-            if(item.data.status == PicturePage_ItemStatus.Unlocked)
+            if(item.data.status != PicturePage_ItemStatus.Locked)
             {
                 //UIEngine.Forward<LevelCompletePage>();
                 var picId = item.data.picRow.Get<int>("id");

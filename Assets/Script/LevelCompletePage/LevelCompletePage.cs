@@ -52,6 +52,7 @@ public class LevelCompletePage : Page
 		var clone = GameObject.Instantiate(goldGroup);
 		clone.parent = goldGroup.parent;
 		clone.localPosition = goldGroup.localPosition;
+		clone.transform.localScale = Vector2.one;
 		iTween.Stop(clone.gameObject);
 		goldGroup.gameObject.SetActive(false);
 		iTween.ScaleTo(clone.gameObject, new Vector2(0.2f, 0.2f), 0.2f);
@@ -75,6 +76,7 @@ public class LevelCompletePage : Page
 		var clone = GameObject.Instantiate(expGroup);
 		clone.parent = expGroup.parent;
 		clone.localPosition = expGroup.localPosition;
+		clone.transform.localScale = Vector2.one;
 		iTween.Stop(clone.gameObject);
 		expGroup.gameObject.SetActive(false);
 		iTween.ScaleTo(clone.gameObject, new Vector2(0.2f, 0.2f), 0.2f);

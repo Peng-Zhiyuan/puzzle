@@ -212,4 +212,9 @@ public class LevelSettingsPage : Page
 		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
 		GameController.EnterWithInfo(info);
 	}
+
+	public void OnButtonClose()
+	{
+		HeadBarFloating.instance.OnBackButton();
+	}
 }
