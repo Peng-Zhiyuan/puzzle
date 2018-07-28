@@ -126,9 +126,9 @@ public class PicturePage : Page
                 };
                 data.status = PicturePage_ItemStatus.Complete;
                 dataList.Add(data);
-                this.setDataList(dataList);
             }
             text_pictureCount.text = dataList.Count.ToString();
+            this.setDataList(dataList);
         }
       
     }
@@ -219,7 +219,8 @@ public class PicturePage : Page
         else
         {
             var text = MsgList.Get("lack_of_gold");
-            UIEngine.Forward<DialogPage>(text);
+            var popup = new Admission_PopupNewPage();
+            UIEngine.Forward<DialogPage>(text, popup);
         }
         
     }

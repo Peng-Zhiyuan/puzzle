@@ -19,14 +19,14 @@ public class DialogPage : Page
 	{
 		var admission = new Admission_PopdownOldPage();
 		UIEngine.Back(DialogResult.Conform, admission);
-		Complete(DialogResult.Conform);
+		Complete?.Invoke(DialogResult.Conform);
 	}
 
 	public void OnCloseButton()
 	{
 		var admission = new Admission_PopdownOldPage();
 		UIEngine.Back(DialogResult.Cancel, admission);
-		Complete(DialogResult.Cancel);
+		Complete?.Invoke(DialogResult.Cancel);
 	}
 }
 

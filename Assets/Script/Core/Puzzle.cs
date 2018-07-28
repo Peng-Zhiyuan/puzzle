@@ -209,8 +209,10 @@ public class Puzzle
 		}
 	}
 
+	public Pice lastDragPice;
 	public void OnRootPiceDragEnd(Pice pice)
 	{
+		lastDragPice = pice;
 		UpdatePiceOwner(pice);
 		// 没有连结的 pice， 当拖放释放点不在 board 上时，自动回到 side 上
 		if(pice.linkingList.Count == 0)
@@ -238,7 +240,47 @@ public class Puzzle
 
 	private IEnumerator waiteAndSendComplete()
 	{
-		yield return new WaitForSeconds(0.4f);
+		var temp = DicPool.Take();
+		var rank = new List<List<Pice>>();
+		var r1 = new List<Pice>();
+		r1.Add(lastDragPice);
+		rank.Add(r1);
+		temp[lastDragPice] = true;
+
+		var next = new List<Pice>();
+		var last = r1;
+		here:
+		foreach(var pice in last)
+		{
+			foreach(var linking in pice.linkingList)
+			{
+				var nextPice = linking.pice;
+				if(temp.ContainsKey(nextPice) && temp[nextPice])
+				{
+					continue;
+				}
+				next.Add(nextPice);
+				temp[nextPice] = true;
+			}
+		}
+		if(next.Count >0)
+		{
+			rank.Add(next);
+			last = next;
+			next = new List<Pice>();
+			goto here;
+		}
+		DicPool.Put(temp);
+
+		foreach(var list in rank)
+		{
+			foreach(var pice in list)
+			{
+				pice.Flash();
+			}
+			yield return new WaitForSeconds(0.15f);
+		}
+		yield return new WaitForSeconds(0.2f);
 		Complete?.Invoke();
 	}
 

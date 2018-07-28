@@ -39,6 +39,13 @@ public class MainPage : Page
         // SetDataList(dataList);
     }
 
+    public override void OnPush()
+    {
+        var floating = UIEngine.ShowFloating<BackgroundFloating>(null, -10);
+		floating.transform.SetAsFirstSibling();
+		UIEngine.ShowFloating<HeadBarFloating>();
+    }
+
     public override void OnNavigatedTo()
     {
         UIEngine.ShowFlaoting("BackgroundFloating");

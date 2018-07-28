@@ -11,18 +11,14 @@ public class Game : MonoBehaviour
 		StaticDataLite.Init();
 		UIEngine.Init();
 		PlayerStatus.Read();
-		UIEngine.Forward("MainPage");
+		UIEngine.Forward("LoadingPage");
 		//UIEngine.Forward<LevelCompletePage>();
-		var floating = UIEngine.ShowFloating<BackgroundFloating>(null, -10);
-		floating.transform.SetAsFirstSibling();
-		UIEngine.ShowFloating<HeadBarFloating>();
+
 
 		// 摄像机渲染区域默认根据高去调整宽
 		// 但是这里需要根据宽调整高
 		// 因此需要手动设置摄像机的渲染高度，达到宽度固定 1080 效果
-		Debug.Log(Screen.width + ", " + Screen.height);
-		
-		// 
+
 		heightScale = CameraUtil.SetCameraSizeByDecisionRevelutionAndFixAtWidth(1080, 1920);
 	}
 

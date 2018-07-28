@@ -27,7 +27,7 @@ public static class GameController
 		var piceSize = StaticDataLite.GetCell<int>("pice_slice", sliceId.ToString(), "cell_size");
 
 		// test code
-		//piceSize = 400;
+		//piceSize = 200;
 
 		// start core game
 		Puzzle.Instance.StartPuzzle(picTexture, piceSize);

@@ -61,7 +61,8 @@ public class ShopPage : Page
         }
         else if(item is ShopPage_AdItem)
         {
-            UIEngine.Forward<AdPage>();
+            var popup = new Admission_PopupNewPage();
+            UIEngine.Forward<AdPage>(null, popup);
         }
     }
 
