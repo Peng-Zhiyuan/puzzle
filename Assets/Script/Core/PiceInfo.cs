@@ -14,6 +14,11 @@ public class PiceInfo
     public bool isFixed;
     public PiceOwner owner;
     public List<LinkingInfo> LinkingInfoList = new List<LinkingInfo>();
+    public EdgeType leftType;
+    public EdgeType rightType;
+    public EdgeType bottomType;
+    public EdgeType topType;
+    public int sortingOrder;
 
 }
 

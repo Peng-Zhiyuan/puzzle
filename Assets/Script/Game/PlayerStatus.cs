@@ -11,7 +11,7 @@ public static class PlayerStatus
     public static int lastSignDay;
 
     public static Dictionary<string, CoreInfo> uncompletePuzzle = new Dictionary<string, CoreInfo>();
-    public static List<CompleteInfo> completeList;
+    public static Dictionary<string, CompleteInfo> completeDic;
 
     public static void Save()
     {
@@ -23,15 +23,13 @@ public static class PlayerStatus
         // uncomplete
         {
             var json = JsonMapper.Instance.ToJson(uncompletePuzzle);
-            PlayerPrefs.SetString("PlayerStatus.uncompletePuzzle", json);
+            PlayerPrefs.SetString("PlayerStatus." + nameof(uncompletePuzzle), json);
         }
 
         // complete list
         {
-            var dic = new Dictionary<string, List<CompleteInfo>>();
-            dic["content"] = completeList;
-            var json = JsonMapper.Instance.ToJson(dic);
-            PlayerPrefs.SetString("PlayerStatus.completeList", json);
+            var json = JsonMapper.Instance.ToJson(completeDic);
+            PlayerPrefs.SetString("PlayerStatus." + nameof(completeDic), json);
         }
 
         // flush
@@ -48,15 +46,13 @@ public static class PlayerStatus
         lastSignDay = PlayerPrefs.GetInt("PlayerStatus.lastSignDay", 0);
         // uncomplete
         {
-            var json = PlayerPrefs.GetString("PlayerStatus.uncompletePuzzle", "{}");
+            var json = PlayerPrefs.GetString("PlayerStatus." + nameof(uncompletePuzzle), "{}");
             uncompletePuzzle = JsonMapper.Instance.ToObject<Dictionary<string, CoreInfo>>(json);
         }
         // complete list
         {
-            var json = PlayerPrefs.GetString("PlayerStatus.completeList", "{\"content\":[]}");
-            var dic = JsonMapper.Instance.ToObject<Dictionary<string,  List<CompleteInfo>>>(json);
-            var list = dic["content"];
-            completeList = list;
+            var json = PlayerPrefs.GetString("PlayerStatus." + nameof(completeDic), "{}");
+            completeDic = JsonMapper.Instance.ToObject<Dictionary<string, CompleteInfo>>(json);
         }
     }
 
@@ -133,16 +129,16 @@ public static class PlayerStatus
         }
     }
 
+    public static void RemoveUncompleteInfoOfPicId(int picId)
+    {
+        uncompletePuzzle.Remove(picId.ToString());
+    }
+
     public static CompleteInfo GetCompleteInfoOfPicId(int picId)
     {
-        foreach(var c in completeList)
-        {
-            if(c.pid == picId)
-            {
-                return c;
-            }
-        }
-        return null;
+        CompleteInfo info;
+        completeDic.TryGetValue(picId.ToString(), out info);
+        return info;
     }
 
     public static bool IsPictureComplete(int picId)

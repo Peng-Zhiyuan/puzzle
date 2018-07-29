@@ -34,7 +34,7 @@ public class PicturePage : Page
         else if(p.pageType == PicturePageType.Complete)
         {
             this.text_title.text = "已完成";
-            this.text_des.text = "共 " + PlayerStatus.completeList.Count + " 张";
+            this.text_des.text = "共 " + PlayerStatus.completeDic.Count + " 张";
         }
 
     }
@@ -115,8 +115,9 @@ public class PicturePage : Page
         if(p.pageType == PicturePageType.Complete)
         {
             var dataList = new List<PictruePage_ItemData>();
-            foreach(var info in PlayerStatus.completeList)
+            foreach(var kv in PlayerStatus.completeDic)
             {
+                var info = kv.Value;
                 var picId = info.pid;
                 var picRow = StaticDataLite.GetRow("pic", picId.ToString());
 

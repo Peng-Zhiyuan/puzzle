@@ -107,7 +107,7 @@ public class Side : MonoBehaviour
 			var y = GetCellCenterY(i);
 			if(!pice.draging)
 			{
-				pice.SmoothSetPosition(x, y);
+				pice.SmoothSetPositionWithBlock(x, y);
 				var scale = ((float)this.cellWidth / pice.cellWidth) * 0.65f;
 				pice.AnimateScale(scale);
 			}

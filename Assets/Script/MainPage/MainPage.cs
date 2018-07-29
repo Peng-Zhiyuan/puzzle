@@ -78,7 +78,7 @@ public class MainPage : Page
 
         // 检查是否有已完成的拼图
         {
-            var count = PlayerStatus.completeList.Count;
+            var count = PlayerStatus.completeDic.Count;
             if(count > 0)
             {
                 var data = new MainPage_ItemData()
@@ -152,9 +152,10 @@ public class MainPage : Page
         if(data.pageType == PicturePageType.Complete)
         {
             item.label.text = "已完成";
-            if(PlayerStatus.completeList.Count > 0)
+            foreach(var kv in PlayerStatus.completeDic)
             {
-                var picId = PlayerStatus.completeList[0].pid;
+                var record = kv.Value;
+                var picId = record.pid;
                 var picRow = StaticDataLite.GetRow("pic", picId.ToString());
                 var fileName = picRow.Get<string>("file");
                 var texture = PicLibrary.Load(fileName);

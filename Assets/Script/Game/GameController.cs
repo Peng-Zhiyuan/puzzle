@@ -54,10 +54,19 @@ public static class GameController
 		HeadBarFloating.instance.AutoRefresh = false;
 		PlayerStatus.exp += 10;
 		PlayerStatus.gold += 10;
-		var info = new CompleteInfo();
-		info.pid = lastPicId;
-		info.sliceId = lastSliceId;
-		PlayerStatus.completeList.Add(info);
+
+		// 更新记录
+		var record = PlayerStatus.GetCompleteInfoOfPicId(lastPicId);
+		if(record == null || record.sliceId < lastSliceId)
+		{
+			var info = new CompleteInfo();
+			info.pid = lastPicId;
+			info.sliceId = lastSliceId;
+			PlayerStatus.completeDic[lastPicId.ToString()] = info;
+		}
+		// 如果这张图有中途存档，则删除存档
+		PlayerStatus.RemoveUncompleteInfoOfPicId(lastPicId);
+	
 		PlayerStatus.Save();
 
 		LevelCompletePage.goldParam = gold;

@@ -79,6 +79,18 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		}
 	}
 
+	public int SortingOrder
+	{
+		get
+		{
+			return this.GetComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder;
+		}
+		set
+		{
+			this.GetComponent<UnityEngine.Rendering.SortingGroup>().sortingOrder = value;
+		}
+	}
+
 	public PiceOwner owner;
 
 	public void Init(Map map, int index)
@@ -286,23 +298,28 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		this.owner = PiceOwner.Floating;
 	}
 
-	public void SmoothSetPosition(float x, float y)
+	public void SmoothSetPositionWithBlock(float x, float y)
 	{
 		var p = this.transform.position;
 		var dx = x - p.x;
 		var dy = y - p.y;
-		SmoothMovePosition(dx, dy);
+		SmoothMovePositionWithBlock(dx, dy);
 	}
 
 	public void SetPostion(float x, float y)
 	{
+		this.transform.position = new Vector2(x, y);
+	}
+
+	public void SetPostionWithBlock(float x, float y)
+	{
 		var p = this.transform.position;
 		var dx = x - p.x;
 		var dy = y - p.y;
-		MovePosition(dx, dy);
+		MovePositionWithBlock(dx, dy);
 	}
 
-	public void MovePosition(float dx, float dy)
+	public void MovePositionWithBlock(float dx, float dy)
 	{
 		ForeachPiceOfBlock(pice=>{
 			var p = pice.transform.position;
@@ -312,7 +329,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	}
 
 
-	public void SmoothMovePosition(float dx, float dy)
+	public void SmoothMovePositionWithBlock(float dx, float dy)
 	{
 		ForeachPiceOfBlock(pice=>{
 			iTween.MoveBy(pice.gameObject, iTween.Hash("x", dx, "y", dy, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
@@ -565,6 +582,11 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			sideIndex = this.sideIndex,
 			isFixed = this.isFixed,
 			owner = this.owner,
+			leftType = this.LeftType,
+			rightType = this.RightType,
+			bottomType = this.BottomType,
+			topType = this.TopType,
+			sortingOrder = this.SortingOrder,
 		};
 		foreach(var l in linkingList)
 		{

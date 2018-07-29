@@ -145,6 +145,7 @@ public class Puzzle
 				pice.SetToSide(side.count - 1);
 			}
 			pice.isFixed = i.isFixed;
+			pice.SortingOrder = i.sortingOrder;
 			// linking
 			pice.linkingList.Clear();
 			foreach(var linkingInfo in i.LinkingInfoList)
@@ -156,9 +157,15 @@ public class Puzzle
 				linking.pice = linkingToPice;
 				pice.linkingList.Add(linking);
 			}
+			// edge type
+			pice.LeftType = i.leftType;
+			pice.RightType = i.rightType;
+			pice.BottomType = i.bottomType;
+			pice.TopType = i.topType;
 		}
 		board.RepositionAllPiceNoAnimation();
 		side.RepositionPiceListNoAnimation();
+
 	}
 
 	public void Clean()

@@ -101,7 +101,7 @@ public class Board : MonoBehaviour
 				minIndex = index;
 			}
 		}
-		pice.SmoothSetPosition(minCenterX, minCenterY); 
+		pice.SmoothSetPositionWithBlock(minCenterX, minCenterY); 
 		//set data
 		var indexX_ = IndexToIndexX(minIndex);
 		var indexY_ = IndexToIndexY(minIndex);
@@ -121,6 +121,7 @@ public class Board : MonoBehaviour
 				}
 				var centerX = GetCenterX(i);
 				var centerY = GetCenterY(j);
+				
 				foreach(var pice in stack.list)
 				{
 					pice.SetPostion(centerX, centerY);
