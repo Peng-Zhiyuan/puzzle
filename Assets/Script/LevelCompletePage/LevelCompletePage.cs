@@ -115,7 +115,7 @@ public class LevelCompletePage : Page
 		StartCoroutine(TaskGold());
 		yield return new WaitForSeconds(0.5f);
 		HeadBarFloating.instance.AutoRefresh = true;
-		UIEngine.BackTo<PicturePage>();
+		UIEngine.BackTo<MainPage>();
 		UIEngine.DestroyFromPool("LevelCompletePage");
 	}
 

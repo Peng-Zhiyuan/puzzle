@@ -59,6 +59,12 @@ public class Puzzle
 
 	}
 
+	public void ShowEye(bool b)
+	{
+		core.validSpriet.gameObject.SetActive(b);
+	}
+	
+
 	private Texture2D ExpandTexture(Texture2D texture)
 	{
 		// 扩张 texture
@@ -81,14 +87,14 @@ public class Puzzle
 	/// 每当开始新拼图时调用
 	/// </summary>
 	/// <param name="texture"></param>
-	/// <param name="cellSize"></param>
-	public void StartPuzzle(Texture2D texture, int cellSize)
+	/// <param name="cellPixelSize"></param>
+	public void StartPuzzle(Texture2D texture, int cellPixelSize)
 	{
 		Clean();
-		EXPAND = (int)(cellSize * 0.25f);
+		EXPAND = (int)(cellPixelSize * 0.25f);
 		expanedTexture = ExpandTexture(texture);
 		map = new Map();
-		map.Init(expanedTexture, EXPAND, cellSize);
+		map.Init(expanedTexture, EXPAND, cellPixelSize);
 
 		board.Init(map.validWidth, map.validHeight, map.xCount, map.yCount);
 		side.Init(200);
@@ -115,6 +121,13 @@ public class Puzzle
 		{
 			core.HideDot();
 		}
+		// board 的 scrollRect content位置归零
+		var p = side.scrollView.content.localPosition;
+		p.x = 0;
+		side.scrollView.content.localPosition = p;
+		// 设置 valid rect sprite 到参考图
+		core.validSpriet.sprite = map.validSprite;
+		core.validSpriet.gameObject.SetActive(false);
 	}
 
 	public void LoadInfo(PuzzleInfo info)

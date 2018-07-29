@@ -175,22 +175,39 @@ public class PicturePage : Page
                 item.IsShowPice = false;
                 break;
             case PicturePage_ItemStatus.Unlocked:
-                item.IsShowPuzzleMask = true;
-                item.IsShowUnlockLayer = false;
-                item.IsShowPice = false;
-                break;
-            case PicturePage_ItemStatus.Complete:
-                item.IsShowPuzzleMask = false;
-                item.IsShowUnlockLayer = false;
-                item.IsShowPice = true;
-                var picId = data.picRow.Get<int>("id");
-                var info = PlayerStatus.GetCompleteInfoOfPicId(picId);
-                if(info != null)
                 {
-                    var sliceCount = StaticDataLite.GetCell<int>("pice_slice", info.sliceId.ToString(), "count");
-                    item.PiceCount = sliceCount;
+                    item.IsShowPuzzleMask = true;
+                    item.IsShowUnlockLayer = false;
+
+                    var picId = data.picRow.Get<int>("id");
+                    var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
+                    if(info != null)
+                    {
+                        var sliceCount = StaticDataLite.GetCell<int>("pice_slice", info.sliceId.ToString(), "count");
+                        item.PiceCount = sliceCount;
+                        item.IsShowPice = true;
+                    }
+                    else
+                    {
+                        item.IsShowPice = false;
+                    }
+                    break;
                 }
-                break;
+
+            case PicturePage_ItemStatus.Complete:
+                {
+                     item.IsShowPuzzleMask = false;
+                    item.IsShowUnlockLayer = false;
+                    item.IsShowPice = true;
+                    var picId = data.picRow.Get<int>("id");
+                    var info = PlayerStatus.GetCompleteInfoOfPicId(picId);
+                    if(info != null)
+                    {
+                        var sliceCount = StaticDataLite.GetCell<int>("pice_slice", info.sliceId.ToString(), "count");
+                        item.PiceCount = sliceCount;
+                    }
+                    break;
+                }
         }
         item.LabelText = data.picRow.Get<string>("name");
         var file = data.picRow.Get<string>("file");

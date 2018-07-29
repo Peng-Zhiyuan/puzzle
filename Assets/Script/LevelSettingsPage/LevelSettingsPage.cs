@@ -11,6 +11,15 @@ public class LevelSettingsPage : Page
 	public RectTransform selection_norotation;
 	public RectTransform selection_rotation;
 	public Button button_continue;
+	public Button button_newGame;
+
+	int PicId
+	{
+		get
+		{
+			return int.Parse(this.param as string);
+		}
+	}
 
 	public void OnRotateSelection()
 	{
@@ -56,16 +65,30 @@ public class LevelSettingsPage : Page
 		first = true;
 
 		// 检查是否有已经开始的拼图
-		var picId = int.Parse(this.param as string);
+		// var picId = PicId;
+		// var b = HasUncompleteGame(picId);
+		// if(b)
+		// {
+
+		// }
+		// if(info == null)
+		// {
+		// 	button_continue.gameObject.SetActive(false);
+		// }
+		// else
+		// {
+		// 	button_continue.gameObject.SetActive(true);
+		// }
+	}
+
+	private bool HasUncompleteGame(int picId)
+	{
 		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
 		if(info == null)
 		{
-			button_continue.gameObject.SetActive(false);
+			return false;
 		}
-		else
-		{
-			button_continue.gameObject.SetActive(true);
-		}
+		return true;
 	}
 
 	private void OnSetData(Transform itemTr, object dataObj)
@@ -83,15 +106,12 @@ public class LevelSettingsPage : Page
 		TweenNearestToCenter();
 	}
 
-	public void TweenNearestToCenter()
+	Vector2 GetNearestItemCenter()
 	{
 		// 计算最近的 item 的 rect
+		var lockPoint = GetScrollRectCenter();
+
 		var itemList = sampleizeScrollRect.ItemList;
-		var scrollRectTransform = sampleizeScrollRect.GetComponent<RectTransform>();
-		var scrollRectWorldRect = RectTransformUtil.GetWorldRect(scrollRectTransform);
-		var scrollRectCenter = scrollRectWorldRect.center;
-		var lockPoint = scrollRectCenter;
-		
 		var shotestDistance = float.MaxValue;
 		Vector2 nearestItemCenter = Vector2.zero;
 		var nearestItemIndex = -1;
@@ -108,22 +128,113 @@ public class LevelSettingsPage : Page
 				nearestItemIndex = i;
 			}
 		}
+		Debug.Log(nearestItemIndex);
+		return nearestItemCenter;
+	}
 
-		// 计算移动向量
-		var moveVector = lockPoint - nearestItemCenter;
-		var moveVector3 = new Vector3(moveVector.x, moveVector.y);
-		// tween scrollRect
+	Vector2 GetCenterOfItem(int index)
+	{
+		var itemList = sampleizeScrollRect.ItemList;
+		var item = itemList[index];
+		var rect = RectTransformUtil.GetWorldRect(item.GetComponent<RectTransform>());
+		var center = rect.center;
+		return center;
+	}
+
+	public Vector2 GetScrollRectCenter()
+	{
+		var scrollRectTransform = sampleizeScrollRect.GetComponent<RectTransform>();
+		var scrollRectWorldRect = RectTransformUtil.GetWorldRect(scrollRectTransform);
+		var scrollRectCenter = scrollRectWorldRect.center;
+		var lockPoint = scrollRectCenter;
+		return lockPoint;
+	}
+
+	void TweenScrollContent(Vector2 v)
+	{
+		var moveVector3 = new Vector3(v.x, v.y);
 		var content = sampleizeScrollRect.GetComponent<ScrollRect>().content;
 		//iTween.MoveBy(content.gameObject, moveVector, 0.2f);
 		iTween.MoveBy(content.gameObject, iTween.Hash("amount", moveVector3, "time", 0.2f, "easetype", "easeOutQuad"));
+	}
 
-		Debug.Log(nearestItemIndex);
+	public void TweenNearestToCenter()
+	{
+		var nearestItemCenter = GetNearestItemCenter();
+		var lockPoint = GetScrollRectCenter();
+
+		// 计算移动向量
+		var moveVector = lockPoint - nearestItemCenter;
+		
+		// tween scrollRect
+		TweenScrollContent(moveVector);
+
+		Debug.Log(moveVector);
+	}
+
+	public void TweenItemToCenter(int index)
+	{
+		var itemCenter = GetCenterOfItem(index);
+		var lockPoint = GetScrollRectCenter();
+
+		// 计算移动向量
+		var moveVector = lockPoint - itemCenter;
+		
+		// tween scrollRect
+		TweenScrollContent(moveVector);
+
 		Debug.Log(moveVector);
 	}
 
 	float lostTime = 0;
 	bool first = true;
-	LevelSettingsPage_Item selectItem;
+
+	LevelSettingsPage_Item _selectItem;
+	LevelSettingsPage_Item selectItem
+	{
+		set
+		{
+			_selectItem = value;
+			RefreshButton();
+		}
+		get
+		{
+			return _selectItem;
+		}
+	}
+	public void RefreshButton()
+	{
+		// 检查当前pid和sliceId是否有中断的游戏
+		var picId = PicId;
+		var sliceId = _selectItem.dataRow.Get<int>("id");
+		var b = HasUncompleteGame(picId, sliceId);
+		if(b)
+		{
+			button_continue.gameObject.SetActive(true);
+			button_newGame.gameObject.SetActive(false);
+		}
+		else
+		{
+			button_continue.gameObject.SetActive(false);
+			button_newGame.gameObject.SetActive(true);
+		}
+	
+	}
+
+	private bool HasUncompleteGame(int picId, int sliceId)
+	{
+		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
+		if(info == null)
+		{
+			return false;
+		}
+		if(info.sliceId == sliceId)
+		{
+			return true;
+		}
+		return false;
+	}
+
 	public void Update()
 	{
 		// tween center at frame 2
@@ -133,8 +244,18 @@ public class LevelSettingsPage : Page
 		{
 			if(first)
 			{
-				
-				TweenNearestToCenter();
+				var b = HasUncompleteGame(PicId);
+				if(b)
+				{
+					var info = PlayerStatus.TryGetUncompleteOfPicId(PicId);
+					var sliceId = info.sliceId;
+					var itemIndex = sliceId - 1;
+					TweenItemToCenter(itemIndex);
+				}
+				else
+				{
+					TweenNearestToCenter();
+				}
 				first = false;
 			}
 		}
@@ -184,6 +305,7 @@ public class LevelSettingsPage : Page
 
 	public void OnStartButton()
 	{
+		if(first) return;
 		// 检查这个 picId 是否已经有存档，如果有则提示
 		var picId = int.Parse(this.param as string);
 
@@ -208,6 +330,7 @@ public class LevelSettingsPage : Page
 
 	public void OnContinue()
 	{
+		if(first) return;
 		var picId = int.Parse(this.param as string);
 		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
 		GameController.EnterWithInfo(info);

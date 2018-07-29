@@ -7,6 +7,7 @@ public class Core : MonoBehaviour
 
 	public Board board;
 	public Side side;
+	public SpriteRenderer validSpriet;
 
 	public void Init()
 	{

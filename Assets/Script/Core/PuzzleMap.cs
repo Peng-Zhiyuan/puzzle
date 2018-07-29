@@ -18,6 +18,7 @@ public class Map
 
 	public Rect validRect;
 	public PiceEdgeInfo[,] piceInfo;
+	public Sprite validSprite;
 
 	public void Init(Texture2D texture, int expand, int cellSize)
 	{
@@ -43,7 +44,10 @@ public class Map
 		this.xCount = xCount;
 		this.yCount = yCount;
 		GeneratePiceShap();
+
+		validSprite = Sprite.Create(this.texture, this.validRect, new Vector2(0.5f, 0.5f), 1);
 	}
+
 
 	public class PiceEdgeInfo
 	{
