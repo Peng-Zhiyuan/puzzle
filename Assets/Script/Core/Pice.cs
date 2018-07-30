@@ -404,11 +404,13 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	public void FlashAsLink()
 	{
 		Flash();
+		AudioManager.PlaySe("pice-link");
 	}
 
 	public void FlashAsFix()
 	{
 		Flash();
+		AudioManager.PlaySe("pice-link");
 	}
 
  	#region Interface Implementations

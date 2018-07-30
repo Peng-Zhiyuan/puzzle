@@ -5,8 +5,8 @@ using System;
 
 public static class GameController  
 {
-	static int lastPicId;
-	static int lastSliceId;
+	public static int lastPicId;
+	public static int lastSliceId;
 
 	public static void EnterCore(int picId, int sliceId)
 	{
@@ -27,7 +27,7 @@ public static class GameController
 		var piceSize = StaticDataLite.GetCell<int>("pice_slice", sliceId.ToString(), "cell_size");
 
 		// test code
-		//piceSize = 200;
+		piceSize = 400;
 
 		// start core game
 		Puzzle.Instance.StartPuzzle(picTexture, piceSize);
@@ -54,7 +54,7 @@ public static class GameController
 		HeadBarFloating.instance.AutoRefresh = false;
 		PlayerStatus.exp += 10;
 		PlayerStatus.gold += 10;
-
+		PlayerStatus.completeCount ++;
 		// 更新记录
 		var record = PlayerStatus.GetCompleteInfoOfPicId(lastPicId);
 		if(record == null || record.sliceId < lastSliceId)

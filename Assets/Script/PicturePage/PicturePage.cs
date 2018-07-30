@@ -36,7 +36,6 @@ public class PicturePage : Page
             this.text_title.text = "已完成";
             this.text_des.text = "共 " + PlayerStatus.completeDic.Count + " 张";
         }
-
     }
 
     public override void OnPush()
@@ -233,18 +232,22 @@ public class PicturePage : Page
             data.status = PicturePage_ItemStatus.Unlocked;
             SetItem(item, data);
             item.Flash();
+            AudioManager.PlaySe("button");
+            AudioManager.PlaySe("unlock-pic");
         }
         else
         {
             var text = MsgList.Get("lack_of_gold");
             var popup = new Admission_PopupNewPage();
             UIEngine.Forward<DialogPage>(text, popup);
+            AudioManager.PlaySe("lack-of-gold");
         }
         
     }
 
     void OnItemClicked(PictruePage_Item item)
     {
+        AudioManager.PlaySe("button");
         // 如果是图片分类，则开始新游戏
         //if(!isUncomplete)
         //{

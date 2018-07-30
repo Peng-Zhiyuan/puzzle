@@ -34,6 +34,7 @@ public class Map
 		var rectBottom = (texture.height - validHeight)/2;
 		var validRect = new Rect(rectLeft, rectBottom, validWidth, validHeight);
 
+
 		this.validRect = validRect;
 		this.validWidth = validWidth;
 		this.validHeight = validHeight;
@@ -45,7 +46,8 @@ public class Map
 		this.yCount = yCount;
 		GeneratePiceShap();
 
-		validSprite = Sprite.Create(this.texture, this.validRect, new Vector2(0.5f, 0.5f), 1);
+		//Debug.Log("validRect:" + validRect);
+		validSprite = Sprite.Create(this.texture, validRect, new Vector2(0.5f, 0.5f), 1);
 	}
 
 
@@ -169,12 +171,14 @@ public class Map
 
 	public float GetCellCenterX(int indexX)
 	{
-		return expand + indexX * cellWidth + cellWidth/2;
+		return validRect.xMin + indexX * cellWidth + cellWidth/2;
+		//return expand + indexX * cellWidth + cellWidth/2;
 	}
 
 	public float GetCellCenterY(int indexY)
 	{
-		return expand + indexY * cellHeight + cellHeight/2;
+		return validRect.yMin + indexY * cellHeight + cellHeight/2;
+		//return expand + indexY * cellHeight + cellHeight/2;
 	}
 
 	public int IndexToIndexX(int index)

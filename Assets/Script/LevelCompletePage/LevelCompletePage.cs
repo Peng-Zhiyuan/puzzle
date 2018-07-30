@@ -79,6 +79,7 @@ public class LevelCompletePage : Page
 
 		HeadBarFloating.instance.Gold += goldParam;
 		HeadBarFloating.instance.ScaleGold();
+		AudioManager.PlaySe("gain-gold");
 	}
 
 	private IEnumerator TaskExp()
@@ -110,13 +111,17 @@ public class LevelCompletePage : Page
 
 	private IEnumerator Task()
 	{
+		AudioManager.PlaySe("pre-gain-gold");
 		StartCoroutine(TaskExp());
 		yield return new WaitForSeconds(0.2f);
+		AudioManager.PlaySe("pre-gain-gold");
 		StartCoroutine(TaskGold());
 		yield return new WaitForSeconds(0.5f);
 		HeadBarFloating.instance.AutoRefresh = true;
-		UIEngine.BackTo<MainPage>();
-		UIEngine.DestroyFromPool("LevelCompletePage");
+		//UIEngine.BackTo<MainPage>();
+
+		var pid = GameController.lastPicId;
+		UIEngine.Forward<DisplayPage>(pid);
 	}
 
 	public void OnFullButton()
