@@ -5,8 +5,8 @@ using UnityEngine;
 public class Board : MonoBehaviour
 {
 	public SpriteRenderer sr_border;
-	int width;
-	int height;
+	float width;
+	float height;
 	public int xCount;
 	public int yCount;
 	int maxIndex;
@@ -15,7 +15,7 @@ public class Board : MonoBehaviour
 
 	SpriteRenderer test;
 	public PiceStack[,] data;
-	public void Init(int width, int height, int xCount, int yCount)
+	public void Init(float width, float height, int xCount, int yCount)
 	{
 		this.width = width;
 		this.height = height;

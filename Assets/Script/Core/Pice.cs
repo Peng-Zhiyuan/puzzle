@@ -38,16 +38,16 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
 	public List<Linking> linkingList = new List<Linking>();
 
-	public static int MASK_PIXEL_WIDTH = 300;
-	public static int MASK_PIXEL_HIGHT = 300;
+	public static int MASK_WIDTH = 300;
+	public static int MASK_HIGHT = 300;
 
 	public bool dealedFlag;
 
 	public int boardX = -1;
 	public int boardY = -1;
 	public int sideIndex = -1;
-	public int cellWidth;
-	public int cellHeight;
+	public float cellWidth;
+	public float cellHeight;
 
 	private bool _isFiexed;
 	/// <summary>
@@ -103,33 +103,35 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		// var maxIndex = cellCount - 1;
 		var indexX = map.IndexToIndexX(index);
 		var indexY = map.IndexToIndexY(index);
-		var cellCenterX = map.GetCellCenterX(indexX);
+		var cellCenterX = map.GetCellPixelCenterX(indexX);
 		var cellCenterY = map.GetCellCenterY(indexY);
-		var expandedCellWidth = map.cellWidth + map.expand * 2;
-		var expandedCellHight = map.cellHeight + map.expand * 2;
+		var expandedCellPixelWidth = map.cellPixelWidth + map.pixelExpand * 2;
+		var expandedCellPixelHight = map.cellPixelHeight + map.pixelExpand * 2;
 
-		var left = cellCenterX - expandedCellWidth/2;
-		var bottom = cellCenterY - expandedCellHight/2;
-		var right = left + expandedCellWidth;
-		var top = bottom + expandedCellHight;
+		var left = cellCenterX - expandedCellPixelWidth/2;
+		var bottom = cellCenterY - expandedCellPixelHight/2;
+		var right = left + expandedCellPixelWidth;
+		var top = bottom + expandedCellPixelHight;
 		
 
-		var sprite = Sprite.Create(map.texture, new Rect(left, bottom, expandedCellWidth, expandedCellHight), new Vector2(0.5f, 0.5f), 1);
+		var sprite = Sprite.Create(map.texture, new Rect(left, bottom, expandedCellPixelWidth, expandedCellPixelHight), new Vector2(0.5f, 0.5f), map.pixlesPerUnit);
 
 		spriteRanderer.sprite = sprite;
-		this.MaskWidth = expandedCellWidth;
-		this.MaskHeight = expandedCellHight;
-		this.FlashSize = new Vector2(expandedCellWidth, expandedCellHight);
+		var cellWidth = expandedCellPixelWidth / map.pixlesPerUnit;
+		var cellHeight = expandedCellPixelHight / map.pixlesPerUnit;
+		this.MaskWidth = cellWidth;
+		this.MaskHeight = cellHeight;
+		this.FlashSize = new Vector2(cellWidth, cellHeight);
 		this.LeftType = EdgeType.AO;
 		this.RightType = EdgeType.AO;
 		this.TopType = EdgeType.AO;
 		this.BottomType = EdgeType.AO;
-		this.collider.size = new Vector2(expandedCellWidth, expandedCellHight);
+		this.collider.size = new Vector2(cellWidth, cellHeight);
 		this.index = index;
 		this.indexX = indexX;
 		this.indexY = indexY;
-		this.cellWidth = map.cellWidth;
-		this.cellHeight = map.cellHeight;
+		this.cellWidth = cellWidth;
+		this.cellHeight = cellHeight;
 
 		// set edge
 		var info = map.piceInfo[indexX, indexY];
@@ -145,7 +147,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	{
 		set
 		{
-			var scale = value / MASK_PIXEL_WIDTH;
+			var scale = value / MASK_WIDTH;
 			mask.localScale = new Vector2(scale, mask.localScale.y);
 		}
 	}
@@ -154,7 +156,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	{
 		set
 		{
-			var scale = value / MASK_PIXEL_HIGHT;
+			var scale = value / MASK_HIGHT;
 			mask.localScale = new Vector2(mask.localScale.x, scale);
 		}
 	}

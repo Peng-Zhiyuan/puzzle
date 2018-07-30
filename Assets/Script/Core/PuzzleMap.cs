@@ -6,48 +6,62 @@ using System;
 public class Map 
  {
 	public Texture2D texture;
-	public int validHeight;
-	public int validWidth;
-	public int cellWidth;
-	public int cellHeight;
+	public int validPixelHeight;
+	public int validPixelWidth;
+	public int cellPixelWidth;
+	public int cellPixelHeight;
 	public int cellCount;
-	public int expand;
+	public int pixelExpand;
 	public int xCount;
 	public int yCount;
-	public int cellSize;
+	public int cellPixelSize;
 
 	public Rect validRect;
 	public PiceEdgeInfo[,] piceInfo;
 	public Sprite validSprite;
 
-	public void Init(Texture2D texture, int expand, int cellSize)
+	public float pixlesPerUnit;
+	public float validHeight;
+	public float validWidth;
+	public float cellHeigth;
+	public float cellWidth; 
+	public float expand;
+
+	public void Init(Texture2D texture, int pixelExpand, int cellPixelSize)
 	{
-		this.cellSize = cellSize;
+		this.cellPixelSize = cellPixelSize;
 		this.texture = texture;
-		var realWidth = texture.width - 2 * expand;
-		var readlHeight = texture.height - 2 * expand;
-		var xCount = realWidth / cellSize;
-		var yCount = readlHeight / cellSize;
-		var validWidth = xCount * cellSize;
-		var validHeight = yCount * cellSize;
+		var realWidth = texture.width - 2 * pixelExpand;
+		var readlHeight = texture.height - 2 * pixelExpand;
+		var xCount = realWidth / cellPixelSize;
+		var yCount = readlHeight / cellPixelSize;
+		var validWidth = xCount * cellPixelSize;
+		var validHeight = yCount * cellPixelSize;
 		var rectLeft = (texture.width - validWidth)/2;
 		var rectBottom = (texture.height - validHeight)/2;
 		var validRect = new Rect(rectLeft, rectBottom, validWidth, validHeight);
 
 
 		this.validRect = validRect;
-		this.validWidth = validWidth;
-		this.validHeight = validHeight;
-		this.cellWidth = cellSize;
-		this.cellHeight = cellSize;
+		this.validPixelWidth = validWidth;
+		this.validPixelHeight = validHeight;
+		this.cellPixelWidth = cellPixelSize;
+		this.cellPixelHeight = cellPixelSize;
 		this.cellCount = xCount * yCount;
-		this.expand = expand;
+		this.pixelExpand = pixelExpand;
 		this.xCount = xCount;
 		this.yCount = yCount;
 		GeneratePiceShap();
 
+		pixlesPerUnit = realWidth / 1000f;
+		this.validWidth = validPixelWidth / pixlesPerUnit;
+		this.validHeight = validPixelHeight / pixlesPerUnit;
+		this.cellWidth = cellPixelWidth / pixlesPerUnit;
+		this.cellHeigth = cellPixelHeight / pixlesPerUnit;
+		this.expand = this.pixelExpand / pixlesPerUnit;
+
 		//Debug.Log("validRect:" + validRect);
-		validSprite = Sprite.Create(this.texture, validRect, new Vector2(0.5f, 0.5f), 1);
+		validSprite = Sprite.Create(this.texture, validRect, new Vector2(0.5f, 0.5f), pixlesPerUnit);
 	}
 
 
@@ -169,15 +183,15 @@ public class Map
 	// 	this.yCount = yCount;
 	// }
 
-	public float GetCellCenterX(int indexX)
+	public float GetCellPixelCenterX(int indexX)
 	{
-		return validRect.xMin + indexX * cellWidth + cellWidth/2;
+		return validRect.xMin + indexX * cellPixelWidth + cellPixelWidth/2;
 		//return expand + indexX * cellWidth + cellWidth/2;
 	}
 
 	public float GetCellCenterY(int indexY)
 	{
-		return validRect.yMin + indexY * cellHeight + cellHeight/2;
+		return validRect.yMin + indexY * cellPixelHeight + cellPixelHeight/2;
 		//return expand + indexY * cellHeight + cellHeight/2;
 	}
 

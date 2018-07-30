@@ -193,7 +193,7 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 		}
 	}
 
-	public void SetContentLength(int length)
+	public void SetContentLength(float length)
 	{
 		var c = ContentBoxCliider;
 		c.size = new Vector2(length, c.size.y);

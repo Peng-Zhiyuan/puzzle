@@ -13,11 +13,11 @@ public class Side : MonoBehaviour
 			return list.Count;
 		}
 	}
-	public int cellWidth;
+	public float cellWidth;
 	private Transform prefab_dot;
 	public List<Pice> list = new List<Pice>();
 
-	public void Init(int cellWidth)
+	public void Init(float cellWidth)
 	{
 		this.cellWidth = cellWidth;
 		this.prefab_dot = transform.Find("dot");
@@ -37,7 +37,7 @@ public class Side : MonoBehaviour
 	}
 
 
-	public void SetContentLength(int length)
+	public void SetContentLength(float length)
 	{
 		scrollView.SetContentLength(length);
 	}
@@ -108,7 +108,7 @@ public class Side : MonoBehaviour
 			if(!pice.draging)
 			{
 				pice.SmoothSetPositionWithBlock(x, y);
-				var scale = ((float)this.cellWidth / pice.cellWidth) * 0.65f;
+				var scale = (this.cellWidth / pice.cellWidth) * 0.85f;
 				pice.AnimateScale(scale);
 			}
 		}
