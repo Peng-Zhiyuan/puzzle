@@ -13,6 +13,7 @@ public class PictruePage_Item : MonoBehaviour
 	public Text label;
 	public Image flash;
 	public Image image_pice;
+	public Text label_unlockButotn;
 
 	public Texture2D Texture2D
 	{
@@ -60,6 +61,14 @@ public class PictruePage_Item : MonoBehaviour
 		{
 			var text = this.image_pice.GetComponentInChildren<Text>();
 			text.text = value.ToString();
+		}
+	}
+
+	public string UnlockButtonText
+	{
+		set
+		{
+			label_unlockButotn.text = value;
 		}
 	}
 

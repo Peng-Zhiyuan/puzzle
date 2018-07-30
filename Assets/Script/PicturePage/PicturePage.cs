@@ -172,6 +172,9 @@ public class PicturePage : Page
                 item.IsShowPuzzleMask = true;
                 item.IsShowUnlockLayer = true;
                 item.IsShowPice = false;
+                var unlockGold = data.picRow.Get<int>("cost");
+                var unlockButotnText = unlockGold + "金币解锁";
+                item.UnlockButtonText = unlockButotnText;
                 break;
             case PicturePage_ItemStatus.Unlocked:
                 {
