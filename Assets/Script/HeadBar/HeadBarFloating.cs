@@ -68,6 +68,23 @@ public class HeadBarFloating : Floating
 		if(UIEngine.PagesCount > 1)
 		{
 			var top = UIEngine.Top;
+			if(top is LevelCompletePage)
+			{
+				// do nothing
+			}
+			else if(top is DisplayPage)
+			{
+				// do nothing
+			}
+			else if(top is DialogPage)
+			{
+				// do nothing
+			}
+			else if(top is AdPage)
+			{
+				// do nothing
+			}
+
 			if(top is LevelSettingsPage)
 			{
 				var admin = new Admission_PopdownOldPage();
@@ -96,6 +113,8 @@ public class HeadBarFloating : Floating
 			{
 				UIEngine.Back(null, admission);
 			}
+			AudioManager.PlaySe("button");
+			SDKManager.OnHeadBarBackbutton();
 		}
 		else
 		{
@@ -134,7 +153,7 @@ public class HeadBarFloating : Floating
 		var nowTop = UIEngine.Top;
 		if(nowTop != lastPage)
 		{
-			if(nowTop is MainPage)
+			if(nowTop is MainPage || nowTop is LevelCompletePage || nowTop is DisplayPage || nowTop is DialogPage || nowTop is AdPage)
 			{
 				HideBack();
 				Debug.Log("HideBack");
@@ -155,19 +174,30 @@ public class HeadBarFloating : Floating
 		{
 			return;
 		}
+		if(top is ShopPage)
+		{
+			this.OnBackButton();
+			return;
+		}
+		UIEngine.ShowFlaoting("BackgroundFloating");
 		var admission = new Admission_OldDownNewUp();
         UIEngine.Forward<ShopPage>(null, admission);
+		AudioManager.PlaySe("button");
+		AudioManager.PlaySe("sign-and-shop");
 	}
 
 	public void OnStarClicked()
 	{
 		UIEngine.ShowFloating<StarFloating>();
+		AudioManager.PlaySe("button");
 	}
 
 	public void OnSignClicked()
 	{
 		var admin = new Admission_PopupNewPage();
 		UIEngine.Forward<SignPage>(null, admin);
+		AudioManager.PlaySe("button");
+		AudioManager.PlaySe("sign-and-shop");
 	}
 
 	public void HideBack()

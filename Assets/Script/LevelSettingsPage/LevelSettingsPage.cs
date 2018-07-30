@@ -194,8 +194,13 @@ public class LevelSettingsPage : Page
 	{
 		set
 		{
+			if(_selectItem == value)
+			{
+				return;
+			}
 			_selectItem = value;
 			RefreshButton();
+			AudioManager.PlaySe("button");
 		}
 		get
 		{
@@ -325,6 +330,7 @@ public class LevelSettingsPage : Page
 		{
 			GameController.EnterCore(picId, selectItem.dataRow.Get<int>("id"));
 		}
+		AudioManager.PlaySe("button");
 		
 	}
 
@@ -334,10 +340,12 @@ public class LevelSettingsPage : Page
 		var picId = int.Parse(this.param as string);
 		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
 		GameController.EnterWithInfo(info);
+		AudioManager.PlaySe("button");
 	}
 
 	public void OnButtonClose()
 	{
 		HeadBarFloating.instance.OnBackButton();
+		AudioManager.PlaySe("button");
 	}
 }

@@ -53,6 +53,7 @@ public class ShopPage : Page
     // 由 Item 的 sendMessage 调用
     public void ItemClicked(ShopPage_Item item)
     {
+        AudioManager.PlaySe("button");
         if(item is ShopPage_IapItem)
         {
             var iapItem = item as ShopPage_IapItem;

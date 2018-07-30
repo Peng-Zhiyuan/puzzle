@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class MainPage : Page 
 {
@@ -44,6 +45,18 @@ public class MainPage : Page
         var floating = UIEngine.ShowFloating<BackgroundFloating>(null, -10);
 		floating.transform.SetAsFirstSibling();
 		UIEngine.ShowFloating<HeadBarFloating>();
+
+        if(!PlayerStatus.IsTodaySigned())
+        {
+            CoroutineManager.Create(WaitAndShowSign());
+        }
+    }
+
+    public IEnumerator WaitAndShowSign()
+    {
+        yield return new WaitForSeconds(0.5f);
+        var admin = new Admission_PopupNewPage();
+        UIEngine.Forward<SignPage>(null, admin);
     }
 
     public override void OnNavigatedTo()
@@ -166,6 +179,7 @@ public class MainPage : Page
 
     public void OnItemClick(MainPage_Item item)
     {
+        AudioManager.PlaySe("button");
 
         var param = new PicturePageParam();
         param.pageType = item.data.pageType;
@@ -185,6 +199,7 @@ public class MainPage : Page
 
     public void OnShopButton()
     {
+        AudioManager.PlaySe("sign-and-shop");
         var admission = new Admission_OldDownNewUp();
         UIEngine.Forward<ShopPage>(null, admission);
         HeadBarFloating.admission = new Admission_OldDownNewUp();
@@ -192,6 +207,7 @@ public class MainPage : Page
 	
     public void OnGiftButton()
     {
+        AudioManager.PlaySe("sign-and-shop");
         var addmision = new Admission_PopupNewPage();
         UIEngine.Forward<AdPage>(null, addmision);
     }

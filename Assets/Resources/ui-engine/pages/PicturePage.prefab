@@ -561,6 +561,7 @@ MonoBehaviour:
   label: {fileID: 114572451264364908}
   flash: {fileID: 114759071503008462}
   image_pice: {fileID: 114896892331368996}
+  label_unlockButotn: {fileID: 114791133070294922}
 --- !u!114 &114361767325888104
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -886,7 +887,7 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 0aa36566f9feb4d60bfd016865770b77, type: 3}
     m_FontSize: 54
     m_FontStyle: 0
-    m_BestFit: 0
+    m_BestFit: 1
     m_MinSize: 5
     m_MaxSize: 54
     m_Alignment: 4
@@ -1620,8 +1621,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
-  m_SizeDelta: {x: 455, y: 473.8}
+  m_AnchoredPosition: {x: -0.5, y: 4.1}
+  m_SizeDelta: {x: -25.9, y: -26.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224912776235816078
 RectTransform:

@@ -9,6 +9,8 @@ public static class PlayerStatus
     public static int gold;
     public static int sign;
     public static int lastSignDay;
+    public static int bgmIndex;
+    public static int completeCount;
 
     public static Dictionary<string, CoreInfo> uncompletePuzzle = new Dictionary<string, CoreInfo>();
     public static Dictionary<string, CompleteInfo> completeDic;
@@ -19,7 +21,10 @@ public static class PlayerStatus
         PlayerPrefs.SetInt("PlayerStatus.gold", gold);
         PlayerPrefs.SetInt("PlayerStatus.exp", exp);
         PlayerPrefs.SetInt("PlayerStatus.sign", sign);
+        PlayerPrefs.SetInt("PlayerStatus.sign", sign);
+        PlayerPrefs.SetInt("PlayerStatus.bgmIndex", bgmIndex);
         PlayerPrefs.SetInt("PlayerStatus.lastSignDay", lastSignDay);
+        PlayerPrefs.SetInt("PlayerStatus.completeCount", completeCount);
         // uncomplete
         {
             var json = JsonMapper.Instance.ToJson(uncompletePuzzle);
@@ -43,7 +48,9 @@ public static class PlayerStatus
         exp = PlayerPrefs.GetInt("PlayerStatus.exp", 0);
         gold = PlayerPrefs.GetInt("PlayerStatus.gold", 0);
         sign =  PlayerPrefs.GetInt("PlayerStatus.sign", 0);
+        bgmIndex =  PlayerPrefs.GetInt("PlayerStatus.bgmIndex", 0);
         lastSignDay = PlayerPrefs.GetInt("PlayerStatus.lastSignDay", 0);
+        completeCount = PlayerPrefs.GetInt("PlayerStatus.completeCount", 0);
         // uncomplete
         {
             var json = PlayerPrefs.GetString("PlayerStatus." + nameof(uncompletePuzzle), "{}");
@@ -153,4 +160,15 @@ public static class PlayerStatus
         uncompletePuzzle.TryGetValue(picId.ToString(), out info);
         return info;
     }
+
+    public static bool IsTodaySigned()
+	{
+		var today = DateTime.UtcNow.Day;
+		var lastSignDay = PlayerStatus.lastSignDay;
+		if(lastSignDay == today)
+		{
+			return true;
+		}
+		return false;
+	}
 }

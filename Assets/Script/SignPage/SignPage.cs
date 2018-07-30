@@ -17,7 +17,7 @@ public class SignPage : Page
 	{
 		if(PlayerStatus.sign == 7)
 		{
-			if(!IsTodaySigned())
+			if(!PlayerStatus.IsTodaySigned())
 			{
 				PlayerStatus.lastSignDay = 0;
 				PlayerStatus.sign = 0;
@@ -65,7 +65,7 @@ public class SignPage : Page
 		smaple_bigItem.gameObject.SetActive(false);
 
 		// 今天是否已经领取过
-		if(IsTodaySigned())
+		if(PlayerStatus.IsTodaySigned())
 		{
 			button_got.interactable = false;
 			var text = button_got.GetComponentInChildren<Text>();
@@ -99,7 +99,7 @@ public class SignPage : Page
 
 	bool IsSelect(int day)
 	{
-		if(!IsTodaySigned())
+		if(!PlayerStatus.IsTodaySigned())
 		{
 			if(PlayerStatus.sign + 1 == day)
 			{
@@ -129,7 +129,7 @@ public class SignPage : Page
 	
 	public void OnGotButton()
 	{
-		if(IsTodaySigned())
+		if(PlayerStatus.IsTodaySigned())
 		{
 			return;
 		}
@@ -155,12 +155,23 @@ public class SignPage : Page
 		var text = button_got.GetComponentInChildren<Text>();
 		text.text = "已领取";
 		text.color = new Color(1f, 1f, 1f, 0.7f);
+		AudioManager.PlaySe("gain-gold");
+		CoroutineManager.Create(WaitAndBack());
 	}
+
+
+    public IEnumerator WaitAndBack()
+    {
+        yield return new WaitForSeconds(0.35f);
+        var admin = new Admission_PopdownOldPage();
+        UIEngine.Back(null, admin);
+    }
 
 	public void OnClose()
 	{
 		var admin = new Admission_PopdownOldPage();
 		UIEngine.Back(null, admin);
+		AudioManager.PlaySe("button");
 	}
 
 	public void SetLastSignDayAsToday()
@@ -169,15 +180,5 @@ public class SignPage : Page
 		PlayerStatus.lastSignDay = today;
 	}
 
-	public bool IsTodaySigned()
-	{
-		var today = DateTime.UtcNow.Day;
-		var lastSignDay = PlayerStatus.lastSignDay;
-		if(lastSignDay == today)
-		{
-			return true;
-		}
-		return false;
-	}
 
 }

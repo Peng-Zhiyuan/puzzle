@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CorePage : Page 
 {
-	Button button_eye;
+	public Button button_eye;
 
 	bool isEyeShowding = false;
 
@@ -18,6 +18,20 @@ public class CorePage : Page
 	{
 		isEyeShowding = !isEyeShowding;
 		Puzzle.instance.ShowEye(isEyeShowding);
+		if(isEyeShowding)
+		{
+			var image = button_eye.GetComponent<Image>();
+			var c = image.color;
+			c.a = 0.5f;
+			image.color = c;
+		}
+		else
+		{
+			var image = button_eye.GetComponent<Image>();
+			var c = image.color;
+			c.a = 1f;
+			image.color = c;
+		}
 	}
 	
 }

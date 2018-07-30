@@ -8,9 +8,11 @@ public class Game : MonoBehaviour
 	public static float heightScale;
 	void Start()
 	{
+		UnityEngine.Random.InitState(DateTime.UtcNow.Second);
 		StaticDataLite.Init();
 		UIEngine.Init();
 		PlayerStatus.Read();
+		AudioManager.Init();
 		UIEngine.Forward("LoadingPage");
 		//UIEngine.Forward<LevelCompletePage>();
 

@@ -40,7 +40,6 @@ public class Puzzle
 	public void Init () 
 	{
 		instance = this;
-		UnityEngine.Random.InitState(DateTime.UtcNow.Second);
 		PiceManager.Init();
 		var core_go = GameObject.Find("Core");
 		if(core_go == null)
@@ -253,12 +252,12 @@ public class Puzzle
 		if(complete)
 		{
 			Debug.Log("[Core] Complete");
-			CoroutineManager.Create(waiteAndSendComplete());
+			CoroutineManager.Create(PlayCompleteTask());
 		}
 		
 	}
 
-	private IEnumerator waiteAndSendComplete()
+	private IEnumerator PlayCompleteTask()
 	{
 		var temp = DicPool.Take();
 		var rank = new List<List<Pice>>();
@@ -292,6 +291,7 @@ public class Puzzle
 		}
 		DicPool.Put(temp);
 
+		AudioManager.PlaySe("level-complete-wave");
 		foreach(var list in rank)
 		{
 			foreach(var pice in list)
@@ -300,7 +300,9 @@ public class Puzzle
 			}
 			yield return new WaitForSeconds(0.15f);
 		}
-		yield return new WaitForSeconds(0.2f);
+		yield return new WaitForSeconds(0.15f);
+
+		AudioManager.PlaySe("level-complete");
 		Complete?.Invoke();
 	}
 

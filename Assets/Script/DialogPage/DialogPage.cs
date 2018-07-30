@@ -20,6 +20,7 @@ public class DialogPage : Page
 		var admission = new Admission_PopdownOldPage();
 		UIEngine.Back(DialogResult.Conform, admission);
 		Complete?.Invoke(DialogResult.Conform);
+		Complete = null;
 	}
 
 	public void OnCloseButton()
@@ -27,6 +28,7 @@ public class DialogPage : Page
 		var admission = new Admission_PopdownOldPage();
 		UIEngine.Back(DialogResult.Cancel, admission);
 		Complete?.Invoke(DialogResult.Cancel);
+		Complete = null;
 	}
 }
 
