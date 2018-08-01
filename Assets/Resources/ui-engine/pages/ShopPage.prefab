@@ -794,7 +794,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 2244afe820c9a430da8e8a2985f99828, type: 3}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 80
     m_FontStyle: 0
     m_BestFit: 0
@@ -1049,7 +1049,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5ddc738b671a4a2eb42c24bfbcda07a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  param: 
   Overlay: 0
   transform_listRoot: {fileID: 224551231106578786}
   prefab_ad_item: {fileID: 224715818012867412}
@@ -1191,7 +1190,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 0aa36566f9feb4d60bfd016865770b77, type: 3}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 48
     m_FontStyle: 0
     m_BestFit: 0

@@ -436,6 +436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b214917e71e2f4ef2a69f69481f6baa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
   mask: {fileID: 4219403261432976}
   maskLeft: {fileID: 331614924847412940}
   maskRigjt: {fileID: 331493468848389938}
@@ -457,10 +458,9 @@ MonoBehaviour:
   dealedFlag: 0
   boardX: -1
   boardY: -1
-  SideIndex: -1
+  sideIndex: -1
   cellWidth: 0
   cellHeight: 0
-  isFixed: 0
   owner: 0
   DraggedInstance: {fileID: 0}
   draging: 0
@@ -516,7 +516,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
-  m_Size: {x: 300, y: 300}
+  m_Size: {x: 0.1, y: 0.1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
