@@ -114,7 +114,8 @@ public class Puzzle
 			var pice = PiceManager.Create(map, index);
 			side.Append(pice);
 		}
-		side.RepositionPiceList();
+		//side.RepositionPiceList();
+		side.RepositionPiceListNoAnimation();
 
 		if(!DEBUG)
 		{
