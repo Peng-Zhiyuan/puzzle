@@ -34,6 +34,8 @@ public static class GameController
 
 		// when compelte
 		Puzzle.Instance.Complete += OnCoreGameCompelte;
+
+		//LocalNotification.SendNotification(1, 5000, "Title", "Long message text", new Color32(0xff, 0x44, 0x44, 255));
 	}
 
 	public static void EnterWithInfo(CoreInfo info)

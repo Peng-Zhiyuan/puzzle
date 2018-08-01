@@ -124,7 +124,7 @@ public class Side : MonoBehaviour
 			if(!pice.draging)
 			{
 				pice.SetPostion(x, y);
-				var scale = ((float)this.cellWidth / pice.cellWidth) * 0.65f;
+				var scale = ((float)this.cellWidth / pice.cellWidth) * 0.85f;
 				pice.SetScale(scale);
 			}
 		}

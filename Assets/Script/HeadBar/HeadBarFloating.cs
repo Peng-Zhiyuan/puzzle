@@ -126,6 +126,7 @@ public class HeadBarFloating : Floating
 	{
 		yield return new WaitForSeconds(0.3f);
 		UIEngine.BackTo<PicturePage>();
+		Puzzle.Instance.Clean();
 	}
 
 	public static HeadBarFloating instance;

@@ -78,6 +78,7 @@ public class DisplayPage : Page
 
 	private void DoBack()
 	{
+		Puzzle.Instance.Clean();
 		AdmissionManager.Remove();
 		UIEngine.BackTo<MainPage>();
 		UIEngine.DestroyFromPool("LevelCompletePage");

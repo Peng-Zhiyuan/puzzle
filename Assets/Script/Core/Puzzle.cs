@@ -178,7 +178,6 @@ public class Puzzle
 		}
 		board.RepositionAllPiceNoAnimation();
 		side.RepositionPiceListNoAnimation();
-
 	}
 
 	public void Clean()

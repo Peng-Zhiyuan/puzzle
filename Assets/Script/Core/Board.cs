@@ -108,6 +108,9 @@ public class Board : MonoBehaviour
 		pice.SetToBoard(indexX_, indexY_);
 	}
 
+	/// <summary>
+	/// 同时还会把 pice 的 scale 设置为 1
+	/// </summary>
 	public void RepositionAllPiceNoAnimation()
 	{
 		for(var i = 0; i < xCount; i++)
@@ -125,10 +128,10 @@ public class Board : MonoBehaviour
 				foreach(var pice in stack.list)
 				{
 					pice.SetPostion(centerX, centerY);
+					pice.SetScale(1);
 				}
 			}
 		}
-
 	}
 
 	public bool isIndexInvalid(int indexX, int indexY)
