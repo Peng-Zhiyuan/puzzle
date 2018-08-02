@@ -38,12 +38,12 @@ public static class PicLibrary
 		return StaticDataLite.GetRow("pic", id.ToString());
 	}
 
-	public static Texture2D LoadPicById(int id)
+	public static Sprite LoadContentSpriteById(int id)
 	{
 		var row = LoadDataRow(id);
 		var fileName = row.Get<string>("file");
-		var pic = PicLibrary.Load(fileName);
-		return pic;
+		var sprite = PicLibrary.LoadContentSprite(fileName);
+		return sprite;
 	}
 	
 }

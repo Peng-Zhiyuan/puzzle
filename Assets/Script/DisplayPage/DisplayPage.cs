@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public class DisplayPage : Page 
 {
-	public RawImage image_pic;
+	public Image image_pic;
 	public RectTransform button_layout;
 
 	public int PicId
@@ -21,8 +21,8 @@ public class DisplayPage : Page
 	{
 		image_pic.gameObject.SetActive(false);
 		button_layout.gameObject.SetActive(false);
-		var texture = PicLibrary.LoadPicById(PicId);
-		image_pic.texture = texture;
+		var sprite = PicLibrary.LoadContentSpriteById(PicId);
+		image_pic.sprite = sprite;
 		CoroutineManager.Create(TimeTaks());
 	}
 

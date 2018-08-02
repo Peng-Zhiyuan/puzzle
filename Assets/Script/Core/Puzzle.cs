@@ -64,17 +64,19 @@ public class Puzzle
 	}
 	
 
-	private Texture2D ExpandTexture(Texture2D texture)
+	private Texture2D ExpandTexture(Sprite content)
 	{
 		// 扩张 texture
-		var t = new Texture2D(texture.width + 2 * EXPAND, texture.height + 2 * EXPAND);
-		var w = texture.width;
-		var h = texture.height;
+		var w = content.rect.width + 2 * EXPAND;
+		var h = content.rect.height + 2 * EXPAND;
+		var t = new Texture2D((int)w, (int)h);
+		var contentMinX = (int)content.rect.xMin;
+		var contentMinY = (int)content.rect.yMin;
 		for(int i = 0; i < w; i++)
 		{
 			for(int j = 0; j < h; j++)
 			{
-				var pixel = texture.GetPixel(i, j);
+				var pixel = content.texture.GetPixel(contentMinX + i, contentMinY + j);
 				t.SetPixel(i + EXPAND, j + EXPAND, pixel);
 			}
 		}
@@ -87,11 +89,11 @@ public class Puzzle
 	/// </summary>
 	/// <param name="texture"></param>
 	/// <param name="cellPixelSize"></param>
-	public void StartPuzzle(Texture2D texture, int cellPixelSize)
+	public void StartPuzzle(Sprite content, int cellPixelSize)
 	{
 		Clean();
 		EXPAND = (int)(cellPixelSize * 0.25f);
-		expanedTexture = ExpandTexture(texture);
+		expanedTexture = ExpandTexture(content);
 		map = new Map();
 		map.Init(expanedTexture, EXPAND, cellPixelSize);
 

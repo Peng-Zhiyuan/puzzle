@@ -21,7 +21,7 @@ public static class GameController
 
 		// load picture which player select
 		var picFile = StaticDataLite.GetCell<string>("pic", picId.ToString(), "file");
-		var picTexture = PicLibrary.Load(picFile);
+		var contentSprite = PicLibrary.LoadContentSprite(picFile);
 
 		// load slice info
 		var piceSize = StaticDataLite.GetCell<int>("pice_slice", sliceId.ToString(), "cell_size");
@@ -30,7 +30,7 @@ public static class GameController
 		// piceSize = 400;
 
 		// start core game
-		Puzzle.Instance.StartPuzzle(picTexture, piceSize);
+		Puzzle.Instance.StartPuzzle(contentSprite, piceSize);
 
 		// when compelte
 		Puzzle.Instance.Complete += OnCoreGameCompelte;

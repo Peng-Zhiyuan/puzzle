@@ -24,14 +24,6 @@ public class Game : MonoBehaviour
 		heightScale = CameraUtil.SetCameraSizeByDecisionRevelutionAndFixAtWidth(1080, 1920);
 	}
 
-
-	public static void TestCore () 
-	{
-		UnityEngine.Random.InitState(DateTime.UtcNow.Second);
-		var texture = Resources.Load<Texture2D>("mapbg");
-		Puzzle.Instance.StartPuzzle(texture, 200);
-	}
-
 	void Update()
 	{
 		UpdateManager.Update();
