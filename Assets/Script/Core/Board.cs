@@ -179,34 +179,36 @@ public class Board : MonoBehaviour
 		pice.owner = PiceOwner.Floating;
 	}
 
-	public void RemoveWithLinking(Pice pice, int indexX, int indexY)
+	public void RemoveWithBlock(Pice pice)
 	{
-		Remove(pice, indexX, indexY);
-		pice.dealedFlag = true;
-		pice.linkingList.ForEach(info =>{
-			if(!info.pice.dealedFlag)
-			{
-				var x = indexX;
-				var y = indexY;
-				switch(info.directory)
-				{
-					case LinkDirectory.Top:
-						y++;
-						break;
-					case LinkDirectory.Bottom:
-						y--;
-						break;
-					case LinkDirectory.Left:
-						x--;
-						break;
-					case LinkDirectory.Right:
-						x++;
-						break;
-				}
-				RemoveWithLinking(info.pice, x, y);
-			}
+		pice.ForeachPiceOfBlock(onePice =>{
+			Remove(onePice, onePice.boardX, onePice.boardY);
 		});
-		pice.dealedFlag = false;
+
+		// Remove(pice, indexX, indexY);
+		// pice.linkingList.ForEach(info =>{
+		// 	if(!info.pice.dealedFlag)
+		// 	{
+		// 		var x = indexX;
+		// 		var y = indexY;
+		// 		switch(info.directory)
+		// 		{
+		// 			case LinkDirectory.Top:
+		// 				y++;
+		// 				break;
+		// 			case LinkDirectory.Bottom:
+		// 				y--;
+		// 				break;
+		// 			case LinkDirectory.Left:
+		// 				x--;
+		// 				break;
+		// 			case LinkDirectory.Right:
+		// 				x++;
+		// 				break;
+		// 		}
+		// 		RemoveWithLinking(info.pice, x, y);
+		// 	}
+		// });
 	}
 
 	public void PutWithLinking(Pice pice, int indexX, int indexY)

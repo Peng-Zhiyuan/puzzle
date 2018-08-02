@@ -474,7 +474,7 @@ public class Puzzle
 			for(int j = 0; j < board.yCount; j++)
 			{
 				var pice = board.GetPiceFromData(i, j);
-				if(pice == null || !pice.isFixed)
+				if(pice == null || !pice.isFixed || pice.owner != PiceOwner.Board)
 				{
 					return false;
 				}

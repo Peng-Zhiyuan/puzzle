@@ -266,7 +266,7 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 	{
 		if(this.owner == PiceOwner.Board)
 		{
-			Puzzle.instance.board.RemoveWithLinking(this, this.boardX, this.boardY);
+			Puzzle.instance.board.RemoveWithBlock(this);
 		}
 		else if(this.owner == PiceOwner.Side)
 		{
