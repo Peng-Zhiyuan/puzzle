@@ -8,7 +8,7 @@ public class MainPage_Item : MonoBehaviour, IPointerClickHandler
 {
     public MainPage_ItemData data;
     public Text label;
-    public RawImage facade;
+    public Image facade;
 
 
 	public void OnPointerClick(PointerEventData eventData)
@@ -16,11 +16,11 @@ public class MainPage_Item : MonoBehaviour, IPointerClickHandler
         SendMessageUpwards("OnItemClick", this);
 	}
 
-    public Texture2D Facade
+    public Sprite Facade
     {
         set
         {
-            this.facade.texture = value;
+            this.facade.sprite = value;
         }
     }
 

@@ -105,15 +105,39 @@ public class MainPage : Page
         SetDataList(dataList);
     }
 
+    Queue<MainPage_Item> pool = new Queue<MainPage_Item>();
+    void PutItem(MainPage_Item item)
+    {
+        item.gameObject.SetActive(false);
+        item.transform.parent = null;
+        pool.Enqueue(item);
+    }
+
+    MainPage_Item TakeItem()
+    {
+        if(pool.Count > 0)
+        {
+            return pool.Dequeue();
+        }
+        var item = GameObject.Instantiate(sample_item);
+        return item;
+    }    
+
     void SetDataList(List<MainPage_ItemData> dataList)
     {
         // clean root
-        TransformUtil.DestroyAllChildren(itemGridRoot);
+        //TransformUtil.DestroyAllChildren(itemGridRoot);
+		for(int i = itemGridRoot.childCount - 1; i >= 0; i--)
+		{
+			var child = itemGridRoot.GetChild(i).GetComponent<MainPage_Item>();
+            PutItem(child);
+		}
 
         // create items
         foreach(var data in dataList)
         {
-            var item = GameObject.Instantiate(sample_item);
+            //var item = GameObject.Instantiate(sample_item);
+            var item = TakeItem();
             item.transform.parent = itemGridRoot;
             item.transform.localScale = Vector2.one;
             item.gameObject.SetActive(true);
@@ -141,9 +165,11 @@ public class MainPage : Page
         if(data.pageType == PicturePageType.Pictype)
         {
             item.label.text = data.row.Get<string>("display_name");
-            var file = PicLibrary.FindFirstFileNameOfType(data.row.Get<string>("id"));
-            var texture = PicLibrary.Load(file);
-            item.Facade = texture;
+            var picType = data.row.Get<string>("id");
+            var row = PicLibrary.FindFirstRowOfType(picType);
+            var file = row?.Get<string>("file");
+            var sprite = PicLibrary.LoadContentSprite(file);
+            item.Facade = sprite;
         }
 
         // 如果是未完成的拼图
@@ -156,8 +182,8 @@ public class MainPage : Page
                 var picId = firstCoreInfo.picId;
                 var picRow = StaticDataLite.GetRow("pic", picId.ToString());
                 var fileName = picRow.Get<string>("file");
-                var texture = PicLibrary.Load(fileName);
-                item.Facade = texture;
+                var sprite = PicLibrary.LoadContentSprite(fileName);
+                item.Facade = sprite;
             }
         }
 
@@ -171,8 +197,8 @@ public class MainPage : Page
                 var picId = record.pid;
                 var picRow = StaticDataLite.GetRow("pic", picId.ToString());
                 var fileName = picRow.Get<string>("file");
-                var texture = PicLibrary.Load(fileName);
-                item.Facade = texture;
+                var sprite = PicLibrary.LoadContentSprite(fileName);
+                item.Facade = sprite;
             }
         }
     }

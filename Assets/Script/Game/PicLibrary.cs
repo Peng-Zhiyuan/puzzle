@@ -10,8 +10,15 @@ public static class PicLibrary
 		var texture = Resources.Load<Texture2D>("pic-library/" + file);
 		return texture;
 	}
+
+	public static Sprite LoadContentSprite(string file)
+	{
+		var texture = Load(file);
+		var content = Sprite.Create(texture, new Rect(0, 106, 512, 300), new Vector2(0.5f, 0.5f), texture.width/1000f);
+		return content;
+	}
 	
-	public static string FindFirstFileNameOfType(string findType)
+	public static JsonData FindFirstRowOfType(string findType)
 	{
 		var sheet = StaticDataLite.GetSheet("pic");
 		foreach(string id in sheet.Keys)
@@ -20,10 +27,10 @@ public static class PicLibrary
 			var type = row.Get<string>("type");
 			if(findType == type)
 			{
-				return row.Get<string>("file");
+				return row;
 			}
 		}
-		return "";
+		return null;
 	}
 
 	public static JsonData LoadDataRow(int id)

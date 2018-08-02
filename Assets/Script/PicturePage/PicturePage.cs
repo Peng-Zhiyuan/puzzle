@@ -213,8 +213,8 @@ public class PicturePage : Page
         }
         item.LabelText = data.picRow.Get<string>("name");
         var file = data.picRow.Get<string>("file");
-        var texture = PicLibrary.Load(file);
-        item.Texture2D = texture;
+        var sprite = PicLibrary.LoadContentSprite(file);
+        item.Sprite = sprite;
     }
 
     void OnItemUnlockButton(PictruePage_Item item)

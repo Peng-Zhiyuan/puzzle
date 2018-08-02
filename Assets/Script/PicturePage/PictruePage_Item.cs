@@ -7,7 +7,7 @@ using DG.Tweening;
 public class PictruePage_Item : MonoBehaviour 
 {
 	public PictruePage_ItemData data;
-	public RawImage picture;
+	public Image picture;
 	public Image puzzleMask;
 	public Transform unlockLayer;
 	public Text label;
@@ -15,11 +15,11 @@ public class PictruePage_Item : MonoBehaviour
 	public Image image_pice;
 	public Text label_unlockButotn;
 
-	public Texture2D Texture2D
+	public Sprite Sprite
 	{
 		set
 		{
-			this.picture.texture = value;
+			this.picture.sprite = value;
 		}
 	}
 
