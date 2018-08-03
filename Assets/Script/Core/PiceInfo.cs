@@ -31,5 +31,6 @@ public class LinkingInfo
 public class PuzzleInfo
 {
     public List<PiceInfo> piceInfoList = new List<PiceInfo>();
+    public int nextOrder;
 
 }

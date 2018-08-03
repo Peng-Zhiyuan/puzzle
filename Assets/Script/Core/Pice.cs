@@ -261,51 +261,26 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 			return _topType;
 		}
 	}
-	
-	private void RemoveFromOwner()
-	{
-		if(this.owner == PiceOwner.Board)
-		{
-			Puzzle.instance.board.RemoveWithBlock(this);
-		}
-		else if(this.owner == PiceOwner.Side)
-		{
-			Puzzle.instance.side.Remove(this);
-		}
-		this.owner = PiceOwner.Floating;
-	}
-
-	public void SetToSide(int index)
-	{
-		RemoveFromOwner();
-		if(index != -1)
-		{
-			Puzzle.instance.side.Insert(this, index);
-		}
-		else
-		{
-			Puzzle.instance.side.Append(this);
-		}
-	}
-
-	public void SetToBoard(int indexX, int indexY)
-	{
-		RemoveFromOwner();
-		Puzzle.instance.board.PutWithLinking(this, indexX, indexY);
-	}
 
 	public void SetToFloating()
 	{
-		RemoveFromOwner();
+		PiceMover.SetBlockToFloat(this);//RemoveFromOwner();
 		this.owner = PiceOwner.Floating;
 	}
 
-	public void SmoothSetPositionWithBlock(float x, float y)
+	public void TweenToPosition(float x, float y)
+	{
+		iTween.MoveTo(this.gameObject, iTween.Hash("x", x, "y", y, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
+	}
+
+	public void TweenBlockToPosition(float x, float y)
 	{
 		var p = this.transform.position;
 		var dx = x - p.x;
 		var dy = y - p.y;
-		SmoothMovePositionWithBlock(dx, dy);
+		ForeachPiceOfBlock(pice=>{
+			iTween.MoveBy(pice.gameObject, iTween.Hash("x", dx, "y", dy, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
+		});
 	}
 
 	public void SetPostion(float x, float y)
@@ -313,37 +288,26 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		this.transform.position = new Vector2(x, y);
 	}
 
-	public void SetPostionWithBlock(float x, float y)
+	public void SetBlockPosition(float x, float y)
 	{
 		var p = this.transform.position;
 		var dx = x - p.x;
 		var dy = y - p.y;
-		MovePositionWithBlock(dx, dy);
-	}
-
-	public void MovePositionWithBlock(float dx, float dy)
-	{
 		ForeachPiceOfBlock(pice=>{
-			var p = pice.transform.position;
-			var pp = new Vector2(p.x + dx, p.y + dy);
-			pice.transform.position = pp;
+			var pp = pice.transform.position;
+			var ppp = new Vector2(p.x + dx, p.y + dy);
+			pice.transform.position = ppp;
 		});
 	}
 
 
-	public void SmoothMovePositionWithBlock(float dx, float dy)
-	{
-		ForeachPiceOfBlock(pice=>{
-			iTween.MoveBy(pice.gameObject, iTween.Hash("x", dx, "y", dy, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
-		});
-	}
 
 	public void StopTween()
 	{
 		iTween.Stop(this.gameObject);
 	}
 
-	public void AnimateScale(float scale)
+	public void TweenToScale(float scale)
 	{
 		//GameObject.Destroy(this.gameObject.GetComponent<iTween>());
 		iTween.ScaleTo(this.gameObject, new Vector2(scale, scale), 0.4f);
@@ -354,23 +318,6 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		//GameObject.Destroy(this.gameObject.GetComponent<iTween>());
 		this.gameObject.transform.localScale = new Vector2(scale, scale);
 	}
-
-	// /// <summary>
-	// /// 遍历被这个 pice 连结到的 pice (不包括自身)
-	// /// </summary>
-	// /// <param name="callback"></param>
-	// public void ForeachLinkedPice(Action<Pice> callback)
-	// {
-	// 	dealedFlag = true;
-	// 	linking.ForEach(info =>{
-	// 		if(!info.pice.dealedFlag)
-	// 		{
-	// 			callback(info.pice);
-	// 			info.pice.ForeachLinkedPice(callback);
-	// 		}
-	// 	});
-	// 	dealedFlag = false;
-	// }
 
 	/// <summary>
 	/// 遍历被这个 pice 连结到的 pice (包括自身)
@@ -393,6 +340,44 @@ public class Pice : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 		callback(this);
 		linkingList.ForEach(info =>{
 			info.pice._ForeachPickOfBlock(dic, callback);
+		});
+	}
+
+	public void ForeachPiceOfBlockWhitShift(Action<Pice, Vector2Int> callback)
+	{
+		var dic = DicPool.Take();
+		_ForeachPickOfBlockWithShift(dic, new Vector2Int(0, 0), callback);
+		DicPool.Put(dic);
+	}
+
+	public void _ForeachPickOfBlockWithShift(Dictionary<Pice, bool> dic, Vector2Int shift, Action<Pice, Vector2Int> callback)
+	{
+		if(dic.ContainsKey(this) && dic[this])
+		{
+			return;
+		}
+		dic[this] = true;
+		callback(this, shift);
+		linkingList.ForEach(info =>{
+			var nextShift = shift;
+			switch(info.directory)
+			{
+				case LinkDirectory.Top:
+					nextShift.y ++;
+					break;
+				case LinkDirectory.Bottom:
+					nextShift.y --;
+					break;
+				case LinkDirectory.Left:
+					nextShift.x --;
+					break;
+				case LinkDirectory.Right:
+					nextShift.x ++;
+					break;
+				default:
+					throw new Exception("unsupport directory" + info.directory);
+			}
+			info.pice._ForeachPickOfBlockWithShift(dic, nextShift, callback);
 		});
 	}
 

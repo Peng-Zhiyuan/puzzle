@@ -55,16 +55,25 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 		// check out view
 		var viewRect = ViewRect;
 		var contentRect = ContentRect;
-		if(contentRect.xMin > viewRect.xMin)
+		if(contentRect.width > viewRect.width)
 		{
-			var delta = contentRect.xMin - viewRect.xMin;
-			content.transform.position = new Vector2(content.transform.position.x - delta, content.transform.position.y);
+			if(contentRect.xMin > viewRect.xMin)
+			{
+				var delta = contentRect.xMin - viewRect.xMin;
+				content.transform.position = new Vector2(content.transform.position.x - delta, content.transform.position.y);
+			}
+			else if(contentRect.xMax < viewRect.xMax)
+			{
+				var delta = viewRect.xMax - contentRect.xMax;
+				content.transform.position = new Vector2(content.transform.position.x + delta, content.transform.position.y);
+			}
 		}
-		else if(contentRect.xMax < viewRect.xMax)
+		else
 		{
 			var delta = viewRect.xMax - contentRect.xMax;
 			content.transform.position = new Vector2(content.transform.position.x + delta, content.transform.position.y);
 		}
+
 	}
 
 	public void OnEndDrag (PointerEventData eventData)
@@ -106,26 +115,35 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 				}
 			}
 
-			if(speed < 0)
+			if(ContentRect.width > ViewRect.width)
 			{
-				if(ContentRect.xMax < ViewRect.xMax)
+				if(speed < 0)
 				{
-					var delta = ViewRect.xMax - ContentRect.xMax;
-					content.transform.position = new Vector2(content.transform.position.x + delta, content.transform.position.y);
-					speed = 0;
-					return;
+					if(ContentRect.xMax < ViewRect.xMax)
+					{
+						var delta = ViewRect.xMax - ContentRect.xMax;
+						content.transform.position = new Vector2(content.transform.position.x + delta, content.transform.position.y);
+						speed = 0;
+						return;
+					}
+				}
+				else if(speed > 0)
+				{
+					if(ContentRect.xMin > ViewRect.xMin)
+					{
+						var delta = ContentRect.xMin - ViewRect.xMin;
+						content.transform.position = new Vector2(content.transform.position.x - delta, content.transform.position.y);
+						speed = 0;
+						return;
+					}
 				}
 			}
-			else if(speed > 0)
+			else
 			{
-				if(ContentRect.xMin > ViewRect.xMin)
-				{
-					var delta = ContentRect.xMin - ViewRect.xMin;
-					content.transform.position = new Vector2(content.transform.position.x - delta, content.transform.position.y);
-					speed = 0;
-					return;
-				}
+				speed = 0;
+				return;
 			}
+
 
 			
 		}
@@ -136,23 +154,26 @@ public class ScrollView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 	{
 		var viewRect = ViewRect;
 		var contentRect = ContentRect;
-		if(contentRect.xMin > viewRect.xMin && contentRect.xMax > viewRect.xMax)
+		if(contentRect.width >= viewRect.width)
 		{
-			var delta = contentRect.xMin - viewRect.xMin;
-			var targetPosition = new Vector2(content.transform.position.x - delta, content.transform.position.y);
-			//iTween.MoveTo(content.gameObject, targetPosition, 0.2f);
-			GameObject.Destroy(content.GetComponent<iTween>());
-			iTween.MoveTo(content.gameObject, iTween.Hash("x", targetPosition.x, "y", targetPosition.y, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
+			if(contentRect.xMin > viewRect.xMin && contentRect.xMax > viewRect.xMax)
+			{
+				var delta = contentRect.xMin - viewRect.xMin;
+				var targetPosition = new Vector2(content.transform.position.x - delta, content.transform.position.y);
+				//iTween.MoveTo(content.gameObject, targetPosition, 0.2f);
+				GameObject.Destroy(content.GetComponent<iTween>());
+				iTween.MoveTo(content.gameObject, iTween.Hash("x", targetPosition.x, "y", targetPosition.y, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
+			}
+			else if(contentRect.xMax < viewRect.xMax && contentRect.xMin < viewRect.xMin)
+			{
+				GameObject.Destroy(content.GetComponent<iTween>());
+				var delta = viewRect.xMax - contentRect.xMax;
+				var targetPosition = new Vector2(content.transform.position.x + delta, content.transform.position.y);
+				//iTween.MoveTo(content.gameObject, targetPosition, 0.2f);
+				iTween.MoveTo(content.gameObject, iTween.Hash("x", targetPosition.x, "y", targetPosition.y, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
+			}
 		}
-		else if(contentRect.xMax < viewRect.xMax && contentRect.xMin < viewRect.xMin)
-		{
-			GameObject.Destroy(content.GetComponent<iTween>());
-			var delta = viewRect.xMax - contentRect.xMax;
-			var targetPosition = new Vector2(content.transform.position.x + delta, content.transform.position.y);
-			//iTween.MoveTo(content.gameObject, targetPosition, 0.2f);
-			iTween.MoveTo(content.gameObject, iTween.Hash("x", targetPosition.x, "y", targetPosition.y, "easeType", iTween.EaseType.easeOutCirc, "time", 0.2f));
-		}
-		else if(contentRect.xMin >= viewRect.xMin && contentRect.xMax <= viewRect.xMax)
+		else
 		{
 			GameObject.Destroy(content.GetComponent<iTween>());
 			var delta = viewRect.xMax - contentRect.xMax;

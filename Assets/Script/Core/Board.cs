@@ -78,7 +78,8 @@ public class Board : MonoBehaviour
 		}
 		return null;
 	}
-	public void PlacePice(Pice pice)
+
+	public Vector2Int GetNearestCellIndex(Pice pice)
 	{
 		var px = pice.transform.position.x;
 		var py = pice.transform.position.y;
@@ -101,11 +102,32 @@ public class Board : MonoBehaviour
 				minIndex = index;
 			}
 		}
-		pice.SmoothSetPositionWithBlock(minCenterX, minCenterY); 
-		//set data
 		var indexX_ = IndexToIndexX(minIndex);
 		var indexY_ = IndexToIndexY(minIndex);
-		pice.SetToBoard(indexX_, indexY_);
+		return new Vector2Int(indexX_, indexY_);
+	}
+
+	public void RepositionAllPice()
+	{
+		for(var i = 0; i < xCount; i++)
+		{
+			for(var j = 0; j < yCount; j++)
+			{
+				var stack = data[i, j];
+				if(stack == null || stack.Count == 0)
+				{
+					continue;
+				}
+				var centerX = GetCenterX(i);
+				var centerY = GetCenterY(j);
+				
+				foreach(var pice in stack.list)
+				{
+					pice.TweenToPosition(centerX, centerY);
+					pice.TweenToScale(1f);
+				}
+			}
+		}
 	}
 
 	/// <summary>
@@ -170,48 +192,15 @@ public class Board : MonoBehaviour
 		return stack.Contains(pice);
 	}
 
-	private void Remove(Pice pice, int indexX, int indexY)
+	public void Remove(Pice pice, int indexX, int indexY)
 	{
 		if(isIndexInvalid(indexX, indexY))
 		{
 			data[indexX, indexY].Remove(pice);
 		}
-		pice.owner = PiceOwner.Floating;
 	}
 
-	public void RemoveWithBlock(Pice pice)
-	{
-		pice.ForeachPiceOfBlock(onePice =>{
-			Remove(onePice, onePice.boardX, onePice.boardY);
-		});
-
-		// Remove(pice, indexX, indexY);
-		// pice.linkingList.ForEach(info =>{
-		// 	if(!info.pice.dealedFlag)
-		// 	{
-		// 		var x = indexX;
-		// 		var y = indexY;
-		// 		switch(info.directory)
-		// 		{
-		// 			case LinkDirectory.Top:
-		// 				y++;
-		// 				break;
-		// 			case LinkDirectory.Bottom:
-		// 				y--;
-		// 				break;
-		// 			case LinkDirectory.Left:
-		// 				x--;
-		// 				break;
-		// 			case LinkDirectory.Right:
-		// 				x++;
-		// 				break;
-		// 		}
-		// 		RemoveWithLinking(info.pice, x, y);
-		// 	}
-		// });
-	}
-
-	public void PutWithLinking(Pice pice, int indexX, int indexY)
+	public void Put(Pice pice, int indexX, int indexY)
 	{
 		if(isIndexInvalid(indexX, indexY))
 		{
@@ -221,34 +210,9 @@ public class Board : MonoBehaviour
 		}
 		else
 		{
-			pice.boardX = -1;
-			pice.boardY = -1;
+			pice.boardX = indexX;
+			pice.boardY = indexY;
 		}
-		pice.dealedFlag = true;
-		pice.linkingList.ForEach(info =>{
-			if(!info.pice.dealedFlag)
-			{
-				var x = indexX;
-				var y = indexY;
-				switch(info.directory)
-				{
-					case LinkDirectory.Top:
-						y++;
-						break;
-					case LinkDirectory.Bottom:
-						y--;
-						break;
-					case LinkDirectory.Left:
-						x--;
-						break;
-					case LinkDirectory.Right:
-						x++;
-						break;
-				}
-				PutWithLinking(info.pice, x, y);
-			}
-		});
-		pice.dealedFlag = false;
 	}
 
 	public int IndexToIndexX(int index)

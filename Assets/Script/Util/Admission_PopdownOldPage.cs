@@ -8,7 +8,6 @@ public class Admission_PopdownOldPage : Admission
     public override void Play(Page oldPage, Page newPage)
     {
         oldPage.Active = true;
-        newPage.Active = true;
         this.oldPage = oldPage;
         iTween.ScaleTo(oldPage.gameObject, iTween.Hash("scale", Vector3.zero, "easeType", "easeInBack", "time", 0.2f));
         this.lostTime = 0;

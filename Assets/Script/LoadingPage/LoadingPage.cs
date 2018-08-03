@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public class LoadingPage : Page 
 {
-	public Image pice;
+	public Text text;
 
     public override void OnPush()
     {
@@ -16,10 +16,10 @@ public class LoadingPage : Page
 
     private IEnumerator PreloadingTask()
     {
-        var c = pice.color;
+        var c = text.color;
         c.a = 0;
-        pice.color = c;
-        pice.DOFade(1, 1f);
+        text.color = c;
+        text.DOFade(1, 1f);
         yield return new WaitForSeconds(1f);
         {
             var resList = Resources.LoadAll("ui-engine");
@@ -29,7 +29,7 @@ public class LoadingPage : Page
             var resList = Resources.LoadAll("audio-manager");
             Debug.Log("audio-manager: " + resList.Length + " res loaded");
         }
-        pice.DOFade(0, 1f);
+        text.DOFade(0, 1f);
         yield return new WaitForSeconds(1f);
         UIEngine.Replace("MainPage");
 

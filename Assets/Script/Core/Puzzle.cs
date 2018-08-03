@@ -32,7 +32,7 @@ public class Puzzle
 	private Map map;
 
 	public static bool DEBUG = false;
-	public static bool SHUFF = true;
+	public static bool SHUFF = false;
 
 	/// <summary>
 	/// 整个游戏中只会被调用一次
@@ -114,7 +114,7 @@ public class Puzzle
 		foreach(var index in indexList)
 		{
 			var pice = PiceManager.Create(map, index);
-			side.Append(pice);
+			PiceMover.SetToSide(pice, -1);
 		}
 		//side.RepositionPiceList();
 		side.RepositionPiceListNoAnimation();
@@ -137,7 +137,8 @@ public class Puzzle
 		// 把所有 pice 拿起
 		foreach(var pice in PiceManager.list)
 		{
-			pice.SetToFloating();
+			//pice.SetToFloating();
+			PiceMover.SetBlockToFloat(pice);
 			pice.StopTween();
 		}
 
@@ -148,16 +149,19 @@ public class Puzzle
 			var pice = PiceManager.GetByIndex(index);
 			if(i.owner == PiceOwner.Board)
 			{
-				pice.SetToBoard(i.boardX, i.boardY);
+				//pice.SetToBoard(i.boardX, i.boardY);
+				PiceMover.SetBlockToBoard(pice, i.boardX, i.boardY);
 			}
 			else if(i.owner == PiceOwner.Side)
 			{
 				//pice.SetToSide(i.sideIndex);
-				side.Append(pice);
+				//side.Append(pice);
+				PiceMover.SetToSide(pice, -1);
 			}
 			else if(i.owner == PiceOwner.Floating)
 			{
-				pice.SetToSide(side.count - 1);
+				PiceMover.SetToSide(pice, -1);
+				//pice.SetToSide(side.count - 1);
 			}
 			pice.isFixed = i.isFixed;
 			pice.SortingOrder = i.sortingOrder;
@@ -180,6 +184,8 @@ public class Puzzle
 		}
 		board.RepositionAllPiceNoAnimation();
 		side.RepositionPiceListNoAnimation();
+
+		LayerOrderDispatcher.next = info.nextOrder;
 	}
 
 	public void Clean()
@@ -202,9 +208,10 @@ public class Puzzle
 			if(!inSide)
 			{
 				// 认为从side中拖出
-				side.Remove(pice);
+				//side.Remove(pice);
+				PiceMover.SetBlockToFloat(pice);
 				side.RepositionPiceList();
-				pice.AnimateScale(1);
+				pice.TweenToScale(1);
 				side.scrollView.AnimateFixContentPosition();
 			}
 			else
@@ -213,8 +220,12 @@ public class Puzzle
 				if(!rect.Contains(pice.transform.position))
 				{
 					// 认为在side中移动了位置
-					side.Remove(pice);
-					side.PlacePice(pice);
+					//side.Remove(pice);
+					PiceMover.SetBlockToFloat(pice);
+					var insertIndex = side.GetNearestCellIndex(pice);
+					PiceMover.SetToSide(pice, insertIndex);
+					side.RepositionPiceList();
+					side.scrollView.AnimateFixContentPosition();
 				}
 			}
 		}
@@ -223,9 +234,11 @@ public class Puzzle
 			var inSide = side.Rect.Contains(pice.transform.position);
 			if(inSide)
 			{
-				// 认为从拖入side
-				side.PlacePice(pice);
+				// 认为拖入side
+				var insertIndex = side.GetNearestCellIndex(pice);
+				PiceMover.SetToSide(pice, insertIndex);
 				side.RepositionPiceList();
+				side.scrollView.AnimateFixContentPosition();
 			}
 		}
 	}
@@ -241,13 +254,23 @@ public class Puzzle
 			var inboard = board.Rect.Contains(pice.transform.position);
 			if(!inboard)
 			{
-				side.PlacePice(pice);
+				var insertIndex = side.GetNearestCellIndex(pice);
+				PiceMover.SetToSide(pice, insertIndex);
+				side.RepositionPiceList();
+				side.scrollView.AnimateFixContentPosition();
 				return;
 			}
 		}
 
 		// 应该放置到 board 上时
-		board.PlacePice(pice);
+		//board.PlacePice(pice);
+		var index = board.GetNearestCellIndex(pice);
+		PiceMover.SetBlockToBoard(pice, index.x, index.y);
+		var x = board.GetCenterX(index.x);
+		var y = board.GetCenterY(index.y);
+		pice.TweenBlockToPosition(x, y);
+		//board.RepositionAllPice();
+
 		CheckNewLink();
 		CheckNewFix();
 		var complete = IsAllPiceFixed();
@@ -493,6 +516,7 @@ public class Puzzle
 			var piceInfo = pice.CreateInfo();
 			info.piceInfoList.Add(piceInfo);
 		}
+		info.nextOrder = LayerOrderDispatcher.next;
 		return info;
 	}
 

@@ -42,7 +42,8 @@ public class Side : MonoBehaviour
 		scrollView.SetContentLength(length);
 	}
 
-	public void PlacePice(Pice pice)
+
+	public int GetNearestCellIndex(Pice pice)
 	{
 		var px = pice.transform.position.x;
 		var py = pice.transform.position.y;
@@ -63,19 +64,12 @@ public class Side : MonoBehaviour
 				minIndex = index;
 			}
 		}
-		//pice.SmoothSetPosition(minCenterX, minCenterY); 
-		pice.boardX = -1;
-		pice.boardY = -1;
-		//Insert(pice, minIndex);
-		pice.SetToSide(minIndex);
-		//pice.AnimateScale(50/pice.cellWidth);
-		RepositionPiceList();
+		return minIndex;
 	}
 
 	public void Insert(Pice pice, int index)
 	{
 		list.Insert(index, pice);
-		pice.owner = PiceOwner.Side;
 		pice.sideIndex = index;
 		pice.transform.parent = scrollView.content;
 		SetContentLength(list.Count * cellWidth);
@@ -84,7 +78,6 @@ public class Side : MonoBehaviour
 	public void Append(Pice pice)
 	{
 		list.Add(pice);
-		pice.owner = PiceOwner.Side;
 		pice.sideIndex = list.Count - 1;
 		pice.transform.parent = scrollView.content;
 		SetContentLength(list.Count * cellWidth);
@@ -93,7 +86,6 @@ public class Side : MonoBehaviour
 	public void Remove(Pice pice)
 	{
 		list.Remove(pice);
-		pice.owner = PiceOwner.Floating;
 		pice.transform.parent = null;
 		SetContentLength(list.Count * cellWidth);
 	}
@@ -107,9 +99,9 @@ public class Side : MonoBehaviour
 			var y = GetCellCenterY(i);
 			if(!pice.draging)
 			{
-				pice.SmoothSetPositionWithBlock(x, y);
+				pice.TweenBlockToPosition(x, y);
 				var scale = (this.cellWidth / pice.cellWidth) * 0.85f;
-				pice.AnimateScale(scale);
+				pice.TweenToScale(scale);
 			}
 		}
 	}

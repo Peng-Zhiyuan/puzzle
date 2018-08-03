@@ -6,6 +6,10 @@ public static class UIEngine
 {
     static PagePool pagePool = new PagePool();
     static GameObject root; 
+    static GameObject low;
+    static GameObject mid;
+    static GameObject height;
+    static GameObject top;
 	static Func<UIResourceType, string, GameObject> externalLoader;
 
     static Dictionary<string, Floating> createdControl = new Dictionary<string, Floating>();
@@ -18,6 +22,10 @@ public static class UIEngine
         {
             design.gameObject.SetActive(false);
         }
+        low = root.transform.Find("Low").gameObject;
+        mid = root.transform.Find("Mid").gameObject;
+        height = root.transform.Find("Height").gameObject;
+        top = root.transform.Find("Top").gameObject;
     }
 
     public static Canvas Canvas
@@ -53,7 +61,7 @@ public static class UIEngine
             var go_page = GameObject.Instantiate(prefab);
             page = go_page.GetComponent<Page>();
             page.name = prefab.name;
-            page.transform.parent = root.transform;
+            page.transform.parent = mid.transform;
             page.transform.localScale = Vector2.one;
             //page.transform.localPosition = Vector2.zero;
             //page.rectTransform.parent = root.GetComponent<RectTransform>();
@@ -188,7 +196,7 @@ public static class UIEngine
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-	public static Floating ShowFlaoting(string name, string param=null, int depth = UIDepth.Middle)
+	public static Floating ShowFlaoting(string name, string param=null, int depth = UIDepth.High)
     {
         Debug.Log("Show Control: " + name);
 
@@ -204,10 +212,11 @@ public static class UIEngine
                 return null;
             }
 
+            var root = GetRootFromDepth(depth);
             var go = CreateChildKeepLocalProperties(root.transform, prefab);
             control = go.GetComponent<Floating>();
             control.name = prefab.name;
-			control.param=param;
+			control.param = param;
             control.transform.localScale = Vector2.one;
             control.OnCreate();
             createdControl[name] = control;
@@ -216,6 +225,22 @@ public static class UIEngine
         control.Active = true;
         control.Depth = depth;
         return control;
+    }
+
+    public static GameObject GetRootFromDepth(int depth)
+    {
+        switch(depth)
+        {
+            case UIDepth.High:
+                return height;
+            case UIDepth.Middle:
+                return mid;
+            case UIDepth.Low:
+                return low;
+            case UIDepth.Top:
+                return top;
+        }
+        return mid;
     }
 
     public static Floating GetControl<T>()
@@ -266,7 +291,7 @@ public static class UIEngine
         return go;
     }
 
-	public static T ShowFloating<T>(string param=null,int depth = UIDepth.Middle) where T : Floating
+	public static T ShowFloating<T>(string param=null,int depth = UIDepth.High) where T : Floating
     {
         var name = typeof(T).Name;
 		var control = ShowFlaoting(name,param, depth);
@@ -332,8 +357,10 @@ public static class UIEngine
 
 public static class UIDepth
 {
-    public const int High = 200;
+    public const int Low = 0;
 	public const int Middle = 100;
+    public const int High = 200;
+    public const int Top = 300;
 }
 
 public enum UIResourceType

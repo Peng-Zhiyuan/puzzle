@@ -42,7 +42,7 @@ public class MainPage : Page
 
     public override void OnPush()
     {
-        var floating = UIEngine.ShowFloating<BackgroundFloating>(null, -10);
+        var floating = UIEngine.ShowFloating<BackgroundFloating>(null, UIDepth.Low);
 		floating.transform.SetAsFirstSibling();
 		UIEngine.ShowFloating<HeadBarFloating>();
 
