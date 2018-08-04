@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Stopwatch = System.Diagnostics.Stopwatch;
 
 public class MainPage : Page 
 {
@@ -50,6 +51,50 @@ public class MainPage : Page
         {
             CoroutineManager.Create(WaitAndShowSign());
         }
+
+        Refrehs();
+    }
+
+    private void Refrehs()
+    {
+        // create data list form static data
+        var sheet = StaticDataLite.GetSheet("pictype");
+        var dataList = new List<MainPage_ItemData>();
+        foreach(string key in sheet.Keys)
+        {
+            var row = sheet[key];
+            var data = new MainPage_ItemData
+            {
+                row = row,
+                visible = true,
+            };
+            dataList.Add(data);
+        }
+
+        // 检查是否有未完成拼图
+        {
+            var count = PlayerStatus.uncompletePuzzle.Count;
+            var data = new MainPage_ItemData()
+            {
+                pageType = PicturePageType.Uncomplete,
+                visible = count > 0,
+            };
+            dataList.Insert(0, data);
+        }
+
+        // 检查是否有已完成的拼图
+        {
+            var count = PlayerStatus.completeDic.Count;
+            var data = new MainPage_ItemData()
+            {
+                pageType = PicturePageType.Complete,
+                visible = count > 0,
+            };
+            dataList.Insert(0, data);
+            
+        }
+
+        SetDataList(dataList);
     }
 
     public IEnumerator WaitAndShowSign()
@@ -62,47 +107,32 @@ public class MainPage : Page
     public override void OnNavigatedTo()
     {
         UIEngine.ShowFlaoting("BackgroundFloating");
-    
-        // create data list form static data
-        var sheet = StaticDataLite.GetSheet("pictype");
-        var dataList = new List<MainPage_ItemData>();
-        foreach(string key in sheet.Keys)
-        {
-            var row = sheet[key];
-            var data = new MainPage_ItemData
-            {
-                row = row,
-            };
-            dataList.Add(data);
-        }
+        RefreshOnlyCompleteAndUncomplete();
+    }
 
+    public void RefreshOnlyCompleteAndUncomplete()
+    {
         // 检查是否有未完成拼图
         {
             var count = PlayerStatus.uncompletePuzzle.Count;
-            if(count > 0)
+            var data = new MainPage_ItemData()
             {
-                var data = new MainPage_ItemData()
-                {
-                    pageType = PicturePageType.Uncomplete
-                };
-                dataList.Insert(0, data);
-            }
+                pageType = PicturePageType.Uncomplete,
+                visible = count > 0,
+            };
+            SetData(uncompleteItem, data);
         }
 
         // 检查是否有已完成的拼图
         {
             var count = PlayerStatus.completeDic.Count;
-            if(count > 0)
+            var data = new MainPage_ItemData()
             {
-                var data = new MainPage_ItemData()
-                {
-                    pageType = PicturePageType.Complete
-                };
-                dataList.Insert(0, data);
-            }
+                pageType = PicturePageType.Complete,
+                visible = count > 0,
+            };
+            SetData(completeItem, data);
         }
-        
-        SetDataList(dataList);
     }
 
     Queue<MainPage_Item> pool = new Queue<MainPage_Item>();
@@ -145,6 +175,7 @@ public class MainPage : Page
             SetData(item, data);
         }
 
+
         // reset scroll content height
         var itemHeight = sample_item.GetComponent<RectTransform>().rect.height;
         var gl = itemGridRoot.GetComponent<UnityEngine.UI.GridLayoutGroup>();
@@ -155,11 +186,33 @@ public class MainPage : Page
         var scrollContentHeight = itemHeight * rowCount + (rowCount - 1) * spaceingY + listInset + extra;
         var rt = scrollContent.GetComponent<RectTransform>();
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, scrollContentHeight);
+
+
     }
+
+    MainPage_Item completeItem;
+    MainPage_Item uncompleteItem;
+
 
     void SetData(MainPage_Item item, MainPage_ItemData data)
     {
+        // var sw = new Stopwatch();
+        // sw.Start();
+
         item.data = data;
+        item.gameObject.SetActive(data.visible);
+        if(data.pageType == PicturePageType.Uncomplete)
+        {
+            uncompleteItem = item;
+        }
+        else if(data.pageType == PicturePageType.Complete)
+        {
+            completeItem = item;
+        }
+        if(!data.visible)
+        {
+            return;
+        }
 
         // 如果是一个图片分类
         if(data.pageType == PicturePageType.Pictype)
@@ -185,22 +238,31 @@ public class MainPage : Page
                 var sprite = PicLibrary.LoadContentSprite(fileName);
                 item.Facade = sprite;
             }
+
+           
         }
 
         // 如果是已完成的拼图
         if(data.pageType == PicturePageType.Complete)
         {
             item.label.text = "已完成";
+            CompleteInfo firstInfo = null;
             foreach(var kv in PlayerStatus.completeDic)
             {
-                var record = kv.Value;
-                var picId = record.pid;
-                var picRow = StaticDataLite.GetRow("pic", picId.ToString());
-                var fileName = picRow.Get<string>("file");
-                var sprite = PicLibrary.LoadContentSprite(fileName);
-                item.Facade = sprite;
+                firstInfo = kv.Value;
+                break;
             }
+            var picId = firstInfo.pid;
+            var picRow = StaticDataLite.GetRow("pic", picId.ToString());
+            var fileName = picRow.Get<string>("file");
+            var sprite = PicLibrary.LoadContentSprite(fileName);
+            item.Facade = sprite;
+
         }
+
+        
+        // sw.Stop();
+        // Debug.Log("set item: " + sw.Elapsed.TotalSeconds);
     }
 
     public void OnItemClick(MainPage_Item item)

@@ -7,14 +7,23 @@ public class CommandLineFloating : Floating
 {
 	public Text text;
 	public GameObject content;
+	public GameObject hideContent;
+
+	public static CommandLineFloating instance;
 
 	public override void OnCreate()
 	{
+		instance = this;
 		ConsoleService.Instance.OnPrint += OnPrint;
 		this.Hide();
 	}
 
 	private void OnPrint(LogLevel level, string msg)
+	{
+		Log(msg);
+	}
+
+	public void Log(string msg)
 	{
 		var s = text.text;
 		s += "\n";
@@ -51,11 +60,23 @@ public class CommandLineFloating : Floating
 	{
 		_isVisible = false;
 		this.content.SetActive(false);
+		this.hideContent.SetActive(true);
 	}
 
 	public void Show()
 	{
 		_isVisible = true;
 		this.content.SetActive(true);
+		this.hideContent.SetActive(false);
+	}
+
+	public void OnCloseButton()
+	{
+		this.Hide();
+	}
+
+	public void OnOpenButton()
+	{
+		this.Show();
 	}
 }

@@ -19,18 +19,6 @@ public static class GameManifestManager {
                 {
                     jsonString = NativeBridge.SyncCall("NativeGameManifestManager", "GetManifest");
                 }
-                if (string.IsNullOrEmpty(jsonString))
-                {
-                    switch (Application.platform)
-                    {
-                        case RuntimePlatform.Android:
-                            jsonString = JavaProxyHelper.GetStaticFeild<string>("edroity.game.hos.AndroidGameManifestManager", "manifestString");
-                            break;
-                        case RuntimePlatform.IPhonePlayer:
-                            jsonString = OCProxy.proxyCallStaticAndGetString("IOSGameManifestManager", "getManifestString");
-                            break;
-                    }
-                }
 
                 Debug.Log("[GameManifestManager] manifest: " + jsonString);
                 if(!string.IsNullOrEmpty(jsonString))
@@ -52,7 +40,7 @@ public static class GameManifestManager {
         {
             if (_coreManifest == null)
             {
-                var textAsset = Resources.Load<TextAsset>("LocalConfig/game-manifest");
+                var textAsset = Resources.Load<TextAsset>("game-manifest/game-manifest");
                 var jsonString = textAsset.text;
                 Debug.Log("[GameManifestManager] core-manifest: " + jsonString);
                 if (!string.IsNullOrEmpty(jsonString))

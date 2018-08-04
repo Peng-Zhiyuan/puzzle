@@ -11,10 +11,19 @@ public static class PicLibrary
 		return texture;
 	}
 
+
+	//static Dictionary<string, Sprite> spriteCache = new Dictionary<string, Sprite>();
 	public static Sprite LoadContentSprite(string file)
 	{
+		// Sprite s;
+		// spriteCache.TryGetValue(file, out s);
+		// if(s != null)
+		// {
+		// 	return s;
+		// }
 		var texture = Load(file);
 		var content = Sprite.Create(texture, new Rect(0, 106, 512, 300), new Vector2(0.5f, 0.5f), texture.width/1000f);
+		// spriteCache[file] = content;
 		return content;
 	}
 	

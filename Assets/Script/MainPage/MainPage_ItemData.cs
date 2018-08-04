@@ -12,4 +12,6 @@ public class MainPage_ItemData
 
     public PicturePageType pageType;
 
+    public bool visible;
+
 }

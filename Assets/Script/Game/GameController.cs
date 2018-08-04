@@ -16,9 +16,11 @@ public static class GameController
   
 		// hide bg and show core page
 		UIEngine.HideFlaoting<BackgroundFloating>();
-		UIEngine.CleanAdmission();
-		UIEngine.Forward<CorePage>();
 
+		UIEngineHelper.WateAdmissionComplete(()=>{
+			UIEngine.Forward<CorePage>();
+		});
+		
 		// load picture which player select
 		var picFile = StaticDataLite.GetCell<string>("pic", picId.ToString(), "file");
 		var contentSprite = PicLibrary.LoadContentSprite(picFile);

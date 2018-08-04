@@ -79,9 +79,11 @@ public class DisplayPage : Page
 	private void DoBack()
 	{
 		Puzzle.Instance.Clean();
-		AdmissionManager.Remove();
-		UIEngine.BackTo<MainPage>();
-		UIEngine.DestroyFromPool("LevelCompletePage");
+		UIEngineHelper.WateAdmissionComplete(()=>{
+			UIEngine.BackTo<MainPage>();
+			UIEngine.DestroyFromPool("LevelCompletePage");
+		});
+		
 	}
 
 	public void OnShareButton()
