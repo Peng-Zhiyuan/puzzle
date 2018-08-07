@@ -79,12 +79,15 @@ public class HeadBarFloating : Floating
 			else if(top is DialogPage)
 			{
 				// do nothing
+				var dialog = top as DialogPage;
+				dialog.OnCloseButton();
 			}
 			else if(top is AdPage)
 			{
 				// do nothing
+				var adPage = top as AdPage;
+				adPage.OnCloseButton();
 			}
-
 			if(top is LevelSettingsPage)
 			{
 				var admin = new Admission_PopdownOldPage();
@@ -154,7 +157,7 @@ public class HeadBarFloating : Floating
 		var nowTop = UIEngine.Top;
 		if(nowTop != lastPage)
 		{
-			if(nowTop is MainPage || nowTop is LevelCompletePage || nowTop is DisplayPage || nowTop is DialogPage || nowTop is AdPage)
+			if(nowTop is MainPage || nowTop is LevelCompletePage || nowTop is DisplayPage)
 			{
 				HideBack();
 				Debug.Log("HideBack");

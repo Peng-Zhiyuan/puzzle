@@ -32,7 +32,7 @@ public class Puzzle
 	private Map map;
 
 	public static bool DEBUG = false;
-	public static bool SHUFF = false;
+	public static bool SHUFF = true;
 
 	/// <summary>
 	/// 整个游戏中只会被调用一次

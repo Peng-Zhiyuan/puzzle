@@ -56,7 +56,7 @@ public class ShopPage_IapItem : ShopPage_Item
                 tag2.gameObject.SetActive(true);
                 tag3.gameObject.SetActive(false);
             }
-            else if(value == 3)
+            else if(value >= 3)
             {
                 tag1.gameObject.SetActive(false);
                 tag2.gameObject.SetActive(false);
@@ -81,7 +81,7 @@ public class ShopPage_IapItem : ShopPage_Item
                 icon2.gameObject.SetActive(true);
                 icon3.gameObject.SetActive(false);
             }
-            else if(value == 3)
+            else if(value >= 3)
             {
                 icon1.gameObject.SetActive(false);
                 icon2.gameObject.SetActive(false);
