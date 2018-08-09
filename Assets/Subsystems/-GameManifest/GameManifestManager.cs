@@ -2,7 +2,6 @@
 using System.Collections;
 using CustomLitJson;
 using UnityEngine.Assertions;
-using Edroity;
 
 public static class GameManifestManager {
     
@@ -15,10 +14,7 @@ public static class GameManifestManager {
             if (_manifest == null)
             {
                 string jsonString = null;
-                if (NativeBridge.IsInited)
-                {
-                    jsonString = NativeBridge.SyncCall("NativeGameManifestManager", "GetManifest");
-                }
+                jsonString = NativeBridge.SyncCall("NativeGameManifestManager", "GetManifest");
 
                 Debug.Log("[GameManifestManager] manifest: " + jsonString);
                 if(!string.IsNullOrEmpty(jsonString))

@@ -49,6 +49,19 @@ public class Game : MonoBehaviour
 	void Update()
 	{
 		UpdateManager.Update();
+
+		if(Input.GetKeyDown(KeyCode.Escape))
+		{
+			var page = UIEngine.Top;
+			if(page is MainPage)
+			{
+				SDKManager.Exit();
+			}
+			else
+			{
+				HeadBarFloating.instance.OnBackButton();
+			}
+		}
 	}
 
 }

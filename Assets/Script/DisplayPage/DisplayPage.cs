@@ -64,11 +64,18 @@ public class DisplayPage : Page
 		}
 		else if(completeCount >= 4)
 		{
-			var admin = new Admission_PopupNewPage();
-			var adPage = UIEngine.Forward<AdPage>(null, admin);
-			adPage.Compelte = () => {
+			if(SDKManager.IsAdLoaded)
+			{
+				var admin = new Admission_PopupNewPage();
+				var adPage = UIEngine.Forward<AdPage>(null, admin);
+				adPage.Compelte = () => {
+					DoBack();
+				};
+			}
+			else
+			{
 				DoBack();
-			};
+			}
 		}
 		else
 		{

@@ -10,6 +10,8 @@ public class MainPage : Page
     public Transform itemGridRoot;
     public Transform scrollContent;
 
+    public RectTransform gift_button;
+
     public override void OnCreate()
     {
         sample_item.gameObject.SetActive(false);
@@ -108,6 +110,7 @@ public class MainPage : Page
     {
         UIEngine.ShowFlaoting("BackgroundFloating");
         RefreshOnlyCompleteAndUncomplete();
+        gift_button.gameObject.SetActive(SDKManager.IsAdLoaded);
     }
 
     public void RefreshOnlyCompleteAndUncomplete()

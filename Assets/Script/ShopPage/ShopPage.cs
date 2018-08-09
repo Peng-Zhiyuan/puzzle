@@ -18,9 +18,19 @@ public class ShopPage : Page
     {
         prefab_ad_item.gameObject.SetActive(false);
         prefab_ipa_item.gameObject.SetActive(false);
+        Refresh();
     }
 
-    public override void OnPush()
+    public override void OnNavigatedTo()
+    {
+        if(adItem != null)
+        {
+            adItem.gameObject.SetActive(SDKManager.IsAdLoaded);
+        }
+    }
+
+    ShopPage_AdItem adItem;
+    private void Refresh()
     {
         // rebuild item list
         itemList.Clear();
@@ -34,6 +44,7 @@ public class ShopPage : Page
             tr.gameObject.SetActive(true);
             var item = tr.GetComponent<ShopPage_Item>();
             itemList.Add(item);
+            adItem = item as ShopPage_AdItem;
         }
 
         // add iap items
@@ -59,7 +70,6 @@ public class ShopPage : Page
         var scrollContentHeight = itemHeight * rowCount + (rowCount - 1) * spaceingY + listInset + extra;
         var rt = scrollViewContent.GetComponent<RectTransform>();
         rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, scrollContentHeight);
-        
     }
     
     // 由 Item 的 sendMessage 调用
@@ -70,9 +80,8 @@ public class ShopPage : Page
         {
             var iapItem = item as ShopPage_IapItem;
             var row = iapItem.row;
-            Debug.Log(row.Get<int>("id"));
-            var gold = row.Get<int>("gold");
-            Helper.AddGold(gold);
+            var id = row.Get<int>("id");
+            SDKManager.Pay(id);
         }
         else if(item is ShopPage_AdItem)
         {

@@ -459,6 +459,7 @@ MonoBehaviour:
   sample_item: {fileID: 114547496126028868}
   itemGridRoot: {fileID: 224199831882737744}
   scrollContent: {fileID: 224098846673967532}
+  gift_button: {fileID: 224231539134126842}
 --- !u!114 &114283219574164750
 MonoBehaviour:
   m_ObjectHideFlags: 1
