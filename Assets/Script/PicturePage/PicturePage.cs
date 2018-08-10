@@ -17,6 +17,12 @@ public class PicturePage : Page
 
     public VirtualGridScrollView virtualGridScrollView;
 
+    public override void OnCreate()
+    {
+        virtualGridScrollView.offsetX = (this.rectTransform.rect.width - virtualGridScrollView.cellWidth)/2;
+        virtualGridScrollView.onSetControl = OnSetItem;
+    }
+
     public override void OnParamChanged()
     {
         this.p = param as PicturePageParam;
@@ -167,6 +173,11 @@ public class PicturePage : Page
         // hide sample
         //itemSample.gameObject.SetActive(false);
 
+    }
+
+    private void OnSetItem(RectTransform item, object data)
+    {
+        SetItem(item.GetComponent<PictruePage_Item>(), data as PictruePage_ItemData);   
     }
 
     void SetItem(PictruePage_Item item, PictruePage_ItemData data)

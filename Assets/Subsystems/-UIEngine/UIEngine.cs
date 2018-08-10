@@ -62,7 +62,12 @@ public static class UIEngine
             page = go_page.GetComponent<Page>();
             page.name = prefab.name;
             page.transform.parent = mid.transform;
+            page.rectTransform.anchorMax = new Vector2(0, 0);
+            page.rectTransform.anchorMax = new Vector2(1, 1);
+
             page.transform.localScale = Vector2.one;
+            page.rectTransform.offsetMin = Vector2.zero;
+            page.rectTransform.offsetMax = Vector2.zero;
             //page.transform.localPosition = Vector2.zero;
             //page.rectTransform.parent = root.GetComponent<RectTransform>();
             // page.rectTransform.sizeDelta = Vector2.zero;
@@ -70,9 +75,14 @@ public static class UIEngine
             Debug.Log("(new Instance)");
             page.OnCreate();
         }
-        page.rectTransform.sizeDelta = Vector2.zero;
-        page.rectTransform.localPosition = Vector2.one;
-       
+        else
+        {
+            page.transform.localScale = Vector2.one;
+            page.rectTransform.offsetMin = Vector2.zero;
+            page.rectTransform.offsetMax = Vector2.zero;
+        }
+
+
         return page;
     }
 
@@ -196,7 +206,7 @@ public static class UIEngine
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-	public static Floating ShowFlaoting(string name, string param=null, int depth = UIDepth.High)
+	public static Floating ShowFlaoting(string name, string param = null, int depth = UIDepth.High)
     {
         Debug.Log("Show Control: " + name);
 
@@ -213,15 +223,21 @@ public static class UIEngine
             }
 
             var root = GetRootFromDepth(depth);
-            var go = CreateChildKeepLocalProperties(root.transform, prefab);
+            var go = GameObject.Instantiate(prefab);
             control = go.GetComponent<Floating>();
             control.name = prefab.name;
-			control.param = param;
+			control.transform.parent = root.transform;
             control.transform.localScale = Vector2.one;
+            control.rectTransform.anchorMin = Vector2.zero;
+            control.rectTransform.anchorMax = Vector2.one;
+            control.rectTransform.offsetMin = Vector2.zero;
+            control.rectTransform.offsetMax = Vector2.zero;
+            
             control.OnCreate();
             createdControl[name] = control;
         }
-		else control.param=param;
+		control.param = param;
+        control.OnParamChanged();
         control.Active = true;
         control.Depth = depth;
         return control;
@@ -271,24 +287,6 @@ public static class UIEngine
         {
             control.Active = false;
         }
-    }
-
-    private static GameObject CreateChildKeepLocalProperties(Transform parent, GameObject prefab)
-    {
-        var go = GameObject.Instantiate(prefab);
-        // var localPosition = go.transform.localPosition;
-        // var localRotation = go.transform.localRotation;
-        // var localScale = go.transform.localScale;
-        go.transform.parent = parent.transform;
-        //go.transform.localScale = Vector2.one;
-        // go.transform.localPosition = localPosition;
-        // go.transform.localRotation = localRotation;
-        // go.transform.localScale = localScale;
-        var rectTransform = go.GetComponent<RectTransform>();
-        rectTransform.sizeDelta = Vector2.zero;
-        rectTransform.localPosition = Vector2.zero;
-        //rectTransform.localPosition = Vector2.zero;
-        return go;
     }
 
 	public static T ShowFloating<T>(string param=null,int depth = UIDepth.High) where T : Floating

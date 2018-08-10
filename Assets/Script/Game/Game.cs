@@ -13,7 +13,6 @@ public class Game : MonoBehaviour
 		StaticDataLite.Init();
 		UIEngine.Init();
 		PlayerStatus.Read();
-		AudioManager.Init();
 		UIEngine.Forward("LoadingPage", null, new Admission_None());
 		//UIEngine.Forward<LevelCompletePage>();
 		if(GameInfo.ForceDeveloper)

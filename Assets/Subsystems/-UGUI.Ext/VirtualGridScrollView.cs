@@ -19,6 +19,7 @@ public class VirtualGridScrollView : MonoBehaviour
 
 	public float offsetY;
 	public float extraY;
+	public float offsetX;
 
 	private Queue<RectTransform> queue = new Queue<RectTransform>();
 	private RectTransform head;
@@ -32,9 +33,7 @@ public class VirtualGridScrollView : MonoBehaviour
 	{
 		get
 		{
-			var zeroToViewPivot = - this.content.rect.yMax;
-			var pivotToTop = (1 - this.view.pivot.y) * this.view.rect.height;
-			return zeroToViewPivot + pivotToTop;
+			return - this.content.offsetMax.y;
 			// var viewY = - this.content.localPosition.y;
 			// var top = viewY + (1 - this.view.pivot.y) * this.view.rect.height;
 			// return top;
@@ -81,10 +80,11 @@ public class VirtualGridScrollView : MonoBehaviour
 	{
 		get
 		{
-			var zeroToContentPivot = - (1 - this.content.pivot.y) * this.view.rect.height;
-			var contentPivotToViewPivot = - this.content.localPosition.y;
-			var viewPivotToViewBottom = - this.view.pivot.y * this.view.rect.height;
-			return zeroToContentPivot + contentPivotToViewPivot + viewPivotToViewBottom;
+			// var zeroToContentPivot = - (1 - this.content.pivot.y) * this.view.rect.height;
+			// var contentPivotToViewPivot = - this.content.localPosition.y;
+			// var viewPivotToViewBottom = - this.view.pivot.y * this.view.rect.height;
+			// return zeroToContentPivot + contentPivotToViewPivot + viewPivotToViewBottom;
+			return - this.content.rect.height - this.content.offsetMin.y;
 		}
 	}
 
@@ -99,7 +99,7 @@ public class VirtualGridScrollView : MonoBehaviour
 	{
 		get
 		{
-			return (int)(this.content.rect.width / this.cellWidth);
+			return (int)((this.content.rect.width - offsetX) / this.cellWidth);
 		}
     }
 
@@ -161,8 +161,9 @@ public class VirtualGridScrollView : MonoBehaviour
 	{
 		var indexX = this.getIndexX(index);
 		var indexY = this.getIndexY(index);
-		var y = this.head.localPosition.y - indexY * this.cellHeight;
-		var x = this.head.localPosition.x + indexX * this.cellWidth;
+		var y = this.head.anchoredPosition.y - indexY * this.cellHeight;
+		var x = this.head.anchoredPosition.x + indexX * this.cellWidth;
+		x += offsetX;
 		return new Vector2(x, y);
 	}
 

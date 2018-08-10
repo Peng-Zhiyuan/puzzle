@@ -50,6 +50,19 @@ public class View : MonoBehaviour
         }
     }
 
+    private RectTransform _rectTransform;
+    public RectTransform rectTransform
+    {
+        get
+        {
+            if(_rectTransform == null)
+            {
+                this._rectTransform = this.GetComponent<RectTransform>();
+            }
+            return _rectTransform;
+        }
+    }
+
     // 当被(UIService)创建时调用
     public virtual void OnCreate() { }
 

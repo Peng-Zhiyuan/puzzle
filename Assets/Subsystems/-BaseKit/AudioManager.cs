@@ -18,11 +18,12 @@ public static class AudioManager
         }
     }
 
-	public static void Init()
+	static AudioManager()
 	{
 		root = new GameObject("AudioServiceRoot");
         root.AddComponent<AudioListener>();
         CoroutineManager.Create(UpdateAsyn());
+        GameObject.DontDestroyOnLoad(root);
 	}
 
 
