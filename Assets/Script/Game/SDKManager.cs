@@ -44,12 +44,17 @@ public static class SDKManager
         var productName = row.Get<string>("product_name");
         var productDesc = row.Get<string>("product_desc");
         var price_yuan = row.Get<float>("price");
+        var gold = row.Get<int>("gold");
+        var itemId = goodsId;
         var price_fen = price_yuan * 100;
 
         var jd = new JsonData();
         jd["productName"] = productName;
         jd["productDesc"] = productDesc;
         jd["price_fen"] = price_fen;
+        jd["price_yuan"] = price_yuan;
+        jd["itemId"] = itemId;
+        jd["gold"] = gold;
         var json = jd.ToJson();
 
         NativeBridge.InvokeCall("NativeSDKManager", "Pay", json, result => 
@@ -57,7 +62,6 @@ public static class SDKManager
             if(result == "SUCCESS")
             {
                 Log.Scrren("SUCCESS");
-                var gold = row.Get<int>("gold");
                 Helper.AddGold(gold);
             }
             else if(result == "FAIL")
