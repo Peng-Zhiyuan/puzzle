@@ -15,6 +15,8 @@ public class PicturePage : Page
 
     public PicturePageParam p;
 
+    public VirtualGridScrollView virtualGridScrollView;
+
     public override void OnParamChanged()
     {
         this.p = param as PicturePageParam;
@@ -135,31 +137,35 @@ public class PicturePage : Page
 
     void setDataList(List<PictruePage_ItemData> dataList)
     {
+        var d = new List<object>();
+        d.AddRange(dataList);
+        virtualGridScrollView.ChangeData(d);
+
         // clean old items 
-        TransformUtil.DestroyAllChildren(itemRoot);
+        // TransformUtil.DestroyAllChildren(itemRoot);
 
-        // create new items for each data
-        foreach(var data in dataList)
-        {
-            var item = GameObject.Instantiate(itemSample);
-            item.transform.parent = itemRoot;
-            item.transform.localScale = Vector2.one;
-            SetItem(item, data);
-            item.gameObject.SetActive(true);
-        }
+        // // create new items for each data
+        // foreach(var data in dataList)
+        // {
+        //     var item = GameObject.Instantiate(itemSample);
+        //     item.transform.parent = itemRoot;
+        //     item.transform.localScale = Vector2.one;
+        //     SetItem(item, data);
+        //     item.gameObject.SetActive(true);
+        // }
 
-        // set scroll content total height
-        var itemHeight = itemSample.GetComponent<RectTransform>().rect.height;
-        var spaceing = itemRoot.GetComponent<VerticalLayoutGroup>().spacing;
-        var preExtra = 480;
-        var postExtra = 100;
-        var scrollContentHeight = itemHeight * dataList.Count + (dataList.Count - 1) * spaceing + preExtra + postExtra;
-        var rt = scrollContent.GetComponent<RectTransform>();
-        Debug.Log(scrollContentHeight);
-        rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, scrollContentHeight);
+        // // set scroll content total height
+        // var itemHeight = itemSample.GetComponent<RectTransform>().rect.height;
+        // var spaceing = itemRoot.GetComponent<VerticalLayoutGroup>().spacing;
+        // var preExtra = 480;
+        // var postExtra = 100;
+        // var scrollContentHeight = itemHeight * dataList.Count + (dataList.Count - 1) * spaceing + preExtra + postExtra;
+        // var rt = scrollContent.GetComponent<RectTransform>();
+        // Debug.Log(scrollContentHeight);
+        // rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, scrollContentHeight);
 
         // hide sample
-        itemSample.gameObject.SetActive(false);
+        //itemSample.gameObject.SetActive(false);
 
     }
 

@@ -152,6 +152,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224651133394841502}
   - component: {fileID: 114748022900607544}
+  - component: {fileID: 114654541876166296}
   m_Layer: 5
   m_Name: scrollRect
   m_TagString: Untagged
@@ -784,6 +785,27 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: 2, y: -2}
   m_UseGraphicAlpha: 1
+--- !u!114 &114654541876166296
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1363590564094498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 925fb4e49880248088bb439cee424908, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellHeight: 720
+  cellWidth: 791
+  depth: 0
+  elementName: 
+  content: {fileID: 224996657175369378}
+  sample: {fileID: 224272307816962626}
+  view: {fileID: 224651133394841502}
+  offsetY: 480
+  extraY: 0
+  activeElementList: []
 --- !u!114 &114688289532997446
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -835,6 +857,7 @@ MonoBehaviour:
   itemRoot: {fileID: 224027208885544400}
   scrollContent: {fileID: 224996657175369378}
   text_pictureCount: {fileID: 114029286236214032}
+  virtualGridScrollView: {fileID: 114654541876166296}
 --- !u!114 &114748022900607544
 MonoBehaviour:
   m_ObjectHideFlags: 1

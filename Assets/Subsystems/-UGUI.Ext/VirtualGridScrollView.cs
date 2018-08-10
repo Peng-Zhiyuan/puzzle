@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class VirtualScrollView : MonoBehaviour
+public class VirtualGridScrollView : MonoBehaviour
 {
 	public float cellHeight = 100;
 	public float cellWidth = 100;
@@ -26,14 +26,18 @@ public class VirtualScrollView : MonoBehaviour
 	public List<RectTransform> activeElementList = new List<RectTransform>();
 	private List<object> dataList = new List<object>();
 
+	// 取 content 的左上角为计算坐标系原点
 
 	private float ViewTop
 	{
 		get
 		{
-			var viewY = - this.content.localPosition.y;
-			var top = viewY + (1 - this.view.pivot.y) * this.view.rect.height;
-			return top;
+			var zeroToViewPivot = - this.content.rect.yMax;
+			var pivotToTop = (1 - this.view.pivot.y) * this.view.rect.height;
+			return zeroToViewPivot + pivotToTop;
+			// var viewY = - this.content.localPosition.y;
+			// var top = viewY + (1 - this.view.pivot.y) * this.view.rect.height;
+			// return top;
 		}
 	}
 
@@ -41,7 +45,8 @@ public class VirtualScrollView : MonoBehaviour
 	{
 		get
 		{
-			return (1 - this.content.pivot.y) * this.content.rect.height;
+			//return (1 - this.content.pivot.y) * this.content.rect.height;
+			return 0;
 		}
 	}
 
@@ -49,7 +54,8 @@ public class VirtualScrollView : MonoBehaviour
 	{
 		get
 		{
-			return - (this.content.pivot.x * this.content.rect.width);
+			//return - (this.content.pivot.x * this.content.rect.width);
+			return 0;
 		}
 	}
 
@@ -57,7 +63,8 @@ public class VirtualScrollView : MonoBehaviour
 	{
 		get
 		{
-			return (1 - this.content.pivot.x) * this.content.rect.width;
+			//return (1 - this.content.pivot.x) * this.content.rect.width;
+			return this.content.rect.width;
 		}
 	}
 
@@ -65,7 +72,8 @@ public class VirtualScrollView : MonoBehaviour
 	{
 		get
 		{
-			return -(this.content.pivot.y * this.content.rect.height);
+			//return -(this.content.pivot.y * this.content.rect.height);
+			return - this.content.rect.height;
 		}
 	}
 
@@ -73,19 +81,20 @@ public class VirtualScrollView : MonoBehaviour
 	{
 		get
 		{
-			var viewY = - this.content.localPosition.y;
-			var bottom = viewY - this.view.pivot.y * this.view.rect.height;
-			return bottom;
+			var zeroToContentPivot = - (1 - this.content.pivot.y) * this.view.rect.height;
+			var contentPivotToViewPivot = - this.content.localPosition.y;
+			var viewPivotToViewBottom = - this.view.pivot.y * this.view.rect.height;
+			return zeroToContentPivot + contentPivotToViewPivot + viewPivotToViewBottom;
 		}
 	}
 
-	private float ContentCenterX
-	{
-		get
-		{
-			return (0.5f - this.content.pivot.x) * this.content.rect.width;
-		}
-	}
+	// private float ContentCenterX
+	// {
+	// 	get
+	// 	{
+	// 		return (0.5f - this.content.pivot.x) * this.content.rect.width;
+	// 	}
+	// }
     private int rowCount
 	{
 		get
@@ -139,7 +148,9 @@ public class VirtualScrollView : MonoBehaviour
 	private RectTransform CreateControlAt(int index)
 	{
 		var item = this.CreateControl();
-		item.localPosition = this.getControlPosition(index);
+		item.anchorMin = new Vector2(0, 1);
+		item.anchorMax = new Vector2(0, 1);
+		item.anchoredPosition = this.getControlPosition(index);
 		GetTag(item).listIndex = index;
 		var data = this.dataList[index];
 		this.onSetControl?.Invoke(item, data);
@@ -207,20 +218,23 @@ public class VirtualScrollView : MonoBehaviour
         var headY = this.ContentTop - this.cellHeight / 2 - this.offsetY;
         var headX = this.ContentLeft + this.cellWidth / 2;
         {
-            var head = new RectTransform();
+            var head = new GameObject().AddComponent<RectTransform>();
             head.parent = this.content;
+			head.anchorMin = new Vector2(0, 1);
+			head.anchorMax = new Vector2(0, 1);
+			head.anchoredPosition = new Vector2(headX, headY);
 			head.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, this.cellWidth);
 			head.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, this.cellHeight);
-            head.localPosition = new Vector2(headX, headY);
             head.name = "head";
             this.head = head;
         }
         {
-            var tail = new RectTransform();
+            var tail = new GameObject().AddComponent<RectTransform>();
             tail.parent = this.content;
+			tail.anchorMin = new Vector2(0, 1);
+			tail.anchorMax = new Vector2(0, 1);
 			tail.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, this.cellWidth);
 			tail.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, this.cellHeight);
-            tail.localPosition = this.head.localPosition;
             tail.name = "tail";
             this.tail = tail;
         }
@@ -228,15 +242,15 @@ public class VirtualScrollView : MonoBehaviour
 
 	private void RepositionTail() 
 	{
-        this.tail.localPosition = this.head.localPosition;
+        this.tail.anchoredPosition = this.head.anchoredPosition;
         var indexX = (this.dataList.Count - 1) % this.rowCount;
         var indexY = (this.dataList.Count - 1) / this.rowCount;
         var shiftX = indexX * this.cellHeight;
         var shiftY = indexY * this.cellHeight;
         if (shiftX < 0) shiftX = 0;
         if (shiftY < 0) shiftY = 0;
-        var position = this.tail.localPosition;
-        this.tail.localPosition = new Vector2(position.x + shiftX, position.y - shiftY);
+        var position = this.tail.anchoredPosition;
+        this.tail.anchoredPosition = new Vector2(position.x + shiftX, position.y - shiftY);
 		var contentHeight = shiftY + this.cellHeight + this.offsetY + this.extraY;
 		this.content.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, contentHeight);
     }
@@ -289,7 +303,7 @@ public class VirtualScrollView : MonoBehaviour
     }
 	private void CalculateFirstActiveControlIndex(out int firstIndex, out float firstY)
 	{
-        var headTop = this.head.position.y + this.cellHeight / 2;
+        var headTop = this.head.localPosition.y + this.cellHeight / 2;
         var topDistance = headTop - this.ViewTop;
         var indexY = (int)(topDistance / this.cellHeight);
         var index = indexY * this.rowCount;
@@ -390,7 +404,7 @@ public class VirtualScrollView : MonoBehaviour
 		this.RecalculateVisibleControl();
 	}
 
-	public void ChangeData(object[] dataList, VirtaulGridScrollViewOption option = VirtaulGridScrollViewOption.None)
+	public void ChangeData(IList<object> dataList, VirtaulGridScrollViewOption option = VirtaulGridScrollViewOption.None)
 	{
 		if(!this.IsInited)
 		{
@@ -411,6 +425,7 @@ public class VirtualScrollView : MonoBehaviour
 				break;
 		}
 		this.PlaceControl();
+		this.sample.gameObject.SetActive(false);
 	}
 
 	class ItemTag
