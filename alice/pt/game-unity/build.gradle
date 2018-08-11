@@ -1,0 +1,19 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 22
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 22
+
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+}

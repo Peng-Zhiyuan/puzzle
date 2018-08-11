@@ -15,6 +15,7 @@ Temp/*
 *.userprefs
 obj/Debug/*
 screencaptures/
+NativeBuilderProduct/
 
 Library.android.bak
 Library.ios.bak

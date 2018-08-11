@@ -1,0 +1,137 @@
+#!/bin/bash
+
+# $1 apkpath
+# $2 keystore name
+# > $3 options
+
+# 脚本文件绝对路径
+script_path=$(cd `dirname $0`; pwd)/`basename $0`   #重点知识，相对路径转绝对路径的方法!
+# apk 绝对路径
+apk=$(cd `dirname $1`; pwd)/`basename $1`
+# keysotre name
+keystore=$2
+# bin 目录
+bin=`dirname $script_path`
+# 工具根目录
+root=`dirname $bin`
+# 工作目录
+workspace=$root/workspace
+# apktool_path
+apktool=$root/apktool/apktool
+# zipalign路径
+zipalign=$root/tools/zipalign
+
+if [[ $1 == "open" ]]; then
+    open $root
+    exit 0
+fi
+
+# 检查特殊额外参数
+no_res=0
+i=1
+for arg in $@ 
+do
+    if [[ $i -gt 2 ]]; then
+        if [[ $arg == "-no-res" ]]; then
+            no_res=1
+        fi
+    fi
+    let "i+=1"
+done
+
+# 清空工作目录
+echo "clean workspace..."
+rm -rf $workspace
+mkdir $workspace
+
+# 移动到工作目录
+cd $workspace
+
+# apktool d
+echo "[apkremanifest] apktool decode..."
+if [[ $no_res == 1 ]]; then
+    echo "[apkremanifest] use -f -r"
+    $apktool d -f -r $apk
+else
+    $apktool d $apk
+fi
+
+# 检查 apktool d 返回
+ret=$?
+if [[ $ret != 0 ]]; then
+    echo "[apkremanifest] apktool d has some error: $ret"
+    exit 1
+fi
+
+# 反编译工程目录
+project=`cd $workspace/*; pwd`
+
+# 收集自定义参数
+custom_arg=""
+i=1
+for arg in $@ 
+do
+    if [[ $i -gt 1 ]]; then
+        custom_arg=$custom_arg" "$arg
+    fi
+    let "i+=1"
+done
+
+# ruby 流程
+$bin/apkremanifest-ruby.rb $root $project $custom_arg
+
+# 检查 ruby 返回
+ret=$?
+if [[ $ret != 0 ]]; then
+    echo "[apkremanifest] ruby code has some error: $ret"
+    exit 1
+fi
+
+# 编译
+echo "[apkremanifest] apktool build..."
+$apktool b $project
+
+# 检查 apktool b 返回
+ret=$?
+if [[ $ret != 0 ]]; then
+    echo "[apkremanifest] apktool b has some error: $ret"
+    exit 1
+fi
+
+# 拷贝新的apk
+cp $project/dist/*.apk $workspace/non-signed.apk
+
+# 移动到root
+cd $root
+
+# 签名
+echo "[apkremanifest] jarsigner..."
+if [[ $keystore == "edroity" ]]; then
+    echo "use edroity.keystore"
+    jarsigner -sigalg SHA1withRSA -digestalg SHA1 -keystore $root/keystore/edroity.keystore -storepass edroity2018 -signedjar $workspace/signed.apk $workspace/non-signed.apk product
+elif [[ $keystore == "6waves" ]]; then
+    echo "use 6waves.keystore"
+    jarsigner -sigalg SHA1withRSA -digestalg SHA1 -keystore $root/keystore/6waves.keystore -storepass 6waves -signedjar $workspace/signed.apk $workspace/non-signed.apk 6waves
+elif [[ $keystore == "ycplay" ]]; then
+    echo "use ycplay.keystore"
+    jarsigner -sigalg SHA1withRSA -digestalg SHA1 -keystore $root/keystore/ycplay.keystore -storepass ycplay -keypass treasure-hunter -signedjar $workspace/signed.apk $workspace/non-signed.apk treasure-hunter
+else
+    echo "Unsupport keystore: "$keystore
+    exit 1
+fi
+
+# 移除未签名apk
+rm $workspace/non-signed.apk
+
+# 对齐
+echo "[apkremanifest] zipalign..."
+$zipalign 4 $workspace/signed.apk $workspace/aligned.apk
+
+# 移除未对齐的apk
+rm $workspace/signed.apk
+
+# 输出
+echo "[apkremanifest] output..."
+originl_apk_root=`dirname $apk`
+originl_apk_name=`basename $apk .apk`
+mv $workspace/aligned.apk $originl_apk_root/$originl_apk_name-remanifest.apk

@@ -119,6 +119,7 @@ public class VirtualGridScrollView : MonoBehaviour
 		{
 			var item = GameObject.Instantiate(this.sample);
 			item.parent = this.content;
+			item.localScale = this.sample.localScale;
 			item.gameObject.SetActive(true);
 			return item;
 		}

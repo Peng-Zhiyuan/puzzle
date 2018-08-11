@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# 切换到文件目录 (bin)
+cd `dirname $0`
+
+# 获得 alice 目录
+alice=$(dirname `pwd`)
+
+# 移动 alice 到用户目录下
+echo "installing alice..."
+rm -rf ~/alice
+cp -r $alice ~/alice
+
+# 打印信息
+echo ""
+echo "alice has installed to path ~/alice."
+echo "add '~/alice/bin' to shell PATH to compelete install."
+echo "now you can delete this copy." 

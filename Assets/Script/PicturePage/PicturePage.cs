@@ -215,7 +215,7 @@ public class PicturePage : Page
 
             case PicturePage_ItemStatus.Complete:
                 {
-                     item.IsShowPuzzleMask = false;
+                    item.IsShowPuzzleMask = false;
                     item.IsShowUnlockLayer = false;
                     item.IsShowPice = true;
                     var picId = data.picRow.Get<int>("id");

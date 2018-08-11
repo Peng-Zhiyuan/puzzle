@@ -1,0 +1,192 @@
+#!/bin/bash
+# $1 子命令
+# $2 基座名称
+# $3 eclipse工程路径（绝对或相对）
+
+# 参数守卫
+
+to_load=0
+to_build=0
+to_copyApk=0
+
+dir_path=$(cd `dirname $0`; pwd)
+base_name=""
+eclipse_priject_path=""
+
+if [[ $1 == load ]]
+then
+    # $2 不能为空
+    if [[ $2 == "" ]]; then
+        echo 'need base name'
+        exit 1
+    fi
+
+    # $2 必须是一个基座名
+    base_list=`ls $dir_path/..`
+    find=0
+    for base in $base_list; do
+        if [[ $base == $2 ]]; then
+            find=1
+        fi
+    done
+    if [[ $find != 1 ]]; then
+        echo "$2 can't resovled to a base" 
+        exit 1
+    fi
+    base_name=$2
+
+    # $3 不能为空
+    if [[ $3 == "" ]]; then
+        echo 'need eclispe project name'
+        exit 1
+    fi
+
+    # $3 必须为eclispe工程路径
+    if [[ ! -d $3 ]]; then
+        echo "$3 can't resovled to a eclipse project" 
+        exit 1
+    fi
+
+    # 装载变量
+    to_load=1
+    eclipse_priject_path=$(cd $3; pwd)
+elif [[ $1 == build ]]
+then
+    # $2 不能为空
+    if [[ $2 == "" ]]; then
+        echo 'need base name'
+        exit 1
+    fi
+
+    # $2 必须为基座名称
+    if [[ $2 == "" ]]; then
+        echo 'need base name'
+        exit 1
+    fi
+    base_list=`ls $dir_path/..`
+    find=0
+    for base in $base_list; do
+        if [[ $base == $2 ]]; then
+            find=1
+        fi
+    done
+    if [[ $find != 1 ]]; then
+        echo "$2 can't resovled to a base" 
+        exit 1
+    fi
+    
+     # $3 可能为eclispe工程路径
+    if [[ $3 != "" ]]; then
+        if [[ ! -d $3 ]]; then
+            echo "$3 can't resovled to a eclipse project" 
+            exit 1
+        fi
+        to_load=1
+        to_copyApk=1
+        eclipse_priject_path=$(cd "$3"; pwd)
+    fi
+
+    # 装载变量
+    to_build=1
+    base_name=$2
+elif [[ $1 == listbase ]]
+then
+    ls $dir_path/..
+elif [[ $1 == open ]]
+then
+    open "$(dirname "$0")"
+else 
+    echo "usecase:"
+    echo "  alice load <base-name>"
+    echo "  alice build <base-name>"
+    echo "  alice build <base-name> <eclispe-project-path>"
+    echo "  alice listbase"
+    echo "  alice open"
+    exit 1
+fi
+
+# 切换到文件所在目录
+cd "$dir_path"
+
+# 切换到基座的 android-studio-project 目录
+cd ..
+cd "$base_name"
+android_studio_project=`pwd`
+
+if [[ $to_load == 1 ]]; then
+    # eclipse工程绝对路径
+    echo "eclipse_priject_path=$eclipse_priject_path"
+    echo "base_path=$android_studio_project"
+
+    # 切换到基座
+    cd $android_studio_project
+
+    # 切换到 game-unity/src/main 目录
+    cd game-unity/src/main
+
+    # 清理工程
+    echo "clean java..."
+    rm -rf java
+    echo "clean res..."
+    rm -rf res
+    echo "clean libs..."
+    rm -rf ../../libs
+    echo "clean jniLibs"
+    rm -rf jniLibs
+    echo "clean assets..."
+    rm -rf assets
+    echo "clean AndroidManifest.xml..."
+    rm -rf AndroidManifest.xml
+
+    # 拷贝文件
+    echo "load java..."
+    cp -r "${eclipse_priject_path}/src" java
+    echo "load res..."
+    cp -r "${eclipse_priject_path}/res" res
+    echo "load libs..."
+    cp -r "${eclipse_priject_path}/libs" ../../libs
+    echo "load jniLibs"
+    mkdir jniLibs
+    jni_dir_list=`ls -F ../../libs | grep '/$'`
+    for d in $jni_dir_list; do
+        mv ../../libs/$d jniLibs/$d
+    done
+    echo "load assets..."
+    cp -r "$eclipse_priject_path/assets" assets
+    echo "load AndroidManifest.xml..."
+    cp -f "$eclipse_priject_path/AndroidManifest.xml" AndroidManifest.xml
+    echo "load native_builder.properties..."
+    cp -f "$eclipse_priject_path/native_builder.properties" native_builder.properties
+    
+    # ruby处理流程
+    ruby ${dir_path}/load_ruby_code.rb $android_studio_project
+fi
+
+if [[ $to_build == 1 ]]; then
+    
+    cd $android_studio_project
+
+    # 清理遗留 apk
+    echo "clean apk"
+    rm game/build/outputs/apk/*.apk
+
+    # 打包
+    echo "call gradlew build"
+    #./gradlew build
+    ./gradlew assembleRelease
+    if [[ $? != 0 ]]; then
+        echo "Failed: error in gradlw build."
+        exit 1
+    fi
+fi
+
+if [[ $to_copyApk == 1 ]]; then
+    # 输出apk
+    echo "output apk..."
+    target_dir=`dirname "$eclipse_priject_path"`
+    target_name=`basename "$eclipse_priject_path"`.apk
+    target=$target_dir/$target_name
+    echo $target
+    rm -f $target
+    cp $android_studio_project/game/build/outputs/apk/*-release.apk $target
+fi

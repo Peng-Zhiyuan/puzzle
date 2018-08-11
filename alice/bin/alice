@@ -1,0 +1,181 @@
+#!/bin/bash
+# $1 子命令
+# $2 基座名称
+# $3 eclipse工程路径（绝对或相对）
+
+# 参数守卫
+
+to_load=0
+to_build=0
+to_copyApk=0
+
+dir_path=$(cd `dirname $0`; pwd)
+base_name=""
+import_project_path=""
+
+if [[ $1 == load ]]
+then
+    # $2 不能为空
+    if [[ $2 == "" ]]; then
+        echo 'need base name'
+        exit 1
+    fi
+
+    # $2 必须是一个基座名
+    base_list=`ls $dir_path/..`
+    find=0
+    for base in $base_list; do
+        if [[ $base == $2 ]]; then
+            find=1
+        fi
+    done
+    if [[ $find != 1 ]]; then
+        echo "$2 can't resovled to a base" 
+        exit 1
+    fi
+    base_name=$2
+
+    # $3 不能为空
+    if [[ $3 == "" ]]; then
+        echo 'need eclispe project name'
+        exit 1
+    fi
+
+    # $3 必须为eclispe工程路径
+    if [[ ! -d $3 ]]; then
+        echo "$3 can't resovled to a directory" 
+        exit 1
+    fi
+
+    # $3 必须为eclispe工程路径
+    if [[ ! -f $3/build.gradle ]]; then
+        echo "$3 can't resovled to a android studio project" 
+        exit 1
+    fi
+
+    # 装载变量
+    to_load=1
+    import_project_path=$(cd $3; pwd)
+elif [[ $1 == build ]]
+then
+    # $2 不能为空
+    if [[ $2 == "" ]]; then
+        echo 'need base name'
+        exit 1
+    fi
+
+    # $2 必须为基座名称
+    if [[ $2 == "" ]]; then
+        echo 'need base name'
+        exit 1
+    fi
+    base_list=`ls $dir_path/..`
+    find=0
+    for base in $base_list; do
+        if [[ $base == $2 ]]; then
+            find=1
+        fi
+    done
+    if [[ $find != 1 ]]; then
+        echo "$2 can't resovled to a base" 
+        exit 1
+    fi
+    
+     # $3 可能为eclispe工程路径
+    if [[ $3 != "" ]]; then
+        if [[ ! -d $3 ]]; then
+            echo "$3 can't resovled to a eclipse project" 
+            exit 1
+        fi
+        to_load=1
+        to_copyApk=1
+        import_project_path=$(cd "$3"; pwd)
+    fi
+
+    # 装载变量
+    to_build=1
+    base_name=$2
+elif [[ $1 == listbase ]]
+then
+    ls $dir_path/..
+elif [[ $1 == open ]]
+then
+    open "$(dirname "$0")"
+else 
+    echo "usecase:"
+    echo "  alice load <base-name>"
+    echo "  alice build <base-name>"
+    echo "  alice build <base-name> <eclispe-project-path>"
+    echo "  alice listbase"
+    echo "  alice open"
+    exit 1
+fi
+
+# 切换到文件所在目录
+cd "$dir_path"
+
+# 切换到基座的 android-studio-project 目录
+cd ..
+cd "$base_name"
+base=`pwd`
+
+if [[ $to_load == 1 ]]; then
+    # eclipse工程绝对路径
+    echo "import_project_path=$import_project_path"
+    echo "base_path=$base"
+
+    # 切换到基座
+    cd $base
+
+    # 切换到 game-unity 目录
+    cd game-unity
+
+    # 清理工程
+    echo "clean src..."
+    rm -rf src
+    echo "clean libs..."
+    rm -rf libs
+
+    # 拷贝文件
+    echo "load java..."
+    cp -r "${import_project_path}/src" src
+    echo "load libs..."
+    cp -r "${import_project_path}/libs" libs
+    echo "load native_builder.properties..."
+    cp -f "$import_project_path/native_builder.properties" native_builder.properties
+    
+    # ruby处理流程
+    ruby ${dir_path}/load_ruby_code.rb $base
+fi
+
+if [[ $to_build == 1 ]]; then
+    
+    cd $base
+
+    # 清理遗留 apk
+    echo "clean apk"
+    rm game/build/outputs/apk/*.apk
+    rm game/build/outputs/apk/release/*.apk
+    rm game/build/outputs/apk/debug/*.apk
+
+    # 打包
+    echo "call gradlew build"
+    #./gradlew build
+    ./gradlew assembleRelease
+    if [[ $? != 0 ]]; then
+        echo "Failed: error in gradlw build."
+        exit 1
+    fi
+fi
+
+if [[ $to_copyApk == 1 ]]; then
+    # 输出apk
+    echo "output apk..."
+    target_dir=`dirname "$import_project_path"`
+    target_name=`basename "$import_project_path"`.apk
+    target=$target_dir/$target_name
+    echo $target
+    rm -f $target
+    from=`find $base/game/build/outputs/apk -name *-release.apk -mindepth 1 -maxdepth 2`
+    cp $from $target
+fi
