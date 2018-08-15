@@ -487,7 +487,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u4F60\u9700\u8981"
+  m_Text: You need
 --- !u!114 &114796267310489292
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -520,7 +520,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u7B49\u7EA7"
+  m_Text: level
 --- !u!114 &114799620474944970
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -580,7 +580,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u624D\u80FD\u5347\u5230\u4E0B\u4E00\u7EA7"
+  m_Text: to get to the next level
 --- !u!114 &114949858731765372
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -766,11 +766,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224226969837542428}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 32, y: -105.5}
+  m_AnchoredPosition: {x: 64, y: -105.5}
   m_SizeDelta: {x: -47.640015, y: 39.98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224209819819344854
@@ -819,8 +819,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 224168979796667312}
   - {fileID: 224421462419327450}
+  - {fileID: 224168979796667312}
   - {fileID: 224744959459459490}
   - {fileID: 224220307692693642}
   m_Father: {fileID: 224319307105588794}
@@ -851,7 +851,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 253, y: 571}
+  m_AnchoredPosition: {x: 253, y: 442}
   m_SizeDelta: {x: 552, y: 591}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224409460332802310
@@ -903,7 +903,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 224226969837542428}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
@@ -963,7 +963,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 81.6, y: -106.4}
+  m_AnchoredPosition: {x: 113.600044, y: -106.399994}
   m_SizeDelta: {x: 47, y: 53}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224778914645685368

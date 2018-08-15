@@ -251,7 +251,7 @@ public class MainPage : Page
         // 如果是未完成的拼图
         if(data.pageType == PicturePageType.Uncomplete)
         {
-            item.label.text = "未完成";
+            item.label.text = "Undown";
             if(PlayerStatus.uncompletePuzzle.Count > 0)
             {
                 var firstCoreInfo = PlayerStatus.FirstUncompletePuzzleInfo;
@@ -268,7 +268,7 @@ public class MainPage : Page
         // 如果是已完成的拼图
         if(data.pageType == PicturePageType.Complete)
         {
-            item.label.text = "已完成";
+            item.label.text = "Done";
             CompleteInfo firstInfo = null;
             foreach(var kv in PlayerStatus.completeDic)
             {

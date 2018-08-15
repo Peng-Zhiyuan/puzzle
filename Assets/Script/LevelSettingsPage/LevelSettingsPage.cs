@@ -326,8 +326,8 @@ public class LevelSettingsPage : Page
 		if(info != null)
 		{
 			var param = new DialogParam();
-			param.des = "会覆盖已存在的游戏，是否继续？";
-			param.button = "确定";
+			param.des = "The new game will restore Record. Do you want to continue?";
+			param.button = "confirm";
 			var admin = new Admission_PopupNewPage();
 			var dialog = UIEngine.Forward<DialogPage>(param, admin);
 			dialog.Complete = result =>{

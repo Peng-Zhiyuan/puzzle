@@ -38,7 +38,7 @@ public class ShopPage_IapItem : ShopPage_Item
         {
             this.text_gold.text = funcDes;
         }
-        this.text_price.text = "¥ " + price.ToString("F2");
+        this.text_price.text = "$ " + price.ToString("F2");
 
         if(func == "REMOVE_AD")
         {

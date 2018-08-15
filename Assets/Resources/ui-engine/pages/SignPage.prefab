@@ -530,7 +530,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u91D1\u5E01"
+  m_Text: Coins
 --- !u!114 &114129654107403468
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -683,7 +683,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u9886\u53D6"
+  m_Text: GET
 --- !u!114 &114312365657641062
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1738,8 +1738,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 146.75002, y: -38.000004}
-  m_SizeDelta: {x: 118, y: 56.4}
+  m_AnchoredPosition: {x: 141.13, y: -38.000004}
+  m_SizeDelta: {x: 129.25, y: 56.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224590651456550792
 RectTransform:
