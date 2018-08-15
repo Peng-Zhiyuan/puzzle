@@ -318,7 +318,7 @@ public class LevelSettingsPage : Page
 		if(info != null)
 		{
 			var admin = new Admission_PopupNewPage();
-			var dialog = UIEngine.Forward<DialogPage>("会覆盖已存在的游戏，是否继续？", admin);
+			var dialog = UIEngine.Forward<DialogPage>("The new game will restore Record. Do you want to continue?", admin);
 			dialog.Complete = result =>{
 				if(result == DialogResult.Conform)
 				{

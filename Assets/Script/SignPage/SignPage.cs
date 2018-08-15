@@ -69,14 +69,14 @@ public class SignPage : Page
 		{
 			button_got.interactable = false;
 			var text = button_got.GetComponentInChildren<Text>();
-			text.text = "已领取";
+			text.text = "GOT";
 			text.color = new Color(1f, 1f, 1f, 0.7f);
 		}
 		else
 		{
 			button_got.interactable = true;
 			var text = button_got.GetComponentInChildren<Text>();
-			text.text = "领取";
+			text.text = "GET";
 			text.color = new Color(1f, 1f, 1f, 1f);
 		}
 	}
@@ -153,7 +153,7 @@ public class SignPage : Page
 
 		button_got.interactable = false;
 		var text = button_got.GetComponentInChildren<Text>();
-		text.text = "已领取";
+		text.text = "GOT";
 		text.color = new Color(1f, 1f, 1f, 0.7f);
 		AudioManager.PlaySe("gain-gold");
 		CoroutineManager.Create(WaitAndBack());

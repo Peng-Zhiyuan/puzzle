@@ -1057,7 +1057,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u65B0\u6E38\u620F"
+  m_Text: New Game
 --- !u!114 &114797304534299242
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1090,7 +1090,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u7EE7\u7EED"
+  m_Text: Continue
 --- !u!114 &114820324733468302
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1223,7 +1223,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 5ef0ae550f1dc484eafbbcbebdd667c9, type: 3}
+    m_Font: {fileID: 12800000, guid: 449f7a5d0ce504630977d74a24573c39, type: 3}
     m_FontSize: 120
     m_FontStyle: 0
     m_BestFit: 0
@@ -1235,7 +1235,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u9009\u62E9\u96BE\u5EA6\u7B49\u7EA7"
+  m_Text: select level
 --- !u!222 &222087141294343512
 CanvasRenderer:
   m_ObjectHideFlags: 1

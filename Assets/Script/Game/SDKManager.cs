@@ -57,21 +57,23 @@ public static class SDKManager
         jd["gold"] = gold;
         var json = jd.ToJson();
 
-        NativeBridge.InvokeCall("NativeSDKManager", "Pay", json, result => 
-        {
-            if(result == "SUCCESS")
-            {
-                Log.Scrren("SUCCESS");
-                Helper.AddGold(gold);
-            }
-            else if(result == "FAIL")
-            {
-                Log.Scrren("FAIL");
-            }
-            else if(result == "CANCEL")
-            {
-                Log.Scrren("CANCEL");
-            }
-        });
+        Helper.AddGold(gold);
+
+        // NativeBridge.InvokeCall("NativeSDKManager", "Pay", json, result => 
+        // {
+        //     if(result == "SUCCESS")
+        //     {
+        //         Log.Scrren("SUCCESS");
+        //         Helper.AddGold(gold);
+        //     }
+        //     else if(result == "FAIL")
+        //     {
+        //         Log.Scrren("FAIL");
+        //     }
+        //     else if(result == "CANCEL")
+        //     {
+        //         Log.Scrren("CANCEL");
+        //     }
+        // });
     }
 }

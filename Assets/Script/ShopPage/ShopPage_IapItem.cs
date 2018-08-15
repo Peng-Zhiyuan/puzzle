@@ -28,7 +28,7 @@ public class ShopPage_IapItem : ShopPage_Item
 
         this.Type = type;
         this.text_gold.text = gold.ToString();
-        this.text_price.text = "¥ " + price.ToString("F2");
+        this.text_price.text = "$ " + price.ToString("F2");
     }
 
     int Type

@@ -101,7 +101,7 @@ public class HeadBarFloating : Floating
 			else if(top is CorePage)
 			{
 				var popup = new Admission_PopupNewPage();
-				var dialog = UIEngine.Forward<DialogPage>("退出会存储已进行的拼图，确定要退出吗？", popup);
+				var dialog = UIEngine.Forward<DialogPage>("Exit will store the completed puzzle. Are you sure you want to exit?", popup);
 				dialog.Complete = DialogResult =>
 				{
 					if(DialogResult == DialogResult.Conform)

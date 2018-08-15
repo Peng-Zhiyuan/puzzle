@@ -28,8 +28,12 @@ public class PicturePage : Page
         this.p = param as PicturePageParam;
         if(p.pageType == PicturePageType.Uncomplete)
         {
-            this.text_title.text = "未完成";
-            this.text_des.text = "共 " + PlayerStatus.uncompletePuzzle.Count + " 张";
+            this.text_title.text = "Undone";
+            this.text_des.text = PlayerStatus.uncompletePuzzle.Count + " Picture";
+            if(PlayerStatus.uncompletePuzzle.Count > 1)
+            {
+                this.text_des.text += "s";
+            }
         }
         else if(p.pageType == PicturePageType.Pictype)
         {
@@ -41,8 +45,12 @@ public class PicturePage : Page
         }
         else if(p.pageType == PicturePageType.Complete)
         {
-            this.text_title.text = "已完成";
-            this.text_des.text = "共 " + PlayerStatus.completeDic.Count + " 张";
+            this.text_title.text = "Done";
+            this.text_des.text = PlayerStatus.completeDic.Count + " Picture";
+            if(PlayerStatus.completeDic.Count > 1)
+            {
+                this.text_des.text += "s";
+            }
         }
     }
 
@@ -190,7 +198,7 @@ public class PicturePage : Page
                 item.IsShowUnlockLayer = true;
                 item.IsShowPice = false;
                 var unlockGold = data.picRow.Get<int>("cost");
-                var unlockButotnText = unlockGold + "金币解锁";
+                var unlockButotnText = unlockGold + "Coins";
                 item.UnlockButtonText = unlockButotnText;
                 break;
             case PicturePage_ItemStatus.Unlocked:
