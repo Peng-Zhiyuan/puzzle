@@ -19,7 +19,7 @@ public static class SDKManager
     {
         get
         {
-            return false;
+            return true;
         }
     }
 
