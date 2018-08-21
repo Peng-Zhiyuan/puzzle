@@ -98,28 +98,41 @@ public class ShopPage_IapItem : ShopPage_Item
                 icon1.gameObject.SetActive(true);
                 icon2.gameObject.SetActive(false);
                 icon3.gameObject.SetActive(false);
-                iconAd.gameObject.SetActive(false);
+                if(iconAd != null)
+                {
+                    iconAd.gameObject.SetActive(false);
+                }
+                
             }
             else if(value == 2)
             {
                 icon1.gameObject.SetActive(false);
                 icon2.gameObject.SetActive(true);
                 icon3.gameObject.SetActive(false);
-                iconAd.gameObject.SetActive(false);
+                if(iconAd != null)
+                {
+                    iconAd.gameObject.SetActive(false);
+                }
             }
             else if(value >= 3)
             {
                 icon1.gameObject.SetActive(false);
                 icon2.gameObject.SetActive(false);
                 icon3.gameObject.SetActive(true);
-                iconAd.gameObject.SetActive(false);
+                if(iconAd != null)
+                {
+                    iconAd.gameObject.SetActive(false);
+                }
             }
             else if(value == -1)
             {
                 icon1.gameObject.SetActive(false);
                 icon2.gameObject.SetActive(false);
                 icon3.gameObject.SetActive(false);
-                iconAd.gameObject.SetActive(true);
+                if(iconAd != null)
+                {
+                    iconAd.gameObject.SetActive(true);
+                }
             }
         }  
     }

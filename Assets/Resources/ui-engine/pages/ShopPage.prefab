@@ -647,6 +647,7 @@ MonoBehaviour:
   icon1: {fileID: 224541556758183696}
   icon2: {fileID: 224434924647713090}
   icon3: {fileID: 224578686419019348}
+  iconAd: {fileID: 0}
   text_gold: {fileID: 114364350355975094}
   text_price: {fileID: 114875499123395330}
 --- !u!114 &114177421868166378
@@ -1053,6 +1054,7 @@ MonoBehaviour:
   prefab_ipa_item: {fileID: 224446810249083724}
   scrollViewContent: {fileID: 224876908323675488}
   itemList: []
+  adCountdown: 0
 --- !u!114 &114718236659204374
 MonoBehaviour:
   m_ObjectHideFlags: 1
