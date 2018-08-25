@@ -57,16 +57,24 @@ public static class GameManifestManager {
         Assert.IsTrue(Application.isPlaying, "GameManifestManager can't running on editor script, use GameManifestEditor instead.");
 
         var conf = Manifest;
-        if (((IDictionary)conf).Contains(key))
+        if(conf != null)
         {
-            return conf[key].ToString();
+            if (((IDictionary)conf).Contains(key))
+            {
+                return conf[key].ToString();
+            }
         }
 
+
         var coreConf = CoreManifest;
-        if (((IDictionary)coreConf).Contains(key))
+        if(coreConf != null)
         {
-            return coreConf[key].ToString();
+            if (((IDictionary)coreConf).Contains(key))
+            {
+                return coreConf[key].ToString();
+            }
         }
+
 
         return defaultValue;
     }

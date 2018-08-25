@@ -12,7 +12,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: pzy
-  productName: "\u6D82\u9E26\u4E16\u754C"
+  productName: "\u767E\u53D8\u62FC\u56FE"
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -158,7 +158,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.pzy.PT.nearme.gamecenter
+    Android: com.pzy.BBTP
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 16
@@ -243,8 +243,8 @@ PlayerSettings:
   AndroidTargetDevice: 3
   AndroidSplashScreenScale: 0
   androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: 
-  AndroidKeyaliasName: 
+  AndroidKeystoreName: alice/pt/pzy.keystore
+  AndroidKeyaliasName: pzy
   AndroidTVCompatibility: 1
   AndroidIsGame: 1
   AndroidEnableTango: 0
@@ -260,7 +260,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 61b4f28b4c01741e791a76d5f972ce15, type: 3}
+      m_Icon: {fileID: 2800000, guid: 781fd076fe9234c0b8079ce159a0f884, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0

@@ -16,7 +16,7 @@
     <application>
 
         <activity
-            android:name="com.pzy.PT.nearme.gamecenter.UnityPlayerActivity"
+            android:name="com.pzy.BBTP.UnityPlayerActivity"
             tools:node="remove" />
 
         <activity

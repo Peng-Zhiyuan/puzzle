@@ -180,9 +180,16 @@ public class PicturePage : Page
         SetItem(item.GetComponent<PictruePage_Item>(), data as PictruePage_ItemData);   
     }
 
+    PictruePage_Item pic1;
+
     void SetItem(PictruePage_Item item, PictruePage_ItemData data)
     {
         item.data = data;
+        item.name = data.picRow.TryGet<string>("id", "none-id");
+        if(item.name == "1")
+        {
+            pic1 = item;
+        }
         switch(data.status)
         {
             case PicturePage_ItemStatus.Locked:
@@ -264,6 +271,14 @@ public class PicturePage : Page
         }
         
     }
+    
+    public void SimulatePic1Clicked()
+    {
+        if(pic1 != null)
+        {
+            OnItemClicked(pic1);
+        }
+    }
 
     void OnItemClicked(PictruePage_Item item)
     {
@@ -279,6 +294,7 @@ public class PicturePage : Page
                 var admin = new Admission_PopupNewPage();
                 UIEngine.Forward<LevelSettingsPage>(picId.ToString(), admin);
             }
+            RadioStation.Brodcast("SELECT_PIC");
         //}
 
         // 如果是未完成的拼图, 则继续游戏

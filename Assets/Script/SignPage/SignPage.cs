@@ -157,6 +157,7 @@ public class SignPage : Page
 		text.color = new Color(1f, 1f, 1f, 0.7f);
 		AudioManager.PlaySe("gain-gold");
 		CoroutineManager.Create(WaitAndBack());
+		RadioStation.Brodcast("SIGN");
 	}
 
 

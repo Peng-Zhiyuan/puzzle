@@ -6,7 +6,7 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 19
-        applicationId "com.pzy.PT.nearme.gamecenter"
+        applicationId "com.pzy.BBTP.nearme.gamecenter"
 
     }
 
@@ -30,10 +30,12 @@ android {
     buildTypes {
         release {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            signingConfig signingConfigs.edroity
+            //signingConfig signingConfigs.edroity
+            signingConfig signingConfigs.pzy
         }
         debug {
-            signingConfig signingConfigs.edroity
+            //signingConfig signingConfigs.edroity
+            signingConfig signingConfigs.pzy
         }
     }
 

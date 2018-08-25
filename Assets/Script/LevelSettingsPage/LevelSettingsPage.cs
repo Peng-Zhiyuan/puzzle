@@ -249,18 +249,26 @@ public class LevelSettingsPage : Page
 		{
 			if(first)
 			{
-				var b = HasUncompleteGame(PicId);
-				if(b)
+				if(!GuideFloating.guideMode)
 				{
-					var info = PlayerStatus.TryGetUncompleteOfPicId(PicId);
-					var sliceId = info.sliceId;
-					var itemIndex = sliceId - 1;
-					TweenItemToCenter(itemIndex);
+					var b = HasUncompleteGame(PicId);
+					if(b)
+					{
+						var info = PlayerStatus.TryGetUncompleteOfPicId(PicId);
+						var sliceId = info.sliceId;
+						var itemIndex = sliceId - 1;
+						TweenItemToCenter(itemIndex);
+					}
+					else
+					{
+						TweenNearestToCenter();
+					}
 				}
 				else
 				{
-					TweenNearestToCenter();
+					TweenItemToCenter(0);
 				}
+
 				first = false;
 			}
 		}
@@ -331,6 +339,7 @@ public class LevelSettingsPage : Page
 			GameController.EnterCore(picId, selectItem.dataRow.Get<int>("id"));
 		}
 		AudioManager.PlaySe("button");
+		RadioStation.Brodcast("NEW_GAME");
 		
 	}
 

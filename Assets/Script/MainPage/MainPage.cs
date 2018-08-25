@@ -45,6 +45,7 @@ public class MainPage : Page
 
     public override void OnPush()
     {
+
         var floating = UIEngine.ShowFloating<BackgroundFloating>(null, UIDepth.Low);
 		floating.transform.SetAsFirstSibling();
 		UIEngine.ShowFloating<HeadBarFloating>();
@@ -55,6 +56,17 @@ public class MainPage : Page
         }
 
         Refrehs();
+
+        TryGuid();
+    }
+
+    public void TryGuid()
+    {
+        var needGuide = PlayerStatus.needGide;
+        if(needGuide)
+        {
+            UIEngine.ShowFloating<GuideFloating>(null, UIDepth.Top);
+        }
     }
 
     private void Refrehs()
@@ -196,6 +208,7 @@ public class MainPage : Page
     MainPage_Item completeItem;
     MainPage_Item uncompleteItem;
 
+    MainPage_Item animal;
 
     void SetData(MainPage_Item item, MainPage_ItemData data)
     {
@@ -226,6 +239,12 @@ public class MainPage : Page
             var file = row?.Get<string>("file");
             var sprite = PicLibrary.LoadContentSprite(file);
             item.Facade = sprite;
+
+            item.name = data.row.TryGet<string>("id", "no_id");
+            if(item.name == "animal")
+            {
+                animal = item;
+            }
         }
 
         // 如果是未完成的拼图
@@ -268,6 +287,16 @@ public class MainPage : Page
         // Debug.Log("set item: " + sw.Elapsed.TotalSeconds);
     }
 
+    public void SimulateAnimeClick()
+    {
+        if(animal != null)
+        {
+            OnItemClick(animal);
+        }
+       
+    }
+
+
     public void OnItemClick(MainPage_Item item)
     {
         AudioManager.PlaySe("button");
@@ -286,6 +315,8 @@ public class MainPage : Page
 		UIEngine.Forward<PicturePage>(param, admission);
 
         HeadBarFloating.admission = new Admission_ScaleDownOldPage(rect);
+        
+        RadioStation.Brodcast("SELECT_PIC_TYPE");
     }
 
     public void OnShopButton()

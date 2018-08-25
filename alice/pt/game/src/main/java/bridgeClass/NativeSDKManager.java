@@ -37,7 +37,7 @@ public class NativeSDKManager {
     static Activity gameActivity;
     static String TAG = "A-SDKManager";
 
-    static String OPPO_APP_SECRET = "6c73ec272ffb4781a25b9d6e075df379";
+    static String OPPO_APP_SECRET = "e311f1aff9e844cfa8868aa42356994f";
     static String BAIDU_APP_KEY = "2b90c3977a";
 
     public static void onGameActivityCreate(Activity theGameActivity, Bundle savedInstanceState)

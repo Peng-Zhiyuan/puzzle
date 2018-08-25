@@ -13,7 +13,26 @@ public class MainPage_Item : MonoBehaviour, IPointerClickHandler
 
 	public void OnPointerClick(PointerEventData eventData)
 	{
-        SendMessageUpwards("OnItemClick", this);
+        if(data != null)
+        {
+            var top = UIEngine.Top;
+            if(top.name == "MainPage")
+            {
+                var mainPage = top as MainPage;
+                mainPage.OnItemClick(this);
+            }
+        }
+        else
+        {
+            // this is guide mode
+            var top = UIEngine.Top;
+            if(top.name == "MainPage")
+            {
+                var mainPage = top as MainPage;
+                mainPage.SimulateAnimeClick();
+            }
+        }
+
 	}
 
     public Sprite Facade

@@ -12,6 +12,7 @@ public class Core : MonoBehaviour
 	public void Init()
 	{
 		var t = this.transform.Find("bg");
+		
 		t.localScale = new Vector2(Game.heightScale * 1.25f, Game.heightScale * 1.25f);
 	}
 

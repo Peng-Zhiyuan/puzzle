@@ -79,7 +79,21 @@ public class PictruePage_Item : MonoBehaviour
 
 	public void OnClicked()
 	{
-		SendMessageUpwards("OnItemClicked", this);
+		if(data != null)
+		{
+			SendMessageUpwards("OnItemClicked", this);
+		}
+		else
+		{
+			// 这是 guide 模式的复制品
+			var top = UIEngine.Top;
+			if(top.name == "PicturePage")
+			{
+				var picturePage = top as PicturePage;
+				picturePage.SimulatePic1Clicked();
+			}
+		}
+		
 	}
 
 	public void Flash()

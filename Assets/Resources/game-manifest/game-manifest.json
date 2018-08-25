@@ -1,3 +1,4 @@
 ﻿{
-	"force-developer": "true"
+	"force-developer": "false",
+	"silence": "true"
 }

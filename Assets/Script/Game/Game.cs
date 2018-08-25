@@ -26,6 +26,12 @@ public class Game : MonoBehaviour
 		// 因此需要手动设置摄像机的渲染高度，达到宽度固定 1080 效果
 
 		heightScale = CameraUtil.SetCameraSizeByDecisionRevelutionAndFixAtWidth(1080, 1920);
+
+		var silence = GameManifestFinal.Get("silence", "false");
+		if(silence == "true")
+		{
+			AudioManager.Volume = 0;
+		}
 	}
 
 	void OnUnityLog(string condition, string stackTrace, LogType type)

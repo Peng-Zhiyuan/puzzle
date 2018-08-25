@@ -56,6 +56,7 @@ public static class SDKManager
         jd["itemId"] = itemId;
         jd["gold"] = gold;
         var json = jd.ToJson();
+        Helper.AddGold(gold);
 
         NativeBridge.InvokeCall("NativeSDKManager", "Pay", json, result => 
         {
