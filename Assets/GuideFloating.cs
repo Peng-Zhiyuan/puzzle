@@ -8,6 +8,7 @@ public class GuideFloating : Floating
 {
 	public Image bgblack;
 	public Image hand;
+	public RectTransform copyRoot_nonclick;
 	public RectTransform copyRoot;
 	public static bool guideMode;
 	public Text des;
@@ -49,11 +50,11 @@ public class GuideFloating : Floating
 		// 等待动画完成
 		yield return new WaitForSeconds(0.2f);
 
-		// 复制节点
+		// 复制节点到无法点击root
 		var topPage = UIEngine.Top;
 		var button_get = FindChild(topPage.transform, goPath).GetComponent<RectTransform>();
 		var copy = GameObject.Instantiate(button_get);
-		copy.parent = this.copyRoot;
+		copy.parent = this.copyRoot_nonclick;
 		//copy.anchoredPosition = button_get.anchoredPosition;
 		copy.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, button_get.sizeDelta.x);
 		copy.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, button_get.sizeDelta.y);
@@ -66,6 +67,9 @@ public class GuideFloating : Floating
 		// 等待显示手
 		StartCoroutine(this.FadeInDesAsync(des, desY));
 		yield return this.FadeInHandlAsync(copy.position);
+
+		// 移动复制对象到可点击root
+		copy.parent = this.copyRoot;
 
 		// 等待签到事件
 		yield return RadioStation.WaiteMsgAsync(waiteMsg);

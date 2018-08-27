@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
@@ -207,5 +208,15 @@ public class NativeSDKManager {
             }
         });
 
+    }
+
+
+    public static void GotoMarket(String callId, String arg)
+    {
+        Uri uri = Uri.parse("market://details?id=" + gameActivity.getPackageName());
+        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        gameActivity.startActivity(intent);
+        Gate.callReturn(callId, "");
     }
 }

@@ -9,6 +9,8 @@ public class DisplayPage : Page
 	public Image image_pic;
 	public RectTransform button_layout;
 
+	public Button button_gift;
+
 	public int PicId
 	{
 		get
@@ -19,6 +21,7 @@ public class DisplayPage : Page
 
 	public override void OnPush()
 	{
+		button_gift.gameObject.SetActive(SDKManager.IsAdLoaded);
 		image_pic.gameObject.SetActive(false);
 		button_layout.gameObject.SetActive(false);
 		var sprite = PicLibrary.LoadContentSpriteById(PicId);

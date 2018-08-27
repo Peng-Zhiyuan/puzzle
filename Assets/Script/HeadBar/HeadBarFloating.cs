@@ -152,6 +152,15 @@ public class HeadBarFloating : Floating
 			this.goldItem.Value = PlayerStatus.gold.ToString();
 			this.starItem.value = PlayerStatus.exp.ToString();
 			this.starItem.Process = PlayerStatus.LevelUpProcess;
+
+			if(PlayerStatus.headCommentTimes >= 3)
+			{
+				likeItem.gameObject.SetActive(false);
+			}
+			else
+			{
+				likeItem.gameObject.SetActive(true);
+			}
 		}
 
 		var nowTop = UIEngine.Top;
@@ -169,6 +178,13 @@ public class HeadBarFloating : Floating
 			}
 			lastPage = nowTop;
 		}
+	}
+
+	public void OnCommentClicked()
+	{
+		SDKManager.Comment();
+		PlayerStatus.headCommentTimes++;
+		PlayerStatus.Save();
 	}
 
 	public void OnGoldClicked()

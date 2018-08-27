@@ -7,6 +7,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 19
         applicationId "com.pzy.BBTP.nearme.gamecenter"
+        vectorDrawables.useSupportLibrary = true
 
     }
 

@@ -12,6 +12,7 @@ public static class PlayerStatus
     public static int bgmIndex;
     public static int completeCount;
     public static bool needGide;
+    public static int headCommentTimes;
 
     public static Dictionary<string, CoreInfo> uncompletePuzzle = new Dictionary<string, CoreInfo>();
     public static Dictionary<string, CompleteInfo> completeDic;
@@ -27,6 +28,7 @@ public static class PlayerStatus
         PlayerPrefs.SetInt("PlayerStatus.lastSignDay", lastSignDay);
         PlayerPrefs.SetInt("PlayerStatus.completeCount", completeCount);
         PlayerPrefs.SetInt("PlayerStatus.needGide", needGide ? 1 : 0);
+        PlayerPrefs.SetInt("PlayerStatus.headCommentTimes", headCommentTimes);
         // uncomplete
         {
             var json = JsonMapper.Instance.ToJson(uncompletePuzzle);
@@ -54,6 +56,7 @@ public static class PlayerStatus
         lastSignDay = PlayerPrefs.GetInt("PlayerStatus.lastSignDay", 0);
         completeCount = PlayerPrefs.GetInt("PlayerStatus.completeCount", 0);
         needGide = PlayerPrefs.GetInt("PlayerStatus.needGide", 1) == 0 ? false : true;
+        headCommentTimes = PlayerPrefs.GetInt("PlayerStatus.headCommentTimes", 0);
         // uncomplete
         {
             var json = PlayerPrefs.GetString("PlayerStatus." + nameof(uncompletePuzzle), "{}");

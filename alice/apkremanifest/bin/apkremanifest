@@ -115,6 +115,9 @@ elif [[ $keystore == "6waves" ]]; then
 elif [[ $keystore == "ycplay" ]]; then
     echo "use ycplay.keystore"
     jarsigner -sigalg SHA1withRSA -digestalg SHA1 -keystore $root/keystore/ycplay.keystore -storepass ycplay -keypass treasure-hunter -signedjar $workspace/signed.apk $workspace/non-signed.apk treasure-hunter
+elif [[ $keystore == "pzy" ]]; then
+    echo "use pzy.keystore"
+    jarsigner -sigalg SHA1withRSA -digestalg SHA1 -keystore $root/keystore/pzy.keystore -storepass 19911118 -keypass 19911118 -signedjar $workspace/signed.apk $workspace/non-signed.apk pzy
 else
     echo "Unsupport keystore: "$keystore
     exit 1

@@ -31,6 +31,9 @@ public static class SDKManager
     public static void Comment()
     {
         Debug.Log("[SDKManager] goto comment");
+        NativeBridge.InvokeCall("NativeSDKManager", "GotoMarket", null, result =>{
+            Helper.AddGold(40);
+        });
     }
 
     public static void Exit()
@@ -56,7 +59,6 @@ public static class SDKManager
         jd["itemId"] = itemId;
         jd["gold"] = gold;
         var json = jd.ToJson();
-        Helper.AddGold(gold);
 
         NativeBridge.InvokeCall("NativeSDKManager", "Pay", json, result => 
         {
@@ -75,4 +77,5 @@ public static class SDKManager
             }
         });
     }
+
 }
