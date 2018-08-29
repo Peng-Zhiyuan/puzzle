@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Stopwatch = System.Diagnostics.Stopwatch;
+using UnityEngine.UI;
 
 public class MainPage : Page 
 {
@@ -122,7 +123,7 @@ public class MainPage : Page
     {
         UIEngine.ShowFlaoting("BackgroundFloating");
         RefreshOnlyCompleteAndUncomplete();
-        gift_button.gameObject.SetActive(SDKManager.IsAdLoaded);
+        RefreshAd();
     }
 
     public void RefreshOnlyCompleteAndUncomplete()
@@ -331,6 +332,67 @@ public class MainPage : Page
     {
         AudioManager.PlaySe("sign-and-shop");
         var addmision = new Admission_PopupNewPage();
+        AdPage.sources = AdPageOpenSources.Shop;
         UIEngine.Forward<AdPage>(null, addmision);
+    }
+
+    void Update()
+    {
+        if(adCountdown > 0)
+        {
+            adCountdown -= Time.deltaTime;
+            SetAdLabel(adCountdown);
+            if(adCountdown <= 0)
+            {
+                RefreshAd();
+            }
+        }
+        else
+        {
+            if(waiteloading)
+            {
+                if(SDKManager.IsAdLoaded)
+                {
+                    RefreshAd();
+                }
+            }
+        }
+    }
+
+    bool waiteloading;
+    public void SetAdLabel(float time)
+    {
+        var t = (int)time;
+        var label = gift_button.GetComponentInChildren<Text>();
+        label.text = t.ToString();
+    }
+
+    public float adCountdown;
+    public void RefreshAd()
+    {
+        Log.Scrren("MainPage: RefreshAd");
+        var button = gift_button.GetComponentInChildren<Button>();
+        var label = gift_button.GetComponentInChildren<Text>();
+        adCountdown = PlayerStatus.CalcuNextAdSeconds();
+        if(adCountdown > 0)
+        {   
+            button.interactable = false;
+            SetAdLabel(adCountdown);
+        }
+        else
+        {
+            if(!SDKManager.IsAdLoaded)
+            {
+                button.interactable = false;
+                label.text = "正在加载"; 
+                waiteloading = true;
+            }
+            else
+            {
+                button.interactable = true;
+                label.text = "可领取";
+                waiteloading = false;
+            }
+        }
     }
 }

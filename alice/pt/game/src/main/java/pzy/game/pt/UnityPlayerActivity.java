@@ -13,7 +13,9 @@ import android.view.WindowManager;
 
 public class UnityPlayerActivity extends Activity
 {
-	protected UnityPlayer mUnityPlayer; // don't change the name of this variable; referenced from native code
+	public UnityPlayer mUnityPlayer; // don't change the name of this variable; referenced from native code
+
+
 
 	// Setup activity layout
 	@Override protected void onCreate (Bundle savedInstanceState)

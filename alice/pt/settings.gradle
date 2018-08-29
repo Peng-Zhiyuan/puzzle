@@ -1,2 +1,2 @@
-include ':oppo', ':baidu', ':game'
+include ':oppo', ':baidu', ':game', ':oppo-ad'
 include ':game-unity'

@@ -12,4 +12,18 @@ public static class GameInfo
             return _forceDeveloper.Value;
         }
     }
+
+
+    public static bool ForceRemoveAd
+    {
+        get
+        {
+            var b = GameManifestFinal.Get("force-remove-ad", "false");
+            if(b == "true")
+            {
+                return true;
+            }
+            return false;
+        }
+    }
 }

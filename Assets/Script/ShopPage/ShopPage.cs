@@ -23,10 +23,7 @@ public class ShopPage : Page
 
     public override void OnNavigatedTo()
     {
-        if(adItem != null)
-        {
-            adItem.gameObject.SetActive(SDKManager.IsAdLoaded);
-        }
+        RefreshAd();
     }
 
     ShopPage_AdItem adItem;
@@ -81,12 +78,88 @@ public class ShopPage : Page
             var iapItem = item as ShopPage_IapItem;
             var row = iapItem.row;
             var id = row.Get<int>("id");
-            SDKManager.Pay(id);
+            SDKManager.Pay(id, buyed =>{
+                if(buyed)
+                {
+                    Refresh();
+                }
+            });
         }
         else if(item is ShopPage_AdItem)
         {
+            AdPage.sources = AdPageOpenSources.Shop;
             var popup = new Admission_PopupNewPage();
             UIEngine.Forward<AdPage>(null, popup);
+        }
+    }
+
+
+    public void SetAdLabel(float time)
+    {
+        var t = (int)time;
+        var label = adItem.transform.Find("label").GetComponent<Text>();
+        label.text = t.ToString();
+    }
+
+    void Update()
+    {
+        if(adCountdown > 0)
+        {
+            adCountdown -= Time.deltaTime;
+            SetAdLabel(adCountdown);
+            if(adCountdown <= 0)
+            {
+                RefreshAd();
+            }
+        }
+        else
+        {
+            if(waiteloading)
+            {
+                if(SDKManager.IsAdLoaded)
+                {
+                    RefreshAd();
+                }
+            }
+        }
+    }
+
+    bool waiteloading;
+    public float adCountdown;
+    public void RefreshAd()
+    {
+        if(adItem != null)
+        {
+            var cg = adItem.GetComponentInChildren<CanvasGroup>();
+            var label = adItem.transform.Find("label").GetComponent<Text>();
+            adCountdown = PlayerStatus.CalcuNextAdSeconds();
+            if(adCountdown > 0)
+            {   
+                cg.interactable = false;
+                cg.blocksRaycasts = false;
+                cg.alpha = 0.5f;
+                SetAdLabel(adCountdown);
+            }
+            else
+            {
+                if(!SDKManager.IsAdLoaded)
+                {
+                    cg.interactable = false;
+                    cg.blocksRaycasts = false;
+                    cg.alpha = 0.5f;
+                    label.text = "正在加载"; 
+                    waiteloading = true;
+                }
+                else
+                {
+                    cg.interactable = true;
+                    cg.blocksRaycasts = true;
+                    cg.alpha = 1;
+                    label.text = "";
+                    waiteloading = false;
+                }
+            }
+            //adItem.gameObject.SetActive(SDKManager.IsAdLoaded);
         }
     }
 

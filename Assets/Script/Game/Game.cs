@@ -19,6 +19,10 @@ public class Game : MonoBehaviour
 		{
 			var commandline = UIEngine.ShowFloating<CommandLineFloating>(null, UIDepth.Top);
 		}
+		if(GameInfo.ForceRemoveAd)
+		{
+			PlayerStatus.removeAd = true;
+		}
 		PushManager.ResetNotification();
 
 		// 摄像机渲染区域默认根据高去调整宽

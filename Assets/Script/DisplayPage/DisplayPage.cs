@@ -21,7 +21,7 @@ public class DisplayPage : Page
 
 	public override void OnPush()
 	{
-		button_gift.gameObject.SetActive(SDKManager.IsAdLoaded);
+		//button_gift.gameObject.SetActive(SDKManager.IsAdLoaded);
 		image_pic.gameObject.SetActive(false);
 		button_layout.gameObject.SetActive(false);
 		var sprite = PicLibrary.LoadContentSpriteById(PicId);
@@ -55,8 +55,11 @@ public class DisplayPage : Page
 		if(completeCount == 2 || completeCount == 3)
 		{
 			var text = MsgList.Get("comment");
+			var param = new DialogParam();
+			param.des = text;
+			param.button = "确定";
 			var admin = new Admission_PopupNewPage();
-			var dialog = UIEngine.Forward<DialogPage>(text, admin);
+			var dialog = UIEngine.Forward<DialogPage>(param, admin);
 			dialog.Complete = result => {
 				if(result == DialogResult.Conform)
 				{
@@ -69,6 +72,7 @@ public class DisplayPage : Page
 		{
 			if(SDKManager.IsAdLoaded)
 			{
+				AdPage.sources = AdPageOpenSources.LevelComplete;
 				var admin = new Admission_PopupNewPage();
 				var adPage = UIEngine.Forward<AdPage>(null, admin);
 				adPage.Compelte = () => {
@@ -103,8 +107,12 @@ public class DisplayPage : Page
 
 	public void OnGiftButton()
 	{
+		AdPage.sources = AdPageOpenSources.LevelComplete;
         AudioManager.PlaySe("sign-and-shop");
         var addmision = new Admission_PopupNewPage();
-        UIEngine.Forward<AdPage>(null, addmision);
+        var adPage = UIEngine.Forward<AdPage>(null, addmision);
+		adPage.Compelte = () => {
+			button_gift.gameObject.SetActive(false);
+		};
 	}
 }

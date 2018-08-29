@@ -13,6 +13,7 @@ public class ShopPage_IapItem : ShopPage_Item
     public Transform icon1;
     public Transform icon2;
     public Transform icon3;
+    public Transform iconAd;
     public Text text_gold;
     public Text text_price;
 
@@ -25,10 +26,27 @@ public class ShopPage_IapItem : ShopPage_Item
         var type = row.TryGet("type", 1);
         var gold = row.TryGet("gold", 0);
         var price = row.TryGet("price", 0f);
+        var func = row.TryGet("func", "");
+        var funcDes = row.TryGet("func_des", "");
 
         this.Type = type;
-        this.text_gold.text = gold.ToString();
+        if(string.IsNullOrEmpty(func))
+        {
+            this.text_gold.text = gold.ToString();
+        }
+        else
+        {
+            this.text_gold.text = funcDes;
+        }
         this.text_price.text = "¥ " + price.ToString("F2");
+
+        if(func == "REMOVE_AD")
+        {
+            if(PlayerStatus.removeAd)
+            {
+                this.gameObject.SetActive(false);
+            }
+        }
     }
 
     int Type
@@ -62,6 +80,12 @@ public class ShopPage_IapItem : ShopPage_Item
                 tag2.gameObject.SetActive(false);
                 tag3.gameObject.SetActive(true);
             }
+            else if(value == -1)
+            {
+                tag1.gameObject.SetActive(false);
+                tag2.gameObject.SetActive(false);
+                tag3.gameObject.SetActive(false);
+            }
         }  
     }
 
@@ -74,18 +98,28 @@ public class ShopPage_IapItem : ShopPage_Item
                 icon1.gameObject.SetActive(true);
                 icon2.gameObject.SetActive(false);
                 icon3.gameObject.SetActive(false);
+                iconAd.gameObject.SetActive(false);
             }
             else if(value == 2)
             {
                 icon1.gameObject.SetActive(false);
                 icon2.gameObject.SetActive(true);
                 icon3.gameObject.SetActive(false);
+                iconAd.gameObject.SetActive(false);
             }
             else if(value >= 3)
             {
                 icon1.gameObject.SetActive(false);
                 icon2.gameObject.SetActive(false);
                 icon3.gameObject.SetActive(true);
+                iconAd.gameObject.SetActive(false);
+            }
+            else if(value == -1)
+            {
+                icon1.gameObject.SetActive(false);
+                icon2.gameObject.SetActive(false);
+                icon3.gameObject.SetActive(false);
+                iconAd.gameObject.SetActive(true);
             }
         }  
     }

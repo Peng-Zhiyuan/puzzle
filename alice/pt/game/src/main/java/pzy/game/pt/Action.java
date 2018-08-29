@@ -1,4 +1,4 @@
-package edroity.game.hos;
+package pzy.game.pt;
 
 public interface Action
 {

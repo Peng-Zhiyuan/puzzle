@@ -13,6 +13,8 @@ public static class PlayerStatus
     public static int completeCount;
     public static bool needGide;
     public static int headCommentTimes;
+    public static long lastUseAtGiftTime;
+    public static bool removeAd;
 
     public static Dictionary<string, CoreInfo> uncompletePuzzle = new Dictionary<string, CoreInfo>();
     public static Dictionary<string, CompleteInfo> completeDic;
@@ -29,6 +31,8 @@ public static class PlayerStatus
         PlayerPrefs.SetInt("PlayerStatus.completeCount", completeCount);
         PlayerPrefs.SetInt("PlayerStatus.needGide", needGide ? 1 : 0);
         PlayerPrefs.SetInt("PlayerStatus.headCommentTimes", headCommentTimes);
+        PlayerPrefs.SetString("PlayerStatus.lastUseAtGiftTime", lastUseAtGiftTime.ToString());
+        PlayerPrefs.SetInt("PlayerStatus.removeAd", removeAd ? 1 : 0);
         // uncomplete
         {
             var json = JsonMapper.Instance.ToJson(uncompletePuzzle);
@@ -57,6 +61,8 @@ public static class PlayerStatus
         completeCount = PlayerPrefs.GetInt("PlayerStatus.completeCount", 0);
         needGide = PlayerPrefs.GetInt("PlayerStatus.needGide", 1) == 0 ? false : true;
         headCommentTimes = PlayerPrefs.GetInt("PlayerStatus.headCommentTimes", 0);
+        lastUseAtGiftTime = long.Parse(PlayerPrefs.GetString("PlayerStatus.lastUseAtGiftTime", "0"));
+        removeAd = PlayerPrefs.GetInt("PlayerStatus.removeAd", 0) == 0 ? false : true;
         // uncomplete
         {
             var json = PlayerPrefs.GetString("PlayerStatus." + nameof(uncompletePuzzle), "{}");
@@ -177,4 +183,13 @@ public static class PlayerStatus
 		}
 		return false;
 	}
+
+    public static int CalcuNextAdSeconds()
+    {
+        var now = TimestampUtil.Now/1000;
+        var last = lastUseAtGiftTime/1000;
+        var losttime = now - last;
+        var needtime = 3 * 60;
+        return (int)(needtime - losttime);
+    }
 }

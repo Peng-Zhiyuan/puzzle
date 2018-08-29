@@ -18,5 +18,15 @@ namespace BridgeClasses
             Debug.Log("[NativeSDKManager] simulate ret SUCCESS");
             Gate.CallReturn(id, "SUCCESS");
         }
+
+        public static string IsInterAdLoaded(string arg)
+        {
+            return "true";
+        }
+
+        public static void ShowInterAd(string callId, string arg)
+        {
+            Gate.CallReturn(callId, "true");
+        }
     }
 }

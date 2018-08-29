@@ -264,9 +264,19 @@ public class PicturePage : Page
         }
         else
         {
-            var text = MsgList.Get("lack_of_gold");
+            var param = new DialogParam();
+            param.des = MsgList.Get("lack_of_gold");
+            param.button = "商城";
             var popup = new Admission_PopupNewPage();
-            UIEngine.Forward<DialogPage>(text, popup);
+            var dialog = UIEngine.Forward<DialogPage>(param, popup);
+            dialog.Complete = result =>{
+                if(result == DialogResult.Conform)
+                {
+                    UIEngineHelper.WateAdmissionComplete(()=>{
+                        UIEngine.Forward<ShopPage>();
+                    });
+                }
+            };
             AudioManager.PlaySe("lack-of-gold");
         }
         

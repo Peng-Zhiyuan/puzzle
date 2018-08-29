@@ -12,6 +12,12 @@ public class CorePage : Page
 	public override void OnPush()
 	{
 		isEyeShowding = false;
+		SDKManager.OnEnterCore();
+	}
+
+	public override void OnPop()
+	{
+		SDKManager.OnExitCore();
 	}
 
 	public void OnEyeButton()

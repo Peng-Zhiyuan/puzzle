@@ -325,8 +325,11 @@ public class LevelSettingsPage : Page
 		var info = PlayerStatus.TryGetUncompleteOfPicId(picId);
 		if(info != null)
 		{
+			var param = new DialogParam();
+			param.des = "会覆盖已存在的游戏，是否继续？";
+			param.button = "确定";
 			var admin = new Admission_PopupNewPage();
-			var dialog = UIEngine.Forward<DialogPage>("会覆盖已存在的游戏，是否继续？", admin);
+			var dialog = UIEngine.Forward<DialogPage>(param, admin);
 			dialog.Complete = result =>{
 				if(result == DialogResult.Conform)
 				{

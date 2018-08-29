@@ -32,7 +32,7 @@ public class GuideFloating : Floating
 		yield return StepAsync("PicturePage", "scrollRect/content/1", "SELECT_PIC", 700, MsgList.Get("guide3"));
 		yield return StepAsync("LevelSettingsPage", "content/button_newGame", "NEW_GAME", 150, MsgList.Get("guide4"));
 
-		yield return StepClickAsync("CorePage", 500, MsgList.Get("guide5"));
+		yield return StepClickAsync("CorePage", 1050, MsgList.Get("guide5"));
 		guideMode = false;
 		PlayerStatus.needGide = false;
 		PlayerStatus.Save();

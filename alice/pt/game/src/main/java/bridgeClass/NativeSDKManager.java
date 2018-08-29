@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.widget.Toast;
 
 
@@ -18,7 +19,7 @@ import com.nearme.game.sdk.callback.GameExitCallback;
 import com.nearme.game.sdk.callback.SinglePayCallback;
 import com.nearme.game.sdk.common.model.biz.PayInfo;
 import com.nearme.platform.opensdk.pay.PayResponse;
-
+import com.oppo.mobad.api.MobAdManager;
 
 
 import org.json.JSONObject;
@@ -26,8 +27,12 @@ import org.json.JSONObject;
 
 import java.util.Random;
 
+
+import pzy.game.pt.Action;
 import pzy.game.pt.GameActivity;
 import pzy.game.pt.JSONObjectUtil;
+import pzy.game.pt.OppoADManager;
+import pzy.game.pt.OppoInterAd;
 
 /**
  * Created by zhiyuan.peng on 2017/5/17.
@@ -54,7 +59,10 @@ public class NativeSDKManager {
         StatSDKService.setAppVersionName(version, BAIDU_APP_KEY);
         BDGameSDK.setOn(gameActivity, BDGameSDK.EXCEPTION_LOG ,BAIDU_APP_KEY);
 
+        OppoADManager.onGameActivityCreate((GameActivity) theGameActivity, savedInstanceState);
+        OppoADManager.loadInterAd();
     }
+
 
     public static String getIMEI(Context context) {
         String imei;
@@ -74,7 +82,7 @@ public class NativeSDKManager {
 
     public static void onGameActivityStart()
     {
-
+        MobAdManager.getInstance().exit(gameActivity);
     }
 
     public static void onGameActivityStop()
@@ -219,4 +227,49 @@ public class NativeSDKManager {
         gameActivity.startActivity(intent);
         Gate.callReturn(callId, "");
     }
+
+    public static void OnEnterCore(String arg)
+    {
+        OppoADManager.ShowBanner();
+    }
+
+    public static void OnExitCore(String arg)
+    {
+        OppoADManager.HideBanner();
+    }
+
+    public static String IsInterAdLoaded(String arg)
+    {
+        boolean b = OppoADManager.isInterAdLoaded();
+        if(b)
+        {
+            return "true";
+        }
+        else
+        {
+            return "false";
+        }
+    }
+
+    public static void ShowInterAd(final String callId, String arg)
+    {
+        OppoADManager.showInterAd(new Action() {
+            @Override
+            public void onStart() {
+                OppoInterAd ad = OppoADManager.getCurrentInterAd();
+                boolean clicked = ad.clicked;
+                if(clicked)
+                {
+                    Gate.callReturn(callId, "true");
+                }
+                else
+                {
+                    Gate.callReturn(callId, "false");
+                }
+                OppoADManager.cleanInterAd();
+                OppoADManager.loadInterAd();
+            }
+        });
+    }
+
 }
