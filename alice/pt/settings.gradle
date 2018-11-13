@@ -1,2 +1,0 @@
-include ':oppo', ':baidu', ':game', ':oppo-ad'
-include ':game-unity'
