@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 24
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 22
+
+    }
+
+    buildTypes {
+        //aaptOptions.cruncherEnabled = false
+        //aaptOptions.useNewCruncher = false
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api 'com.android.support:support-v4:24.0.0'
+}

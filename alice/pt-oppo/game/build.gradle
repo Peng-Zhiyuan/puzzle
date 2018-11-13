@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+
+    defaultConfig {
+        minSdkVersion 11
+        targetSdkVersion 19
+        applicationId "com.pzy.BBTP.nearme.gamecenter"
+        //vectorDrawables.useSupportLibrary = true
+
+    }
+
+    signingConfigs{
+        pzy {
+            storeFile file('../pzy.keystore')
+            storePassword "19911118"
+            keyAlias "pzy"
+            keyPassword "19911118"
+            println("====== signingConfigs.pzy ======")
+        }
+        edroity {
+            storeFile file('../edroity.keystore')
+            storePassword "edroity2018"
+            keyAlias "product"
+            keyPassword "edroity2018"
+            println("====== signingConfigs.edroity ======")
+        }
+    }
+
+    buildTypes {
+        release {
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            //signingConfig signingConfigs.edroity
+            signingConfig signingConfigs.pzy
+        }
+        debug {
+            //signingConfig signingConfigs.edroity
+            signingConfig signingConfigs.pzy
+        }
+    }
+
+    //android.enforceUniquePackageName=false
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+
+dependencies {
+    api fileTree(include: ['*.jar'], dir: 'libs')
+    api project(':game-unity')
+    api project(':baidu')
+    api project(':oppo')
+    api project(':oppo-ad')
+
+}
