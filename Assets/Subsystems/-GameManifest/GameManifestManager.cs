@@ -14,7 +14,7 @@ public static class GameManifestManager {
             if (_manifest == null)
             {
                 string jsonString = null;
-                jsonString = NativeBridge.SyncCall("NativeGameManifestManager", "GetManifest");
+                //jsonString = NativeBridge.SyncCall("NativeGameManifestManager", "GetManifest");
 
                 Debug.Log("[GameManifestManager] manifest: " + jsonString);
                 if(!string.IsNullOrEmpty(jsonString))

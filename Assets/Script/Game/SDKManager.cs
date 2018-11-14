@@ -33,14 +33,14 @@ public static class SDKManager
     public static void Comment()
     {
         Debug.Log("[SDKManager] goto comment");
-        NativeBridge.InvokeCall("NativeSDKManager", "GotoMarket", null, result =>{
-            Helper.AddGold(40);
-        });
+        // NativeBridge.InvokeCall("NativeSDKManager", "GotoMarket", null, result =>{
+        //     Helper.AddGold(40);
+        // });
     }
 
     public static void Exit()
     {
-        NativeBridge.SendNotify("NativeSDKManager", "Exit");
+        //NativeBridge.SendNotify("NativeSDKManager", "Exit");
     } 
 
     public static void Pay(int goodsId, Action<bool> onComplete = null)
@@ -63,42 +63,42 @@ public static class SDKManager
         jd["gold"] = gold;
         var json = jd.ToJson();
 
-        NativeBridge.InvokeCall("NativeSDKManager", "Pay", json, result => 
-        {
-            if(result == "SUCCESS")
-            {
-                Log.Scrren("SUCCESS");
-                Helper.AddGold(gold);
-                if(!string.IsNullOrEmpty(func))
-                {
-                    if(func == "REMOVE_AD")
-                    {
-                        PlayerStatus.removeAd = true;
-                    }
-                }
-                PlayerStatus.Save();
-                if(onComplete != null)
-                {
-                    onComplete(true);
-                }
-            }
-            else if(result == "FAIL")
-            {
-                Log.Scrren("FAIL");
-                if(onComplete != null)
-                {
-                    onComplete(false);
-                }
-            }
-            else if(result == "CANCEL")
-            {
-                Log.Scrren("CANCEL");
-                if(onComplete != null)
-                {
-                    onComplete(false);
-                }
-            }
-        });
+        // NativeBridge.InvokeCall("NativeSDKManager", "Pay", json, result => 
+        // {
+        //     if(result == "SUCCESS")
+        //     {
+        //         Log.Scrren("SUCCESS");
+        //         Helper.AddGold(gold);
+        //         if(!string.IsNullOrEmpty(func))
+        //         {
+        //             if(func == "REMOVE_AD")
+        //             {
+        //                 PlayerStatus.removeAd = true;
+        //             }
+        //         }
+        //         PlayerStatus.Save();
+        //         if(onComplete != null)
+        //         {
+        //             onComplete(true);
+        //         }
+        //     }
+        //     else if(result == "FAIL")
+        //     {
+        //         Log.Scrren("FAIL");
+        //         if(onComplete != null)
+        //         {
+        //             onComplete(false);
+        //         }
+        //     }
+        //     else if(result == "CANCEL")
+        //     {
+        //         Log.Scrren("CANCEL");
+        //         if(onComplete != null)
+        //         {
+        //             onComplete(false);
+        //         }
+        //     }
+        // });
     }
 
     public static void OnEnterCore()
@@ -107,12 +107,12 @@ public static class SDKManager
         {
             return;
         }
-        NativeBridge.SendNotify("NativeSDKManager", "OnEnterCore");
+        //NativeBridge.SendNotify("NativeSDKManager", "OnEnterCore");
     }
 
     public static void OnExitCore()
     {
-        NativeBridge.SendNotify("NativeSDKManager", "OnExitCore");
+        //NativeBridge.SendNotify("NativeSDKManager", "OnExitCore");
     }
 
     public static bool IsInterAdLoaded()
@@ -121,15 +121,16 @@ public static class SDKManager
         {
             return true;
         }
-        var ret = NativeBridge.SyncCall("NativeSDKManager", "IsInterAdLoaded");
-        if(ret == "true")
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
+        // var ret = NativeBridge.SyncCall("NativeSDKManager", "IsInterAdLoaded");
+        // if(ret == "true")
+        // {
+        //     return true;
+        // }
+        // else
+        // {
+        //     return false;
+        // }
     }
 
     static Action<bool> lastCallback;
