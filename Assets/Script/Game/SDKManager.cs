@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CustomLitJson;
 using System;
+using UnityEngine.Advertisements;
 
 public static class SDKManager
 {
@@ -131,6 +132,7 @@ public static class SDKManager
         }
     }
 
+    static Action<bool> lastCallback;
     public static void ShowInterAd(Action<bool> callback)
     {
         if(PlayerStatus.removeAd)
@@ -138,16 +140,49 @@ public static class SDKManager
             callback(true);
             return;
         }
-        NativeBridge.InvokeCall("NativeSDKManager", "ShowInterAd", null, result=>{
-            if(result == "true")
-            {
-                callback(true);
-            }
-            else
-            {
-                callback(false);
-            }
-        });
+        // NativeBridge.InvokeCall("NativeSDKManager", "ShowInterAd", null, result=>{
+        //     if(result == "true")
+        //     {
+        //         callback(true);
+        //     }
+        //     else
+        //     {
+        //         callback(false);
+        //     }
+        // });
+        if (Advertisement.IsReady())
+        {
+            lastCallback = callback;
+            var options = new ShowOptions { resultCallback = HandleShowResult };
+            Advertisement.Show(options);
+        }
+        else
+        {
+            Debug.Log("[NativeSDKManager] rewardedVideo not ready");
+            callback(false);
+        }
+    }
+
+    private static void HandleShowResult(ShowResult result)
+    {
+        switch (result)
+        {
+            case ShowResult.Finished:
+                Debug.Log("The ad was successfully shown.");
+                //
+                // YOUR CODE TO REWARD THE GAMER
+                // Give coins etc.
+                lastCallback(true);
+                break;
+            case ShowResult.Skipped:
+                Debug.Log("The ad was skipped before reaching the end.");
+                lastCallback(false);
+                break;
+            case ShowResult.Failed:
+                Debug.LogError("The ad failed to be shown.");
+                lastCallback(false);
+                break;
+        }
     }
 
 }

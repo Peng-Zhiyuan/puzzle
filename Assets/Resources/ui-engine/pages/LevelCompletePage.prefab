@@ -253,7 +253,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d86afcd98b94a49a8a9858059c957ff7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  param: 
   Overlay: 0
   label_exp: {fileID: 114284613853427140}
   label_gold: {fileID: 114222422265732172}

@@ -805,6 +805,7 @@ MonoBehaviour:
   view: {fileID: 224651133394841502}
   offsetY: 480
   extraY: 0
+  offsetX: 0
   activeElementList: []
 --- !u!114 &114688289532997446
 MonoBehaviour:

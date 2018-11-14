@@ -186,10 +186,11 @@ public static class PlayerStatus
 
     public static int CalcuNextAdSeconds()
     {
+        var adcd = int.Parse(GameManifestFinal.Get("ad-cd"));
         var now = TimestampUtil.Now/1000;
         var last = lastUseAtGiftTime/1000;
         var losttime = now - last;
-        var needtime = 3 * 60;
+        var needtime = adcd;
         return (int)(needtime - losttime);
     }
 }

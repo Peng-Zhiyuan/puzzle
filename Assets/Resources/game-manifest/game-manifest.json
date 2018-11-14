@@ -1,5 +1,6 @@
 ﻿{
 	"force-developer": "false",
 	"silence": "false",
-	"force-remove-ad": "false"
+	"force-remove-ad": "false",
+	"ad-cd": "0"
 }
