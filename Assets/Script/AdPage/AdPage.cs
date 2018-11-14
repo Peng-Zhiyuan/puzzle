@@ -9,6 +9,24 @@ public class AdPage : Page
 
 	public static AdPageOpenSources sources;
 
+	private async void _async()
+	{
+		await UIUtil.DialogAsync("40 Coins", "receive");
+		Helper.AddGold(40);
+		if(sources == AdPageOpenSources.Shop)
+		{
+			PlayerStatus.lastUseAtGiftTime = TimestampUtil.Now;
+		}
+		PlayerStatus.Save();	
+
+		//Log.Scrren("AdPage: clicked: " + clicked);
+		var admission = new Admission_PopdownOldPage();
+		UIEngine.Back(null, admission);
+		Compelte?.Invoke();
+		Compelte = null;
+		
+	}
+
 	public void OnGetButton()
 	{
 		if(SDKManager.IsAdLoaded)
@@ -16,24 +34,14 @@ public class AdPage : Page
 			SDKManager.ShowInterAd(clicked =>{
 				if(clicked)
 				{
-					Helper.AddGold(40);
-					if(sources == AdPageOpenSources.Shop)
-					{
-						PlayerStatus.lastUseAtGiftTime = TimestampUtil.Now;
-					}
-					PlayerStatus.Save();	
-
-					Log.Scrren("AdPage: clicked: " + clicked);
-					var admission = new Admission_PopdownOldPage();
-					UIEngine.Back(null, admission);
-					Compelte?.Invoke();
-					Compelte = null;
+					_async();
+					
 				}
 				else
 				{
 					var param = new DialogParam();
-					param.des = "您没有点击广告，需要点击广告才能获得金币";
-					param.button = "确认";
+					param.des = "The video has not finished playing and cannot be rewarded";
+					param.button = "confirm";
 					var popup = new Admission_PopupNewPage();
 					var dialog = UIEngine.Forward<DialogPage>(param, popup);
 					dialog.Complete = result =>{
@@ -65,11 +73,18 @@ public class AdPage : Page
 
 	public void OnCloseButton()
 	{
-		var admission = new Admission_PopdownOldPage();
-		UIEngine.Back(null, admission);
-		AudioManager.PlaySe("button");
-		Compelte?.Invoke();
-		Compelte = null;
+		if(sources == AdPageOpenSources.LevelComplete)
+		{
+			OnGetButton();
+		}
+		else
+		{
+			var admission = new Admission_PopdownOldPage();
+			UIEngine.Back(null, admission);
+			AudioManager.PlaySe("button");
+			Compelte?.Invoke();
+			Compelte = null;
+		}
 	}
 }
 

@@ -49,45 +49,46 @@ public class DisplayPage : Page
 		}
 	}
 
+	private async void AsyncHelper()
+	{
+		await UIUtil.ShowADPageAsync(AdPageOpenSources.LevelComplete);
+		DoBack();
+	}
+
 	public void OnBackButton()
 	{
 		var completeCount = PlayerStatus.completeCount;
-		if(completeCount == 2 || completeCount == 3)
-		{
-			var text = MsgList.Get("comment");
-			var param = new DialogParam();
-			param.des = text;
-			param.button = "确定";
-			var admin = new Admission_PopupNewPage();
-			var dialog = UIEngine.Forward<DialogPage>(param, admin);
-			dialog.Complete = result => {
-				if(result == DialogResult.Conform)
-				{
-					SDKManager.Comment();
-				}
-				DoBack();
-			};
-		}
-		else if(completeCount >= 4)
+		// if(completeCount == 2 || completeCount == 3)
+		// {
+		// 	var text = MsgList.Get("comment");
+		// 	var param = new DialogParam();
+		// 	param.des = text;
+		// 	param.button = "确定";
+		// 	var admin = new Admission_PopupNewPage();
+		// 	var dialog = UIEngine.Forward<DialogPage>(param, admin);
+		// 	dialog.Complete = result => {
+		// 		if(result == DialogResult.Conform)
+		// 		{
+		// 			SDKManager.Comment();
+		// 		}
+		// 		DoBack();
+		// 	};
+		// }
+		// else 
 		{
 			if(SDKManager.IsAdLoaded)
 			{
-				AdPage.sources = AdPageOpenSources.LevelComplete;
-				var admin = new Admission_PopupNewPage();
-				var adPage = UIEngine.Forward<AdPage>(null, admin);
-				adPage.Compelte = () => {
-					DoBack();
-				};
+				AsyncHelper();
 			}
 			else
 			{
 				DoBack();
 			}
 		}
-		else
-		{
-			DoBack();
-		}
+		// else
+		// {
+		// 	DoBack();
+		// }
 	}
 
 	private void DoBack()

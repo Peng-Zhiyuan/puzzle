@@ -384,13 +384,13 @@ public class MainPage : Page
             if(!SDKManager.IsAdLoaded)
             {
                 button.interactable = false;
-                label.text = "正在加载"; 
+                label.text = "loading"; 
                 waiteloading = true;
             }
             else
             {
                 button.interactable = true;
-                label.text = "可领取";
+                label.text = "";
                 waiteloading = false;
             }
         }

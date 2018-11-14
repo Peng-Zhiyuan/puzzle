@@ -147,7 +147,7 @@ public class ShopPage : Page
                     cg.interactable = false;
                     cg.blocksRaycasts = false;
                     cg.alpha = 0.5f;
-                    label.text = "正在加载"; 
+                    label.text = "loading"; 
                     waiteloading = true;
                 }
                 else
@@ -155,7 +155,7 @@ public class ShopPage : Page
                     cg.interactable = true;
                     cg.blocksRaycasts = true;
                     cg.alpha = 1;
-                    label.text = "";
+                    label.text = "AD for 40 coins";
                     waiteloading = false;
                 }
             }
